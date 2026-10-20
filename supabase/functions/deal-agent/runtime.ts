@@ -1,6 +1,6 @@
 import {validatePlan,object,redact,type Plan,type Evidence,grounded,safeUrl,stores} from '../../../src/lib/agents/core.ts';
 export type DB=(path:string,body?:unknown,method?:string)=>Promise<unknown>;
-export type Config={enabled:boolean;primary_model:string;fallback_model:string;fallback_enabled:boolean};
+export type Config={enabled:boolean;owner_only:boolean;primary_model:string;fallback_model:string;fallback_enabled:boolean};
 const fields:Record<string,unknown>={query:{type:'string'},stores:{type:'array',items:{type:'string',enum:stores}},maxPrice:{type:'number'},minDiscount:{type:'number'},productId:{type:'string'},suburb:{type:'string'},category:{type:'string'}};
 const signatures:Record<string,string[]>={search_deals:['query','stores','maxPrice','minDiscount'],compare_prices:['query','stores'],get_price_history:['query','productId'],get_unit_price_ranking:['query','category'],find_cheap_eats:['query','suburb','maxPrice']};
 export const definitions=Object.entries(signatures).map(([name,args])=>({type:'function',function:{name,parameters:{type:'object',additionalProperties:false,properties:Object.fromEntries(args.map(k=>[k,fields[k]])),required:['query']}}}));

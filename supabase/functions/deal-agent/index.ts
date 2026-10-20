@@ -14,14 +14,19 @@ Deno.serve(async req=>{
  const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers});
  if(req.method==='OPTIONS')return new Response(null,{headers});
  if(req.method!=='POST'||(origin&&!allowed.includes(origin)))return json({error:'Not allowed'},403);
- const start=Date.now();let subject='';let event='';let provider='';let reserved=0;let tool='';
+ const start=Date.now();let subject='';let event='';let provider='';let reserved=0;let tool='';let agentType:'deal'|'planner'|'quality'='deal';
  try{
  // Reject oversized bodies before parsing; never trust Content-Length alone.
  const reader=req.body?.getReader();let raw='';if(!reader)return json({error:'Empty request'},400);const decoder=new TextDecoder();let bytes=0;
  while(true){const {value,done}=await reader.read();if(done)break;bytes+=value.length;if(bytes>4096){await reader.cancel();return json({error:'Request too large'},413);}raw+=decoder.decode(value,{stream:true});}raw+=decoder.decode();
  const body=object(JSON.parse(raw));
- const config=(await db('/agent_config?select=enabled,primary_model,fallback_model,fallback_enabled&id=eq.true') as Config[])[0];
+ agentType=body.action==='planner'?'planner':body.action==='quality'?'quality':'deal';
+ const owner=!!service&&req.headers.get('authorization')===`Bearer ${service}`;
+ if((body.action==='readiness'||body.action==='owner_smoke')&&!owner)return json({error:'Owner access required'},403);
+ const config=(await db('/agent_config?select=enabled,owner_only,primary_model,fallback_model,fallback_enabled&id=eq.true') as Config[])[0];
+ if(body.action==='readiness')return json({enabled:config?.enabled===true,ownerOnly:config?.owner_only!==false,credentials:{groq:!!env('GROQ_API_KEY'),hashSecret:(env('AGENT_HASH_SECRET')?.length||0)>=32,cloudflare:!!env('CLOUDFLARE_AI_TOKEN')&&/^[a-f0-9]{32}$/.test(env('CLOUDFLARE_ACCOUNT_ID')||'')},modelsAllowed:config?.primary_model==='openai/gpt-oss-20b'&&config?.fallback_model==='@cf/meta/llama-3.1-8b-instruct-fp8-fast',freeAccountVerified:false,note:'Key presence only; verify Free account limits directly with each provider. No inference was called.'});
  if(!config?.enabled)return json({fallback:true,message:'The AI assistant is switched off. Search and filters are still available.'});
+ if(config.owner_only!==false&&!owner)return json({fallback:true,message:'The AI assistant is being tested privately. Normal search and filters are available.'});
  if(body.action==='quality'){
    if(req.headers.get('authorization')!==`Bearer ${service}`)return json({error:'Not allowed'},403);
    if(typeof body.title!=='string'||body.title.length>200)return json({error:'Invalid title'},400);
@@ -34,7 +39,8 @@ Deno.serve(async req=>{
  }
  // Platform verifies JWT. Validate user JWT against Auth; never trust decoded claims/user IDs.
  const authorization=req.headers.get('authorization')||'';const bearer=authorization.replace(/^Bearer /i,'');let user:string|null=null;
- if(bearer&&bearer!==env('SUPABASE_ANON_KEY')){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
+ if(body.action==='owner_smoke'&&owner)user='owner-smoke';
+ else if(bearer&&bearer!==env('SUPABASE_ANON_KEY')){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
  // The gateway's final forwarded address is an advisory network throttle, not identity.
  // Unknown addresses share a bucket; atomic global budgets remain the hard abuse boundary.
  const network=(req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()||'unknown').slice(0,100);
@@ -87,7 +93,7 @@ Deno.serve(async req=>{
  const stream=new ReadableStream({start(controller){for(const data of [{type:'answer',eventId:event,message:result.sources.length?result.notice:'No fresh matching data was found. Try another store or normal search.'},...result.sources.map(source=>({type:'source',source})),...(result.history?[{type:'history',history:result.history}]:[]),{type:'done'}])controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));controller.close();}});
  return new Response(stream,{headers:{...headers,'Content-Type':'text/event-stream'}});
  }catch{
- if(subject)try{await db('/agent_events',{subject,agent:'deal',tool:tool||null,provider:provider||null,reserved_tokens:reserved,latency_ms:Date.now()-start,status:'unavailable'});}catch{/* No prompts, identifiers or provider error bodies logged. */}
+ if(subject)try{await db('/agent_events',{subject,agent:agentType,tool:tool||null,provider:provider||null,reserved_tokens:reserved,latency_ms:Date.now()-start,status:'unavailable'});}catch{/* No prompts, identifiers or provider error bodies logged. */}
  return json({fallback:true,message:'The assistant could not answer safely. Please use normal search and filters.'});
  }
 });

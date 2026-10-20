@@ -28,10 +28,10 @@ In [Supabase Edge Function secrets](https://supabase.com/dashboard/project/mdbql
 
 No connector for setting these secrets is available here. Do not paste keys into chat or commit them. Existing `SUPABASE_URL`, `SUPABASE_ANON_KEY` and service-role runtime credentials are managed by Supabase.
 
-Verify account limits and send one owner-controlled smoke question before opening access. Then enable via reviewed SQL:
+Verify account limits and send one owner-controlled smoke question before opening access. Then enable private testing via reviewed SQL:
 
 ```sql
-update public.agent_config set enabled=true, updated_at=now() where id;
+update public.agent_config set enabled=true, owner_only=true, updated_at=now() where id;
 -- Only after a separately verified fallback smoke test:
 update public.agent_config set fallback_enabled=true, updated_at=now() where id;
 ```
@@ -130,3 +130,27 @@ A usable local Chrome/Chromium and Lighthouse installation are absent. No new de
 - Final initial JS: 131,268 gzip bytes; assistant JS: 4,140 gzip bytes; assistant CSS: 783 gzip bytes. Initial bundle increased by about 0.47 KB gzip from the last baseline; no Lighthouse score inferred from this.
 - All nine new `agent_*` tables have RLS. Private tables intentionally have no client policy/grant; owner-list SELECT/DELETE policies are present. Security advisor's existing leaked-password warning remains; no paid Auth upgrade was enabled.
 - Live model accuracy, real fallback, authenticated browser saves, GitHub workflow execution and before/after Lighthouse remain unverified/blocking gates. No model tokens consumed during this implementation.
+
+
+## Private activation gate — continued rollout
+
+Edge version 2 adds `owner_only=true` by default. It remains off (`enabled=false`). An owner-only readiness action reports only key-presence/format booleans and explicitly does not verify billing plans or expose credentials. Anonymous attempts receive HTTP 403. No readiness request calls an LLM. Errors from planner/quality processing now use the correct agent label in logs.
+
+After adding the server secrets above:
+
+```sh
+# Use the existing owner environment; never paste a service-role key in chat.
+node tools/agents/preflight.mjs
+# After confirming the actual provider account is Free, enable private testing in SQL.
+node tools/agents/preflight.mjs --smoke
+```
+
+`--smoke` requires `enabled=true, owner_only=true` and uses a single fixed, non-personal shopping question. It consumes the normal reserved token budget and cannot run from an anonymous client. Review the grounded response and run live evaluation cases before opening public access:
+
+```sql
+update public.agent_config set owner_only=false, updated_at=now() where id;
+```
+
+If anything fails, leave public access closed. Disabled AI and ordinary search remain available. The readiness command cannot create provider accounts, generate provider keys or set Supabase secrets. Current connected tools do not expose a secrets setter. The owner must enter these directly into Supabase.
+
+Follow-up verification: 102 unit/integration tests passed; frontend and Edge type checks and lint passed. Production Edge is ACTIVE version 2 with JWT verification enabled. GitHub create-branch retry still returned HTTP 403, `Resource not accessible by integration`; no branch or workflow was published remotely.
