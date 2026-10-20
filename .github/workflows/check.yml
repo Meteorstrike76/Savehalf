@@ -2,6 +2,9 @@ name: Validate app
 on: [push, pull_request]
 permissions:
   contents: read
+concurrency:
+  group: validate-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -16,6 +19,10 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
+        env:
+          # Test-only public fixtures. No production account or secrets are needed.
+          VITE_SUPABASE_URL: https://savehalf-ci.invalid
+          VITE_SUPABASE_ANON_KEY: savehalf-ci-public-fixture
       - run: node --test tests/*.test.cjs
       - run: npm run test:ui
       - run: npm ci --prefix scraper

@@ -4,7 +4,7 @@
 
 Groq Free and Cloudflare Workers AI Free were explicitly approved by the owner. No new dependency was added. The retired recipe endpoint remains retired. New agent code is implemented, but **live inference is disabled** until the owner supplies server credentials and verifies the account/model's Free allowance. No model calls were made during implementation. Mock-provider tests do not demonstrate actual model accuracy or availability.
 
-Production scraping still uses Supabase Cron and the existing collectors. The local GitHub quality step is prepared, not operational: connected GitHub writes were previously rejected, and deployed source has not been pushed there. Do not enable the alternative GitHub scraper while Supabase schedules still collect the same sources.
+Production scraping still uses Supabase Cron and the existing collectors. The GitHub quality step is prepared behind a disabled workflow gate. GitHub write access recovered on 21 October 2026: source and migrations are now on `feature/grounded-agents` in [PR #1](https://github.com/Meteorstrike76/Savehalf/pull/1). CI is being verified; production cron has not been cut over. Do not enable the alternative GitHub scraper while Supabase schedules still collect the same sources.
 
 ## Design and trust boundaries
 
@@ -154,3 +154,10 @@ update public.agent_config set owner_only=false, updated_at=now() where id;
 If anything fails, leave public access closed. Disabled AI and ordinary search remain available. The readiness command cannot create provider accounts, generate provider keys or set Supabase secrets. Current connected tools do not expose a secrets setter. The owner must enter these directly into Supabase.
 
 Follow-up verification: 102 unit/integration tests passed; frontend and Edge type checks and lint passed. Production Edge is ACTIVE version 2 with JWT verification enabled. GitHub create-branch retry still returned HTTP 403, `Resource not accessible by integration`; no branch or workflow was published remotely.
+
+
+## GitHub connection recovery — 21 October 2026
+
+Write access now works. Source was imported over the README-only main branch as a deployed-app baseline plus seven agent commits. The new production screenshot was omitted after automatic approval review rejected publishing that image; it remains in the downloadable archive. Existing source files and migrations were uploaded without environment files, generated builds or provider credentials. PR #1 is initially a draft while CI runs.
+
+CI uses a reserved `.invalid` Supabase URL and a non-secret fixture key; browser regression tests intercept requests. CI never requires production Supabase access. Branch and PR runs share a concurrency group to cancel superseded validation. This does not change Vercel production variables. Collector and backup workflow enable flags remain off by default, avoiding duplicate production jobs. GitHub secrets and variables still need owner configuration before any scraper cutover.
