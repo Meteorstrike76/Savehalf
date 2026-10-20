@@ -116,6 +116,17 @@ Migrations are checked in with server-issued migration versions. Existing migrat
 
 ## Performance evidence and gaps
 
-Before: initial JS 130.80 KB gzip. After: approximately 131.1 KB gzip; agent UI and stylesheet load separately (about 4.3 KB and 0.8 KB gzip after planner addition). No AI request occurs on initial load; this has a UI regression assertion. Exact final build values are in the release output.
+Before: initial JS 130.80 KB gzip. After: approximately 131.1 KB gzip; agent UI and stylesheet load separately (about 4.14 KB and 0.78 KB gzip after planner addition). No AI request occurs on initial load; this has a UI regression assertion. Exact final build values are in the release output.
 
 A usable local Chrome/Chromium and Lighthouse installation are absent. No new dependency was installed without approval. Therefore **no before/after Lighthouse score or three-width screenshot claim is made**. Existing `tools/lighthouse-audit.sh` and `tools/screenshots.mjs` can run on an equipped machine; they do not substitute for actual measured reports.
+
+## Verified release
+
+- Vercel production `dpl_8bVU6BBEWn67fpDnZYGeSRffd5LT`: READY, https://savehalf.vercel.app/ . Source commit `027d35d` on `feature/grounded-agents` (later documentation-only commit records evidence).
+- Supabase `deal-agent` version 1: ACTIVE, JWT verification enabled. Public-anon smoke call returned HTTP 200 with the deliberate disabled fallback.
+- Browser production verification: assistant opens, accepts the complete typed question, requires consent and displays the switched-off response. Only extension-origin metadata errors appeared in the inspected console sample; no app errors in that sample.
+- 99 unit/integration tests, 56 scraper tests and 18 UI regression scripts passed; frontend and Edge type checks, lint and production build passed.
+- Transactional DB checks confirmed anonymous/per-minute quota enforcement, fallback disabled, anonymous access denied to private config/RPCs, and account lists visible/deletable only by their owner. Tests rolled back: zero list/counter test rows remain; four existing favourites preserved.
+- Final initial JS: 131,268 gzip bytes; assistant JS: 4,140 gzip bytes; assistant CSS: 783 gzip bytes. Initial bundle increased by about 0.47 KB gzip from the last baseline; no Lighthouse score inferred from this.
+- All nine new `agent_*` tables have RLS. Private tables intentionally have no client policy/grant; owner-list SELECT/DELETE policies are present. Security advisor's existing leaked-password warning remains; no paid Auth upgrade was enabled.
+- Live model accuracy, real fallback, authenticated browser saves, GitHub workflow execution and before/after Lighthouse remain unverified/blocking gates. No model tokens consumed during this implementation.
