@@ -30,6 +30,7 @@ import {MORE_RETAILERS} from '@/lib/moreRetailers';
 import { LIST_KEY, readBudget, readList, unitPrice, type ListItem } from '@/lib/shopping';
 import {PREFERENCES_KEY,readPreferences} from '@/lib/preferences';
 import {foodKind} from '@/lib/meal/recipes';
+const DealAssistant=lazy(()=>import('@/components/DealAssistant'));
 const ProductHistory=lazy(()=>import('@/components/ProductHistory'));
 const DecisionTools=lazy(()=>import('@/components/DecisionTools'));
 const DealRadar=lazy(()=>import('@/components/DealRadar'));
@@ -38,6 +39,8 @@ const money = (n:number) => new Intl.NumberFormat('en-AU',{style:'currency',curr
 function readSaved():Deal[] { try {const v=JSON.parse(localStorage.getItem('savehalf-bookmarks-v4') || '[]'); return Array.isArray(v) ? v.filter(d=>typeof d?.id==='string' && typeof d?.title==='string' && typeof d?.discountPrice==='number') : [];} catch {return [];} }
 function StoreLabel({store}:{store:StoreId}) {return <span className="store-label" style={{color:STORES[store].color}}>{store==='Woolworths'?'woolworths':store==='Target'?'◎ Target':store==='Aldi'?'ALDI':store}</span>;}
 function Feed() {
+ const [assistantOpen,setAssistantOpen]=useState(false);
+ const [aiDisabled,setAiDisabled]=useState(()=>{try{return localStorage.getItem('savehalf-ai-disabled')==='true';}catch{return false;}});
  const [decisionOpen,setDecisionOpen]=useState(false);
  const [radarOpen,setRadarOpen]=useState(false);
  const [radarGroup,setRadarGroup]=useState<'All'|'Beauty'|'Fast food'>('All');
@@ -123,6 +126,8 @@ function Feed() {
  <MealPlanner open={mealOpen} onClose={()=>setMealOpen(false)} selected={mealFoods}/>
  <Modal open={about} onClose={()=>setAbout(false)} title="About SaveHalf" wide><h2 className="modal-heading">Good finds. Clear information.</h2><p className="modal-copy">SaveHalf brings a selected catalogue from Coles, Woolworths, ALDI, BIG W, Kmart, Target and a limited Best & Less pilot into one browsing experience. The sale feed shows items with a recorded price reduction. Browse products also includes imported regular-price items.</p><h3>Where prices come from</h3><p className="modal-copy">Scheduled collection adapters and an authorised JSON import update the database. Retailer access, page changes and location differences can affect coverage. This is not a complete catalogue of every retailer. Only products checked in the last 72 hours appear in the public feed. Coles and Woolworths records checked before the current Wednesday promotion boundary need reverification and are excluded.</p><h3>Your shortlist</h3><p className="modal-copy">Guest bookmarks stay in this browser. Sign in to save collected products to your account. Guest bookmarks are separate and are not automatically transferred. Comparison is manual; product equivalence and unit prices must be checked.</p><h3>Website analytics</h3><p className="modal-copy">When enabled, Vercel Web Analytics measures visits to our public home page. We remove query strings and URL fragments from page-view URLs and do not send searches, account details or saved lists as custom events. Analytics is disabled for previews, sign-in callback visits and browsers requesting Do Not Track or Global Privacy Control.</p><h3>Sample mode</h3><p className="modal-copy">Without a database connection, the app uses labelled illustrative products. It never presents these as live offers. No payments or purchases take place here.</p></Modal>
  <nav className="mobile-nav" aria-label="Mobile shopping navigation"><button onClick={()=>setTab('deals')}>Browse</button><button onClick={()=>setShoppingOpen(true)}>List ({list.length})</button><button onClick={()=>setShopOpen(true)}>My shop</button></nav>
+ <button className="assistant-launch" style={{position:'fixed',right:16,bottom:86,zIndex:25,minHeight:48,padding:'12px 18px',borderRadius:30,background:'#243d35',color:'#fff'}} onClick={()=>{if(aiDisabled){try{localStorage.removeItem('savehalf-ai-disabled');}catch{/* Device preference. */}setAiDisabled(false);}setAssistantOpen(true);}}>{aiDisabled?'AI settings':'Ask SaveHalf'}</button>
+ {assistantOpen&&<Suspense fallback={<div className="toast" role="status">Opening assistant…</div>}><DealAssistant chosen={readPreferences().stores} onSearch={q=>{setSearch(q.slice(0,60));setTab('deals');}} onClose={()=>{setAssistantOpen(false);try{setAiDisabled(localStorage.getItem('savehalf-ai-disabled')==='true');}catch{/* Device preference. */}}}/></Suspense>}
  <PasswordRecovery/>
  <AuthModal open={auth} onClose={()=>setAuth(false)}/>{toast&&<div className="toast" role="status">{toast}</div>}
  </div>;
