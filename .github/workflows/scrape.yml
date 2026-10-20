@@ -1,0 +1,32 @@
+name: Public-source catalogue
+on:
+  schedule:
+    - cron: '23 18 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: savehalf-public-scrape
+  cancel-in-progress: false
+jobs:
+  scrape:
+    # Cut over only after a manual run, secrets and zero spending are verified.
+    if: vars.SAVEHALF_ACTIONS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: scraper/package-lock.json
+      - run: npm ci --prefix scraper
+      - name: Collect bounded public sources
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          REQUESTED_STORES: ${{ vars.SAVEHALF_APPROVED_STORES }}
+        run: node scraper/src/run-public.mjs

@@ -1,0 +1,29 @@
+import {FOOD,RECIPES,packSize,foodKind,type FoodKind,type Ingredient,type Recipe} from './meal/recipes';
+import type {Deal} from './supabase';
+import {freshPrice} from './watchlist';
+export const PANTRY_KEY='savehalf-pantry-v1',RECEIPTS_KEY='savehalf-receipts-v1',TRIP_KEY='savehalf-trip-v1';
+export type PantryItem={id:string;kind:FoodKind;amount:number;unit:Ingredient['unit'];date:string;dateType:'best-before'|'use-by'};
+export type Receipt={id:string;date:string;store:string;type:'groceries'|'food';actual:number;estimate:number;reference:number|null;note:string};
+export const sydneyDate=(date=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Australia/Sydney',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
+export function validDate(s:unknown):s is string{return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&Number.isFinite(Date.parse(s))&&new Date(s+'T12:00:00Z').toISOString().slice(0,10)===s;}
+export function validPantry(x:unknown):x is PantryItem{if(!x||typeof x!=='object')return false;const p=x as PantryItem;return typeof p.id==='string'&&p.id.length<=80&&Object.prototype.hasOwnProperty.call(FOOD,p.kind)&&Number.isFinite(p.amount)&&p.amount>0&&p.amount<=100000&&['g','ml','each'].includes(p.unit)&&(p.date===''||validDate(p.date))&&['best-before','use-by'].includes(p.dateType);}
+export function validReceipt(x:unknown):x is Receipt{if(!x||typeof x!=='object')return false;const r=x as Receipt;return typeof r.id==='string'&&r.id.length<=80&&validDate(r.date)&&typeof r.store==='string'&&r.store.length<=50&&['groceries','food'].includes(r.type)&&[r.actual,r.estimate].every(n=>Number.isFinite(n)&&n>=0&&n<=50000)&&(r.reference===null||Number.isFinite(r.reference)&&r.reference>=0&&r.reference<=50000)&&typeof r.note==='string'&&r.note.length<=120;}
+export function readRows<T>(key:string,valid:(x:unknown)=>x is T,limit:number):T[]{try{const a=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(a)?a.filter(valid).slice(0,limit):[];}catch{return [];}}
+export function writeRows(key:string,value:unknown){localStorage.setItem(key,JSON.stringify(value));}
+export function scaleRecipe(r:Recipe,servings:number):Recipe{return {...r,servings,ingredients:r.ingredients.map(i=>({...i,amount:Math.ceil(i.amount*servings/r.servings)})),steps:r.steps.map(s=>s.replace(/between two bowls|into two portions/gi,'into the requested servings'))};}
+export function swapRecipe(r:Recipe,swap:boolean):Recipe{if(!swap)return r;const has=r.ingredients.some(i=>i.kind==='lentils');if(!has)return r;return {...r,title:r.title.replace(/lentil/i,'bean'),ingredients:r.ingredients.map(i=>i.kind==='lentils'?{...i,kind:'beans'}:i),steps:r.steps.map(s=>s.replace(/tinned lentils, or cook dried lentils according to the packet before using/i,'tinned beans according to the packet instructions').replace(/lentils/gi,'beans'))};}
+export function mealChoices(pantry:PantryItem[],diet:'all'|'vegan',useFirst:boolean,now=sydneyDate()){return RECIPES.filter(r=>diet!=='vegan'||!r.ingredients.some(i=>i.kind==='eggs')).sort((a,b)=>{if(!useFirst)return 0;const due=pantry.filter(p=>p.date&&p.date>=now&&Date.parse(p.date)-Date.parse(now)<=7*86400000).map(p=>p.kind);return b.ingredients.filter(i=>due.includes(i.kind)).length-a.ingredients.filter(i=>due.includes(i.kind)).length;});}
+export type MealLine={ingredient:Ingredient;owned:number;need:number;product:Deal|null;packs:number|null;cost:number|null};
+export function planMeals(recipes:Recipe[],pantry:PantryItem[],products:Deal[],now=sydneyDate()):MealLine[]{
+ const merged=new Map<string,Ingredient>();for(const r of recipes)for(const i of r.ingredients){const key=i.kind+'|'+i.unit;merged.set(key,{...i,amount:(merged.get(key)?.amount||0)+i.amount});}
+ return [...merged.values()].map(ingredient=>{const owned=pantry.filter(p=>p.kind===ingredient.kind&&p.unit===ingredient.unit&&(!p.date||p.date>=now)).reduce((n,p)=>n+p.amount,0),need=Math.max(0,ingredient.amount-owned);
+  if(!need)return {ingredient,owned,need,product:null,packs:0,cost:0};
+  const candidates=products.filter(p=>freshPrice(p)&&foodKind(p)===ingredient.kind).map(product=>{const size=packSize(product.title,ingredient.unit);const packs=size&&size>0?Math.ceil(need/size):null;return {product,packs,cost:packs===null?null:Math.round(packs*product.discountPrice*100)/100};}).sort((a,b)=>(a.cost??Infinity)-(b.cost??Infinity));
+  return {ingredient,owned,need,...(candidates[0]||{product:null,packs:null,cost:null})};});
+}
+export function weeklySpending(receipts:Receipt[],now=sydneyDate()){const start=new Date(now+'T12:00:00Z');start.setUTCDate(start.getUTCDate()-((start.getUTCDay()+6)%7));const from=start.toISOString().slice(0,10);return receipts.filter(r=>r.date>=from&&r.date<=now).reduce((n,r)=>n+Math.round(r.actual*100),0)/100;}
+export function savingsLedger(receipts:Receipt[]){return receipts.filter(r=>r.reference!==null).reduce((n,r)=>n+Math.round((r.reference!-r.actual)*100),0)/100;}
+export function scenario(total:number,percentage:number){return Math.round(total*(1+percentage/100)*100)/100;}
+export function splitCents(total:number,people:number){const cents=Math.round(total*100),base=Math.floor(cents/people),remainder=cents%people;return Array.from({length:people},(_,i)=>(base+(i<remainder?1:0))/100);}
+
+export function assignedSplit(items:{deal:{id:string;discountPrice:number};quantity:number}[],people:number,assignments:Record<string,string>){const cents=Array(people).fill(0) as number[];for(const x of items){const amount=Math.round(x.deal.discountPrice*100)*x.quantity;const owner=assignments[x.deal.id];if(owner!==undefined&&owner!=='shared'&&Number.isInteger(Number(owner))&&Number(owner)>=0&&Number(owner)<people)cents[Number(owner)]+=amount;else{const base=Math.floor(amount/people),remainder=amount%people;for(let i=0;i<people;i++)cents[i]+=base+(i<remainder?1:0);}}return cents.map(n=>n/100);}

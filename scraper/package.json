@@ -1,0 +1,17 @@
+{
+  "name": "savehalf-scraper",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "scrape": "node src/index.mjs",
+    "dry": "node src/index.mjs --dry-run",
+    "seed": "node src/seed.mjs",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "playwright": "^1.48.0"
+  }
+}

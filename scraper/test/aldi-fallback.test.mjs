@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {aldiProducts} from '../src/lib/aldi-html.mjs';import {collect} from '../src/lib/http-collect.mjs';
+const product={"@type":"Product",sku:'12345',name:'Coffee 200g',url:'https://www.aldi.com.au/product/coffee-12345',offers:{price:4.99,priceCurrency:'AUD',availability:'https://schema.org/InStock'}};
+const html=p=>`<script type="application/ld+json">${JSON.stringify(p)}</script>`;
+test('ALDI explicit public JSON-LD fallback preserves price without fabricating was',()=>{const [p]=aldiProducts(html(product));assert.equal(p.discount_price,4.99);assert.equal(p.original_price,null);assert.equal(p.external_id,'12345');});
+test('ALDI fallback rejects ambiguous stock, variants, currencies and external links',()=>{for(const p of [{...product,offers:{...product.offers,availability:'https://schema.org/OutOfStock'}},{...product,offers:[product.offers,product.offers]},{...product,url:'https://evil.example/product/a'},{...product,offers:{...product.offers,priceCurrency:'USD'}},{...product,name:'Beef per kg'}])assert.deepEqual(aldiProducts(html(p)),[]);});
+test('ALDI failed promotion page is not silently counted as a healthy run',async()=>{await assert.rejects(collect('Aldi',async u=>{if(u.endsWith('/robots.txt'))return 'User-agent: *\nAllow: /';if(u.includes('super-savers'))throw Error('unavailable');return html(product);}),/promotion page unavailable/);});

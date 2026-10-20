@@ -1,0 +1,288 @@
+{
+  "tables": [
+    {
+      "rls": true,
+      "name": "deals",
+      "bytes": 1056768,
+      "policies": 1,
+      "estimated_rows": 448
+    },
+    {
+      "rls": true,
+      "name": "saved_deals",
+      "bytes": 73728,
+      "policies": 3,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "user_preferences",
+      "bytes": 32768,
+      "policies": 4,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "meal_ai_usage",
+      "bytes": 8192,
+      "policies": 0,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "cheap_eats_run",
+      "bytes": 32768,
+      "policies": 0,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "collection_status",
+      "bytes": 32768,
+      "policies": 1,
+      "estimated_rows": 8
+    },
+    {
+      "rls": true,
+      "name": "cheap_eats",
+      "bytes": 139264,
+      "policies": 1,
+      "estimated_rows": 47
+    },
+    {
+      "rls": true,
+      "name": "cheap_eats_sources",
+      "bytes": 32768,
+      "policies": 1,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "price_feedback",
+      "bytes": 65536,
+      "policies": 1,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "community_feeds",
+      "bytes": 278528,
+      "policies": 1,
+      "estimated_rows": 14
+    },
+    {
+      "rls": true,
+      "name": "collection_daily",
+      "bytes": 65536,
+      "policies": 1,
+      "estimated_rows": 17
+    },
+    {
+      "rls": true,
+      "name": "collection_audit",
+      "bytes": 98304,
+      "policies": 0,
+      "estimated_rows": 91
+    },
+    {
+      "rls": true,
+      "name": "collection_budget",
+      "bytes": 57344,
+      "policies": 0,
+      "estimated_rows": 9
+    },
+    {
+      "rls": true,
+      "name": "scrape_runs",
+      "bytes": 24576,
+      "policies": 0,
+      "estimated_rows": null
+    },
+    {
+      "rls": true,
+      "name": "price_changes",
+      "bytes": 172032,
+      "policies": 1,
+      "estimated_rows": 448
+    },
+    {
+      "rls": true,
+      "name": "price_monthly",
+      "bytes": 122880,
+      "policies": 1,
+      "estimated_rows": 448
+    }
+  ],
+  "indexes": [
+    {
+      "name": "deals_pkey",
+      "table": "deals",
+      "definition": "CREATE UNIQUE INDEX deals_pkey ON public.deals USING btree (id)"
+    },
+    {
+      "name": "deals_store_category_external_id_key",
+      "table": "deals",
+      "definition": "CREATE UNIQUE INDEX deals_store_category_external_id_key ON public.deals USING btree (store_category, external_id)"
+    },
+    {
+      "name": "idx_deals_feed",
+      "table": "deals",
+      "definition": "CREATE INDEX idx_deals_feed ON public.deals USING btree (is_active, store_category, discount_pct DESC, published_at DESC)"
+    },
+    {
+      "name": "idx_deals_freshness",
+      "table": "deals",
+      "definition": "CREATE INDEX idx_deals_freshness ON public.deals USING btree (last_seen_at DESC) WHERE (is_active = true)"
+    },
+    {
+      "name": "deals_search_document",
+      "table": "deals",
+      "definition": "CREATE INDEX deals_search_document ON public.deals USING gin (search_document)"
+    },
+    {
+      "name": "deals_title_trgm",
+      "table": "deals",
+      "definition": "CREATE INDEX deals_title_trgm ON public.deals USING gin (title gin_trgm_ops)"
+    },
+    {
+      "name": "deals_active_price",
+      "table": "deals",
+      "definition": "CREATE INDEX deals_active_price ON public.deals USING btree (store_category, discount_price, id) WHERE is_active"
+    },
+    {
+      "name": "deals_active_newest",
+      "table": "deals",
+      "definition": "CREATE INDEX deals_active_newest ON public.deals USING btree (published_at DESC, id) WHERE is_active"
+    },
+    {
+      "name": "deals_active_units",
+      "table": "deals",
+      "definition": "CREATE INDEX deals_active_units ON public.deals USING btree (unit_basis, unit_price, id) WHERE (is_active AND (unit_price IS NOT NULL))"
+    },
+    {
+      "name": "saved_deals_pkey",
+      "table": "saved_deals",
+      "definition": "CREATE UNIQUE INDEX saved_deals_pkey ON public.saved_deals USING btree (id)"
+    },
+    {
+      "name": "saved_deals_user_id_deal_id_key",
+      "table": "saved_deals",
+      "definition": "CREATE UNIQUE INDEX saved_deals_user_id_deal_id_key ON public.saved_deals USING btree (user_id, deal_id)"
+    },
+    {
+      "name": "idx_saved_user",
+      "table": "saved_deals",
+      "definition": "CREATE INDEX idx_saved_user ON public.saved_deals USING btree (user_id)"
+    },
+    {
+      "name": "idx_saved_deal",
+      "table": "saved_deals",
+      "definition": "CREATE INDEX idx_saved_deal ON public.saved_deals USING btree (deal_id)"
+    },
+    {
+      "name": "user_preferences_pkey",
+      "table": "user_preferences",
+      "definition": "CREATE UNIQUE INDEX user_preferences_pkey ON public.user_preferences USING btree (user_id)"
+    },
+    {
+      "name": "meal_ai_usage_pkey",
+      "table": "meal_ai_usage",
+      "definition": "CREATE UNIQUE INDEX meal_ai_usage_pkey ON public.meal_ai_usage USING btree (day, user_id)"
+    },
+    {
+      "name": "cheap_eats_run_pkey",
+      "table": "cheap_eats_run",
+      "definition": "CREATE UNIQUE INDEX cheap_eats_run_pkey ON public.cheap_eats_run USING btree (id)"
+    },
+    {
+      "name": "collection_status_pkey",
+      "table": "collection_status",
+      "definition": "CREATE UNIQUE INDEX collection_status_pkey ON public.collection_status USING btree (store)"
+    },
+    {
+      "name": "cheap_eats_pkey",
+      "table": "cheap_eats",
+      "definition": "CREATE UNIQUE INDEX cheap_eats_pkey ON public.cheap_eats USING btree (id)"
+    },
+    {
+      "name": "cheap_eats_fresh",
+      "table": "cheap_eats",
+      "definition": "CREATE INDEX cheap_eats_fresh ON public.cheap_eats USING btree (last_verified_at) WHERE is_active"
+    },
+    {
+      "name": "cheap_eats_sources_pkey",
+      "table": "cheap_eats_sources",
+      "definition": "CREATE UNIQUE INDEX cheap_eats_sources_pkey ON public.cheap_eats_sources USING btree (source_key)"
+    },
+    {
+      "name": "price_feedback_pkey",
+      "table": "price_feedback",
+      "definition": "CREATE UNIQUE INDEX price_feedback_pkey ON public.price_feedback USING btree (id)"
+    },
+    {
+      "name": "price_feedback_user_created_idx",
+      "table": "price_feedback",
+      "definition": "CREATE INDEX price_feedback_user_created_idx ON public.price_feedback USING btree (user_id, created_at)"
+    },
+    {
+      "name": "price_feedback_deal_idx",
+      "table": "price_feedback",
+      "definition": "CREATE INDEX price_feedback_deal_idx ON public.price_feedback USING btree (deal_id)"
+    },
+    {
+      "name": "community_feeds_pkey",
+      "table": "community_feeds",
+      "definition": "CREATE UNIQUE INDEX community_feeds_pkey ON public.community_feeds USING btree (feed_key)"
+    },
+    {
+      "name": "collection_daily_pkey",
+      "table": "collection_daily",
+      "definition": "CREATE UNIQUE INDEX collection_daily_pkey ON public.collection_daily USING btree (day, store)"
+    },
+    {
+      "name": "collection_audit_pkey",
+      "table": "collection_audit",
+      "definition": "CREATE UNIQUE INDEX collection_audit_pkey ON public.collection_audit USING btree (id)"
+    },
+    {
+      "name": "collection_audit_store_at_idx",
+      "table": "collection_audit",
+      "definition": "CREATE INDEX collection_audit_store_at_idx ON public.collection_audit USING btree (store, at)"
+    },
+    {
+      "name": "collection_budget_pkey",
+      "table": "collection_budget",
+      "definition": "CREATE UNIQUE INDEX collection_budget_pkey ON public.collection_budget USING btree (day)"
+    },
+    {
+      "name": "scrape_runs_pkey",
+      "table": "scrape_runs",
+      "definition": "CREATE UNIQUE INDEX scrape_runs_pkey ON public.scrape_runs USING btree (id)"
+    },
+    {
+      "name": "scrape_runs_store_started",
+      "table": "scrape_runs",
+      "definition": "CREATE INDEX scrape_runs_store_started ON public.scrape_runs USING btree (store, started_at DESC)"
+    },
+    {
+      "name": "price_changes_pkey",
+      "table": "price_changes",
+      "definition": "CREATE UNIQUE INDEX price_changes_pkey ON public.price_changes USING btree (id)"
+    },
+    {
+      "name": "price_changes_product_at",
+      "table": "price_changes",
+      "definition": "CREATE INDEX price_changes_product_at ON public.price_changes USING btree (deal_id, observed_at DESC)"
+    },
+    {
+      "name": "price_monthly_pkey",
+      "table": "price_monthly",
+      "definition": "CREATE UNIQUE INDEX price_monthly_pkey ON public.price_monthly USING btree (deal_id, month)"
+    }
+  ],
+  "products": 448,
+  "auth_users": 2,
+  "favourites": 4,
+  "measured_at": "2026-10-19T04:48:41.792982+00:00",
+  "database_bytes": 15062707
+}
