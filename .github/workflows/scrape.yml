@@ -30,3 +30,10 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           REQUESTED_STORES: ${{ vars.SAVEHALF_APPROVED_STORES }}
         run: node scraper/src/run-public.mjs
+      - name: Quarantine data quality findings
+        if: success()
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SAVEHALF_QUALITY_LLM: ${{ vars.SAVEHALF_QUALITY_LLM }}
+        run: node tools/agents/quality.mjs

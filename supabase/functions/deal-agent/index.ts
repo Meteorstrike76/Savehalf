@@ -1,5 +1,5 @@
 import {object,redact,validatePlan,stores} from '../../../src/lib/agents/core.ts';
-import {interpret,executeTool,ProviderError,type Config,type DB} from './runtime.ts';
+import {interpret,interpretAction,executeTool,ProviderError,type Config,type DB} from './runtime.ts';
 declare const Deno:{env:{get:(k:string)=>string|undefined};serve:(handler:(req:Request)=>Promise<Response>)=>void};
 const env=(k:string)=>Deno.env.get(k);
 const base=env('SUPABASE_URL')||'';
@@ -22,6 +22,16 @@ Deno.serve(async req=>{
  const body=object(JSON.parse(raw));
  const config=(await db('/agent_config?select=enabled,primary_model,fallback_model,fallback_enabled&id=eq.true') as Config[])[0];
  if(!config?.enabled)return json({fallback:true,message:'The AI assistant is switched off. Search and filters are still available.'});
+ if(body.action==='quality'){
+   if(req.headers.get('authorization')!==`Bearer ${service}`)return json({error:'Not allowed'},403);
+   if(typeof body.title!=='string'||body.title.length>200)return json({error:'Invalid title'},400);
+   subject=await hash('quality:'+new Date().toISOString().slice(0,10));
+   if(!env('GROQ_API_KEY')||!await db('/rpc/agent_reserve',{p_subject:subject,p_ip:subject,p_signed:true,p_provider:'groq'}))return json({suggestion:null});
+   reserved=4000;provider='groq';const result=await interpretAction('quality',body.title,config,'groq',env);
+   if(typeof result.name!=='string'||result.name.length>200||typeof result.size!=='number'||!Number.isFinite(result.size)||result.size<0||result.size>100000||!['g','ml','each','unknown'].includes(String(result.unit))||typeof result.confidence!=='number'||result.confidence<0||result.confidence>1)throw Error('Invalid suggestion');
+   await db('/agent_events',{subject,agent:'quality',tool:'quality',provider,reserved_tokens:reserved,latency_ms:Date.now()-start,status:'quarantined'});
+   return json({suggestion:{...result,status:'quarantined'}});
+ }
  // Platform verifies JWT. Validate user JWT against Auth; never trust decoded claims/user IDs.
  const authorization=req.headers.get('authorization')||'';const bearer=authorization.replace(/^Bearer /i,'');let user:string|null=null;
  if(bearer&&bearer!==env('SUPABASE_ANON_KEY')){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
