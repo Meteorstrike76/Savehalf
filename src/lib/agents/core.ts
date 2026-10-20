@@ -33,3 +33,5 @@ export function calculateBasket(lines:{item:string;quantity:number;candidates:Ev
 }
 /** Block obvious private identifiers locally before any model request. Not a PII guarantee. */
 export function redact(text:string){return text.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[email removed]').replace(/\b(?:\+?61|0)[\d ()-]{8,16}\b/g,'[phone removed]').replace(/\b[0-9a-f]{8}-[0-9a-f-]{27}\b/gi,'[identifier removed]');}
+
+export function blockedRequest(text:string):boolean {return /ignore.{0,30}instructions|system prompt|(?:reveal|print|show).{0,20}(?:secret|api.key)|drop\s+table|select\s+.*from|(?:medical|dietary|financial) advice|(?:hack|steal|bomb|suicide)/i.test(text);}

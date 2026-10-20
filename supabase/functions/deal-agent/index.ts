@@ -1,4 +1,4 @@
-import {object,redact,validatePlan,stores} from '../../../src/lib/agents/core.ts';
+import {object,redact,validatePlan,stores,calculateBasket,cents,blockedRequest} from '../../../src/lib/agents/core.ts';
 import {interpret,interpretAction,executeTool,ProviderError,type Config,type DB} from './runtime.ts';
 declare const Deno:{env:{get:(k:string)=>string|undefined};serve:(handler:(req:Request)=>Promise<Response>)=>void};
 const env=(k:string)=>Deno.env.get(k);
@@ -39,6 +39,12 @@ Deno.serve(async req=>{
  // Unknown addresses share a bucket; atomic global budgets remain the hard abuse boundary.
  const network=(req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()||'unknown').slice(0,100);
  const day=new Date().toISOString().slice(0,10);const ip=await hash(`network:${day}:${network}`);subject=await hash(user?`user:${day}:${user}`:`anon:${day}:${network}`);
+ if(body.action==='save_list'){
+ if(!user)return json({error:'Sign in to save a list'},401);
+ if(body.confirm!==true||!Array.isArray(body.items)||body.items.length<1||body.items.length>12||!Number.isInteger(body.budgetCents)||Number(body.budgetCents)<0||Number(body.budgetCents)>500000||!/^[0-9a-f-]{36}$/i.test(String(body.requestId||'')))return json({error:'Invalid list'},400);
+ for(const v of body.items){const item=object(v);if(!/^[0-9a-f-]{36}$/i.test(String(item.id))||!Number.isInteger(item.quantity)||Number(item.quantity)<1||Number(item.quantity)>20)return json({error:'Invalid item'},400);}
+ const id=await db('/rpc/agent_save_list',{p_user:user,p_request:body.requestId,p_items:body.items,p_budget:body.budgetCents});return json({ok:true,id});
+ }
  if(body.action==='feedback'){
  const id=String(body.eventId||'');if(!/^[0-9a-f-]{36}$/i.test(id)||![1,-1].includes(Number(body.vote)))return json({error:'Invalid feedback'},400);
  const owned=await db(`/agent_events?select=id&id=eq.${id}&subject=eq.${subject}&limit=1`) as unknown[];if(!owned.length)return json({error:'Answer not found'},404);
@@ -47,8 +53,21 @@ Deno.serve(async req=>{
  if(!Array.isArray(body.stores)||body.stores.length>7||!body.stores.length||body.stores.some(s=>!stores.includes(s as typeof stores[number])))return json({error:'Choose valid stores'},400);
  if(body.consent!==true)return json({error:'Please accept the AI privacy notice first'},400);
  const chosen=[...new Set(body.stores as string[])].sort();const prompt=redact(body.prompt.trim());
+ if(blockedRequest(prompt))return json({fallback:true,message:'I can help with current deals and shopping lists. Please use a shopping question or normal search.'});
  const reserve=(p:string)=>db('/rpc/agent_reserve',{p_subject:subject,p_ip:ip,p_signed:!!user,p_provider:p}) as Promise<boolean>;
  if(!await reserve('request'))return json({fallback:true,message:'Assistant allowance reached. Please use search and filters.'});
+ if(body.action==='planner'){
+ if(!env('GROQ_API_KEY'))return json({fallback:true,message:'AI planning is awaiting server configuration. Use the existing shopping list.'});
+ if(!await reserve('groq'))return json({fallback:true,message:'Planner allowance reached. Use the existing shopping list.'});
+ reserved=4000;provider='groq';let parsed;
+ try{parsed=await interpretAction('planner',prompt,config,'groq',env);await db('/rpc/agent_circuit',{p_provider:'groq',p_failed:false});}
+ catch(e){const retry=e instanceof ProviderError&&(e.status===429||e.status>=500);await db('/rpc/agent_circuit',{p_provider:'groq',p_failed:retry});if(!retry||!config.fallback_enabled||!env('CLOUDFLARE_AI_TOKEN')||!await reserve('cloudflare'))throw e;reserved+=4000;provider='cloudflare';try{parsed=await interpretAction('planner',prompt,config,'cloudflare',env);await db('/rpc/agent_circuit',{p_provider:'cloudflare',p_failed:false});}catch(error){await db('/rpc/agent_circuit',{p_provider:'cloudflare',p_failed:true});throw error;}}
+ if(typeof parsed.budget!=='number')throw Error('Specify an AUD budget');cents(parsed.budget);
+ if(!Array.isArray(parsed.items)||parsed.items.length<1||parsed.items.length>12)throw Error('Use 1–12 items');
+ const lines=await Promise.all(parsed.items.map(async value=>{const v=object(value);if(typeof v.item!=='string'||!v.item.trim()||v.item.length>60||!Number.isInteger(v.quantity)||Number(v.quantity)<1||Number(v.quantity)>20)throw Error('Invalid list');const result=await executeTool(validatePlan({tool:'search_deals',query:v.item},chosen),db);return {item:v.item,quantity:Number(v.quantity),candidates:result.sources};}));
+ const basket=calculateBasket(lines,parsed.budget);event=crypto.randomUUID();await db('/agent_events',{id:event,subject,agent:'planner',tool:'planner',provider,reserved_tokens:reserved,latency_ms:Date.now()-start,status:'ok'});
+ return json({eventId:event,basket,message:basket.note});
+ }
  const cacheKey=await hash(JSON.stringify({v:1,prompt:prompt.toLowerCase().replace(/\s+/g,' '),stores:chosen,model:config.primary_model}));
  const cached=await db(`/agent_cache?select=plan&hash=eq.${cacheKey}&expires_at=gt.${new Date().toISOString()}&limit=1`) as {plan:unknown}[];
  let plan;if(cached.length)plan=validatePlan(cached[0].plan,chosen);
