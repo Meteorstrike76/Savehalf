@@ -1,0 +1,42 @@
+name: Encrypted private database backup
+on:
+  schedule:
+    - cron: '47 17 * * 0'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: savehalf-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    if: vars.SAVEHALF_BACKUPS_ENABLED == 'true' && github.event.repository.private == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    container: postgres:17
+    steps:
+      - name: Export application and auth data, encrypted before upload
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          BACKUP_ENCRYPTION_KEY: ${{ secrets.BACKUP_ENCRYPTION_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_DB_URL"
+          test "${#BACKUP_ENCRYPTION_KEY}" -ge 32
+          umask 077
+          trap 'rm -f savehalf.dump' EXIT
+          pg_dump --dbname="$SUPABASE_DB_URL" --format=custom --no-owner --no-acl --schema=public --schema=auth --schema=savehalf_private --file=savehalf.dump
+          openssl enc -aes-256-cbc -salt -pbkdf2 -iter 200000 -in savehalf.dump -out savehalf.dump.enc -pass env:BACKUP_ENCRYPTION_KEY
+          test "$(stat -c%s savehalf.dump.enc)" -lt 40000000
+          openssl dgst -sha256 -hmac "$BACKUP_ENCRYPTION_KEY" savehalf.dump.enc | awk '{print $NF}' > savehalf.dump.enc.hmac
+          sha256sum savehalf.dump.enc > savehalf.dump.enc.sha256
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: savehalf-encrypted-${{ github.run_id }}
+          path: |
+            savehalf.dump.enc
+            savehalf.dump.enc.sha256
+            savehalf.dump.enc.hmac
+          retention-days: 21
+          if-no-files-found: error

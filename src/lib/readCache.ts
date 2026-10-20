@@ -1,0 +1,3 @@
+const entries=new Map<string,{until:number;promise:Promise<unknown>}>();
+export function cachedRead<T>(key:string,fetcher:()=>Promise<T>,ttl=300000):Promise<T>{const old=entries.get(key);if(old&&old.until>Date.now())return old.promise as Promise<T>;for(const [k,v] of entries)if(v.until<=Date.now())entries.delete(k);while(entries.size>=40){const first=entries.keys().next().value;if(first!==undefined)entries.delete(first);else break;}const promise=fetcher().catch(e=>{if(entries.get(key)?.promise===promise)entries.delete(key);throw e;});entries.set(key,{until:Date.now()+ttl,promise});return promise;}
+export function clearReadCache(){entries.clear();}

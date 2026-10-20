@@ -1,0 +1,2 @@
+import {useEffect,useState} from 'react';
+export default function OfflineNotice(){const [offline,setOffline]=useState(!navigator.onLine);useEffect(()=>{const update=()=>setOffline(!navigator.onLine);addEventListener('online',update);addEventListener('offline',update);return()=>{removeEventListener('online',update);removeEventListener('offline',update);};},[]);return offline?<div className="offline-notice" role="status">You’re offline. Collected prices cannot be refreshed. <a href="/offline.html">Open last-known checklist</a></div>:null;}

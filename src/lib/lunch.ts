@@ -1,0 +1,9 @@
+export const LUNCH_KEY='savehalf-lunch-plan-v1';
+export type LunchOffer={id:string;title:string;venue:string;price:number|null;available_days:number[];expires_on:string|null;last_verified_at:string;conditions:string};
+export type LunchPlan={start:string;budget:string;choices:string[]};
+export function validDate(s:string){return /^\d{4}-\d{2}-\d{2}$/.test(s)&&Number.isFinite(Date.parse(s+'T12:00:00Z'))&&new Date(s+'T12:00:00Z').toISOString().slice(0,10)===s;}
+export function validLunch(p:unknown):p is LunchPlan{const v=p as LunchPlan;return !!v&&typeof v.start==='string'&&validDate(v.start)&&new Date(v.start+'T12:00:00Z').getUTCDay()===1&&typeof v.budget==='string'&&v.budget.length<=12&&(v.budget===''||/^\d+(\.\d{1,2})?$/.test(v.budget)&&Number(v.budget)<=5000)&&Array.isArray(v.choices)&&v.choices.length===5&&v.choices.every(x=>typeof x==='string'&&x.length<=120);}
+export function nextMonday(today:string){const d=new Date(today+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+(8-d.getUTCDay())%7);return d.toISOString().slice(0,10);}
+export function planDate(start:string,index:number){const d=new Date(start+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+index);return d.toISOString().slice(0,10);}
+export function lunchEligible(o:LunchOffer,date:string,now=Date.now()){return validDate(date)&&Number.isFinite(o.price)&&o.price!==null&&o.price>=0&&o.price<=5000&&Number.isFinite(Date.parse(o.last_verified_at))&&Date.parse(o.last_verified_at)<=now&&now-Date.parse(o.last_verified_at)<=48*3600000&&o.available_days.includes(new Date(date+'T12:00:00Z').getUTCDay())&&(!o.expires_on||validDate(o.expires_on)&&o.expires_on>=date);}
+export function readLunch(today:string):LunchPlan{try{const p=JSON.parse(localStorage.getItem(LUNCH_KEY)||'null');if(validLunch(p))return p;}catch{/* Optional local data. */}return {start:nextMonday(today),budget:'50',choices:['','','','','']};}

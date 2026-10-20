@@ -1,0 +1,37 @@
+name: Lighthouse evidence
+on:
+  workflow_dispatch:
+    inputs:
+      audit_url:
+        description: Public app URL to measure (run once before and once after a release)
+        required: true
+        default: https://savehalf.vercel.app/
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --prefix scraper
+      - run: mkdir -p audit
+      - run: bash tools/lighthouse-audit.sh
+        env:
+          AUDIT_URL: ${{ inputs.audit_url }}
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: node tools/screenshots.mjs
+        env:
+          AUDIT_URL: ${{ inputs.audit_url }}
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: test "$(du -sb audit | cut -f1)" -lt 30000000
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lighthouse-${{ github.run_id }}
+          path: audit/
+          retention-days: 7

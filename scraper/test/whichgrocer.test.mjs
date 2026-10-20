@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {providerRows,projectedProviderCount} from '../src/lib/whichgrocer.mjs';
+const now=Date.parse('2026-10-19T06:00:00Z'),p={id:'coles_1',name:'Coffee 200g',price:2,currency:'AUD',store:'coles',url:'https://www.coles.com.au/product/1',out_of_stock:false,updated_at:'2026-10-16T00:00:00Z',price_stats:{average_30d:4}};
+test('provider data preserves dated catalogue price and average without a was-price',()=>{const [r]=providerRows([{data:[p,p]}],now);assert.equal(r.price,2);assert.equal(r.average_30d,4);assert.equal(r.source_updated_at,p.updated_at.replace('Z','.000Z'));assert.equal(r.original_price,undefined);assert.equal(providerRows([{data:[p,p]}],now).length,1);});
+test('provider import rejects stale, stock, external-host and currency failures',()=>{for(const patch of [{updated_at:'2026-10-01T00:00:00Z'},{out_of_stock:true},{url:'https://evil.example/'},{currency:'USD'},{price:0},{store:'target'}])assert.equal(providerRows([{data:[{...p,...patch}]}],now).length,0);});
+
+test('provider capacity counts new IDs only so idempotent refreshes remain possible',()=>{assert.equal(projectedProviderCount(999,[{id:'a'},{id:'b'},{id:'b'}],['a']),1000);assert.equal(projectedProviderCount(1000,[{id:'a'}],['a']),1000);assert.equal(projectedProviderCount(1000,[{id:'new'}],[]),1001);});

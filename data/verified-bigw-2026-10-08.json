@@ -1,0 +1,137 @@
+{
+  "note": "Retailer listing prices reviewed 8 October 2026. Verify local stock, sizes and checkout price. Fashion previous prices omitted because individual pages did not show them. Manual import, not a successful automated retailer collection.",
+  "products": [
+    {
+      "store_category": "Big W",
+      "external_id": "972303",
+      "title": "Altec Lansing True Wireless Earbuds - Black",
+      "discount_price": 23,
+      "original_price": 39.95,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/altec-lansing-true-wireless-earbuds-black/p/972303",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "104816",
+      "title": "Belkin SoundForm Mini On-Ear Wireless Headphones for Kids",
+      "discount_price": 34,
+      "original_price": 49.95,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/belkin-soundform-mini-on-ear-wireless-headphones-for-kids/p/104816",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "6035823",
+      "title": "Belkin SoundForm Surround Wireless Over-Ear Headphones - Black",
+      "discount_price": 48,
+      "original_price": 69.95,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/belkin-soundform-surround-wireless-over-ear-headphones-black/p/6035823",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "6068691",
+      "title": "EKO Bluetooth Active Noise Cancelling Headphone - Black",
+      "discount_price": 13,
+      "original_price": 19,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/eko-bluetooth-active-noise-cancelling-headphone-black/p/6068691",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "101926",
+      "title": "Moki Hyper Headphones - Orange",
+      "discount_price": 6,
+      "original_price": 19,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/moki-hyper-headphones-orange/p/101926",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "169437",
+      "title": "EKO Wi-Fi Outdoor Security Camera",
+      "discount_price": 36,
+      "original_price": 52.45,
+      "category": "Electronics",
+      "deal_url": "https://www.bigw.com.au/product/eko-wi-fi-outdoor-security-camera/p/169437",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1647614-baywash",
+      "title": "Avella Women's Denim Jacket - Bay Wash",
+      "discount_price": 10,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/avella-women-s-denim-jacket-bay-wash/p/1647614-baywash",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1647002-atlantiswash",
+      "title": "The 1964 Denim Company Women's Straight Leg Jean - Atlantis Wash",
+      "discount_price": 10,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/the-1964-denim-company-women-s-straight-leg-jean-atlantis-wash/p/1647002-atlantiswash",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1647026-reefwash",
+      "title": "The 1964 Denim Company Women's Wide Leg Jeans - Reef Wash",
+      "discount_price": 15,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/the-1964-denim-company-women-s-wide-leg-jeans-reef-wash/p/1647026-reefwash",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1767665-neutral",
+      "title": "Brilliant Basics Women's Bamboo Crew Socks 5 Pack - Neutral",
+      "discount_price": 7,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/brilliant-basics-women-s-bamboo-crew-socks-5-pack-neutral/p/1767665-neutral",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1786887-borderprint",
+      "title": "&me Women's Abstract Print Dress - Burgundy",
+      "discount_price": 15,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/me-women-s-abstract-print-dress-burgundy/p/1786887-borderprint",
+      "source_feed": "direct",
+      "is_active": true
+    },
+    {
+      "store_category": "Big W",
+      "external_id": "1786661-burgundy",
+      "title": "Avella Women's Abstract Print Pants - Burgundy",
+      "discount_price": 15,
+      "original_price": null,
+      "category": "Fashion",
+      "deal_url": "https://www.bigw.com.au/product/avella-women-s-abstract-print-pants-burgundy/p/1786661-burgundy",
+      "source_feed": "direct",
+      "is_active": true
+    }
+  ]
+}
