@@ -39,8 +39,11 @@ Deno.serve(async req=>{
  }
  // Platform verifies JWT. Validate user JWT against Auth; never trust decoded claims/user IDs.
  const authorization=req.headers.get('authorization')||'';const bearer=authorization.replace(/^Bearer /i,'');let user:string|null=null;
+ // A gateway-verified public anon JWT may differ from the runtime key after rotation.
+ // Reading its role can only downgrade to anonymous; authenticated identity still requires Auth.
+ let publicAnon=false;try{const claims=object(JSON.parse(atob(bearer.split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))));publicAnon=claims.role==='anon';}catch{/* Opaque/invalid tokens must use the normal Auth validation path. */}
  if((body.action==='owner_smoke'||body.action==='owner_planner_smoke')&&owner)user='owner-smoke';
- else if(bearer&&bearer!==env('SUPABASE_ANON_KEY')){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
+ else if(bearer&&bearer!==env('SUPABASE_ANON_KEY')&&!publicAnon){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
  // The gateway's final forwarded address is an advisory network throttle, not identity.
  // Unknown addresses share a bucket; atomic global budgets remain the hard abuse boundary.
  const network=(req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()||'unknown').slice(0,100);
