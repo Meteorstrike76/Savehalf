@@ -49,3 +49,10 @@ export async function interpretAction(kind:'quality'|'planner',input:string,conf
  const result=object(await r.json());const calls=(result.choices as {message:{tool_calls?:{function:{name:string;arguments:string}}[]}}[])?.[0]?.message?.tool_calls;
  if(calls?.length!==1||calls[0].function.name!==kind)throw Error('Invalid tool');return object(JSON.parse(calls[0].function.arguments));
 }
+
+export async function exactBarcodePrices(barcode:string,chosen:string[],db:DB,now=Date.now()):Promise<Evidence[]>{
+ if(!/^\d{8}$|^\d{12,14}$/.test(barcode))return [];
+ const ids=(await db(`/deals?select=id&barcode=eq.${barcode}&is_active=eq.true&limit=12`) as {id:string}[]).map(r=>r.id).filter(id=>/^[0-9a-f-]{36}$/i.test(id));if(!ids.length)return [];
+ const rows=await db(`/current_deals?select=id,title,store_category,discount_price,last_seen_at,deal_url,discount_pct,unit_price,unit_basis,image_url,original_price&id=in.(${ids.join(',')})&limit=12`) as Record<string,unknown>[];
+ return grounded(rows.filter(r=>chosen.includes(String(r.store_category))).map(r=>({id:String(r.id),title:String(r.title),store:String(r.store_category),price:Number(r.discount_price),checked:String(r.last_seen_at),url:safeUrl(r.deal_url),discount:Number(r.discount_pct),image:safeUrl(r.image_url),was:Number(r.original_price)>Number(r.discount_price)?Number(r.original_price):undefined,unitPrice:r.unit_price==null?undefined:Number(r.unit_price),unitBasis:String(r.unit_basis||'')})),now).sort((a,b)=>a.price-b.price);
+}

@@ -1,7 +1,7 @@
 import {object,redact,validatePlan,stores,calculateBasket,cents,blockedRequest} from '../../../src/lib/agents/core.ts';
-import {routeQuestion,reportSchema} from '../../../src/lib/agents/v2.ts';
+import {routeQuestion,reportSchema,barcodeSchema} from '../../../src/lib/agents/v2.ts';
 import {readFlags,verifyChallenge,lookupBarcode} from './integrations.ts';
-import {interpret,interpretAction,executeTool,ProviderError,type Config,type DB} from './runtime.ts';
+import {interpret,interpretAction,executeTool,exactBarcodePrices,ProviderError,type Config,type DB} from './runtime.ts';
 declare const Deno:{env:{get:(k:string)=>string|undefined};serve:(handler:(req:Request)=>Promise<Response>)=>void};
 const env=(k:string)=>Deno.env.get(k);
 const base=env('SUPABASE_URL')||'';
@@ -61,10 +61,12 @@ Deno.serve(async req=>{
    await db('/price_reports',{user_id:user,deal_id:report.dealId,reason:report.reason});return json({ok:true,message:'Thanks. This report is pending review; the published price has not been changed.'});
  }
  if(body.action==='lookup_barcode'){
-   if(!v2||!flags['enrichment.off']?.enabled)return json({fallback:true,message:'Barcode enrichment is off. Enter the product name in search.'});
+   if(!v2)return json({fallback:true,message:'Barcode lookup is off. Enter the product name in search.'});
+   const barcode=barcodeSchema.parse(body.barcode);const selected=Array.isArray(body.stores)?body.stores.filter((s):s is string=>typeof s==='string'&&stores.includes(s as typeof stores[number])):[...stores];
    if(!await db('/rpc/integration_reserve',{p_scope:'assistant',p_subject:subject,p_signed:!!user}))return json({fallback:true,message:'Lookup allowance reached. Normal search remains available.'});
-   const product=await lookupBarcode(body.barcode,db,()=>db('/rpc/integration_reserve',{p_scope:'off',p_subject:subject,p_signed:!!user}) as Promise<boolean>);
-   return json({product});
+   const sources=await exactBarcodePrices(barcode,selected,db);
+   const product=flags['enrichment.off']?.enabled?await lookupBarcode(barcode,db,()=>db('/rpc/integration_reserve',{p_scope:'off',p_subject:subject,p_signed:!!user}) as Promise<boolean>):{barcode,message:'External enrichment is off. Only verified retailer barcode matches are shown.'};
+   return json({product,sources,message:sources.length?'Verified retailer barcode matches; compare pack sizes and source conditions.':'No fresh retailer barcode match was found. A name search may find similar products, not guaranteed equivalents.'});
  }
  if(v2&&typeof body.prompt==='string'&&Array.isArray(body.stores)&&body.stores.length&&body.stores.length<=7&&body.stores.every(s=>stores.includes(s as typeof stores[number]))){
    const chosen=[...new Set(body.stores as string[])];const route=routeQuestion(body.prompt,chosen);
