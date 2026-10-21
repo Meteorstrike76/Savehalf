@@ -20,9 +20,9 @@ Deno.serve(async req=>{
  const reader=req.body?.getReader();let raw='';if(!reader)return json({error:'Empty request'},400);const decoder=new TextDecoder();let bytes=0;
  while(true){const {value,done}=await reader.read();if(done)break;bytes+=value.length;if(bytes>4096){await reader.cancel();return json({error:'Request too large'},413);}raw+=decoder.decode(value,{stream:true});}raw+=decoder.decode();
  const body=object(JSON.parse(raw));
- agentType=body.action==='planner'?'planner':body.action==='quality'?'quality':'deal';
+ agentType=(body.action==='planner'||body.action==='owner_planner_smoke')?'planner':body.action==='quality'?'quality':'deal';
  const owner=!!service&&req.headers.get('authorization')===`Bearer ${service}`;
- if((body.action==='readiness'||body.action==='owner_smoke')&&!owner)return json({error:'Owner access required'},403);
+ if((body.action==='readiness'||body.action==='owner_smoke'||body.action==='owner_planner_smoke')&&!owner)return json({error:'Owner access required'},403);
  const config=(await db('/agent_config?select=enabled,owner_only,primary_model,fallback_model,fallback_enabled&id=eq.true') as Config[])[0];
  if(body.action==='readiness')return json({enabled:config?.enabled===true,ownerOnly:config?.owner_only!==false,credentials:{groq:!!env('GROQ_API_KEY'),hashSecret:(env('AGENT_HASH_SECRET')?.length||0)>=32,cloudflare:!!env('CLOUDFLARE_AI_TOKEN')&&/^[a-f0-9]{32}$/.test(env('CLOUDFLARE_ACCOUNT_ID')||'')},modelsAllowed:config?.primary_model==='openai/gpt-oss-20b'&&config?.fallback_model==='@cf/meta/llama-3.1-8b-instruct-fp8-fast',freeAccountVerified:false,note:'Key presence only; verify Free account limits directly with each provider. No inference was called.'});
  if(!config?.enabled)return json({fallback:true,message:'The AI assistant is switched off. Search and filters are still available.'});
@@ -39,7 +39,7 @@ Deno.serve(async req=>{
  }
  // Platform verifies JWT. Validate user JWT against Auth; never trust decoded claims/user IDs.
  const authorization=req.headers.get('authorization')||'';const bearer=authorization.replace(/^Bearer /i,'');let user:string|null=null;
- if(body.action==='owner_smoke'&&owner)user='owner-smoke';
+ if((body.action==='owner_smoke'||body.action==='owner_planner_smoke')&&owner)user='owner-smoke';
  else if(bearer&&bearer!==env('SUPABASE_ANON_KEY')){const auth=await fetch(`${base}/auth/v1/user`,{headers:{apikey:env('SUPABASE_ANON_KEY')||'',Authorization:authorization},signal:AbortSignal.timeout(4000)});if(!auth.ok)return json({error:'Please sign in again'},401);const data=object(await auth.json());if(data.is_anonymous!==true&&typeof data.id==='string')user=data.id;}
  // The gateway's final forwarded address is an advisory network throttle, not identity.
  // Unknown addresses share a bucket; atomic global budgets remain the hard abuse boundary.
@@ -62,7 +62,7 @@ Deno.serve(async req=>{
  if(blockedRequest(prompt))return json({fallback:true,message:'I can help with current deals and shopping lists. Please use a shopping question or normal search.'});
  const reserve=(p:string)=>db('/rpc/agent_reserve',{p_subject:subject,p_ip:ip,p_signed:!!user,p_provider:p}) as Promise<boolean>;
  if(!await reserve('request'))return json({fallback:true,message:'Assistant allowance reached. Please use search and filters.'});
- if(body.action==='planner'){
+ if(body.action==='planner'||body.action==='owner_planner_smoke'){
  if(!env('GROQ_API_KEY'))return json({fallback:true,message:'AI planning is awaiting server configuration. Use the existing shopping list.'});
  if(!await reserve('groq'))return json({fallback:true,message:'Planner allowance reached. Use the existing shopping list.'});
  reserved=4000;provider='groq';let parsed;
