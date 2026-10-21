@@ -3,7 +3,7 @@ export const stores = ['Coles','Woolworths','Aldi','Big W','Kmart','Target','Bes
 export const tools = ['search_deals','compare_prices','get_price_history','get_unit_price_ranking','find_cheap_eats'] as const;
 export type Tool = typeof tools[number];
 export type Plan = {tool:Tool;query:string;stores:string[];maxPrice:number;minDiscount:number;productId?:string;suburb?:string;category?:string};
-export type Evidence = {id:string;title:string;store:string;price:number;checked:string;url:string;discount?:number;unitPrice?:number;unitBasis?:string;conditions?:string};
+export type Evidence = {id:string;title:string;store:string;price:number;checked:string;url:string;discount?:number;unitPrice?:number;unitBasis?:string;conditions?:string;image?:string;was?:number};
 export function object(v:unknown):Record<string,unknown> {if(!v||typeof v!=='object'||Array.isArray(v))throw Error('Invalid object');return v as Record<string,unknown>;}
 function bounded(v:unknown,min:number,max:number,fallback:number){if(v===undefined)return fallback;if(typeof v!=='number'||!Number.isFinite(v)||v<min||v>max)throw Error('Invalid number');return v;}
 export function validatePlan(value:unknown,chosen:readonly string[]):Plan {

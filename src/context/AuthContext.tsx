@@ -9,11 +9,11 @@ type AuthContextType = {
   loading: boolean;
   recovery:boolean;
   finishRecovery:()=>void;
-  requestPasswordReset:(email:string)=>Promise<Result>;
+  requestPasswordReset:(email:string,captchaToken?:string)=>Promise<Result>;
   updatePassword:(password:string)=>Promise<Result>;
-  signUp: (email: string, password: string) => Promise<Result>;
-  signIn: (email: string, password: string) => Promise<Result>;
-  resendConfirmation: (email: string) => Promise<Result>;
+  signUp: (email: string, password: string, captchaToken?: string) => Promise<Result>;
+  signIn: (email: string, password: string, captchaToken?: string) => Promise<Result>;
+  resendConfirmation: (email: string,captchaToken?:string) => Promise<Result>;
   signInGoogle: () => Promise<Result>;
   signOut: () => Promise<void>;
 };
@@ -40,19 +40,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user: session?.user ?? null,
       loading,recovery,finishRecovery:()=>setRecovery(false),
-      requestPasswordReset:async(email)=>{const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:`${window.location.origin}/`});return {error:error?.message??null};},
+      requestPasswordReset:async(email,captchaToken)=>{const {error}=await supabase.auth.resetPasswordForEmail(email,{captchaToken,redirectTo:`${window.location.origin}/`});return {error:error?.message??null};},
       updatePassword:async(password)=>{if(password.length<12)return {error:'Use at least 12 characters.'};const {error}=await supabase.auth.updateUser({password});return {error:error?.message??null};},
-      signUp: async (email, password) => {
+      signUp: async (email, password, captchaToken) => {
         if(password.length<12)return {error:'Use at least 12 characters.'};
-        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/` } });
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { captchaToken, emailRedirectTo: `${window.location.origin}/` } });
         return { error: error?.message ?? null, needsConfirmation: !error && !data.session };
       },
-      signIn: async (email, password) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+      signIn: async (email, password, captchaToken) => {
+        const { error } = await supabase.auth.signInWithPassword({ email, password, options:{captchaToken} });
         return { error: error?.message ?? null };
       },
-      resendConfirmation: async (email) => {
-        const { error } = await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo:`${window.location.origin}/`}});
+      resendConfirmation: async (email,captchaToken) => {
+        const { error } = await supabase.auth.resend({type:'signup',email,options:{captchaToken,emailRedirectTo:`${window.location.origin}/`}});
         return {error:error?.message??null};
       },
       signInGoogle: async () => {
