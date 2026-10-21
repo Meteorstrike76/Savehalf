@@ -1,5 +1,7 @@
 import {object,redact,validatePlan,stores,calculateBasket,cents,blockedRequest} from '../../../src/lib/agents/core.ts';
-import {interpret,interpretAction,executeTool,ProviderError,type Config,type DB} from './runtime.ts';
+import {routeQuestion,reportSchema,barcodeSchema} from '../../../src/lib/agents/v2.ts';
+import {readFlags,verifyChallenge,lookupBarcode} from './integrations.ts';
+import {interpret,interpretAction,executeTool,exactBarcodePrices,ProviderError,type Config,type DB} from './runtime.ts';
 declare const Deno:{env:{get:(k:string)=>string|undefined};serve:(handler:(req:Request)=>Promise<Response>)=>void};
 const env=(k:string)=>Deno.env.get(k);
 const base=env('SUPABASE_URL')||'';
@@ -25,9 +27,10 @@ Deno.serve(async req=>{
  if((body.action==='readiness'||body.action==='owner_smoke'||body.action==='owner_planner_smoke')&&!owner)return json({error:'Owner access required'},403);
  const config=(await db('/agent_config?select=enabled,owner_only,primary_model,fallback_model,fallback_enabled&id=eq.true') as Config[])[0];
  if(body.action==='readiness')return json({enabled:config?.enabled===true,ownerOnly:config?.owner_only!==false,credentials:{groq:!!env('GROQ_API_KEY'),hashSecret:(env('AGENT_HASH_SECRET')?.length||0)>=32,cloudflare:!!env('CLOUDFLARE_AI_TOKEN')&&/^[a-f0-9]{32}$/.test(env('CLOUDFLARE_ACCOUNT_ID')||'')},modelsAllowed:config?.primary_model==='openai/gpt-oss-20b'&&config?.fallback_model==='@cf/meta/llama-3.1-8b-instruct-fp8-fast',freeAccountVerified:false,note:'Key presence only; verify Free account limits directly with each provider. No inference was called.'});
- if(!config?.enabled)return json({fallback:true,message:'The AI assistant is switched off. Search and filters are still available.'});
+
  if(config.owner_only!==false&&!owner)return json({fallback:true,message:'The AI assistant is being tested privately. Normal search and filters are available.'});
  if(body.action==='quality'){
+   if(!config?.enabled)return json({suggestion:null});
    if(req.headers.get('authorization')!==`Bearer ${service}`)return json({error:'Not allowed'},403);
    if(typeof body.title!=='string'||body.title.length>200)return json({error:'Invalid title'},400);
    subject=await hash('quality:'+new Date().toISOString().slice(0,10));
@@ -48,6 +51,35 @@ Deno.serve(async req=>{
  // Unknown addresses share a bucket; atomic global budgets remain the hard abuse boundary.
  const network=(req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim()||'unknown').slice(0,100);
  const day=new Date().toISOString().slice(0,10);const ip=await hash(`network:${day}:${network}`);subject=await hash(user?`user:${day}:${user}`:`anon:${day}:${network}`);
+ const flags=await readFlags(db);
+ const v2=flags['assistant.v2']?.enabled===true;
+ const emit=(result:{sources:unknown[];history?:unknown[];notice:string},id?:string)=>new Response(new ReadableStream({start(controller){for(const data of [{type:'answer',eventId:id,message:result.sources.length?result.notice:'No fresh matching data was found. Try another store or normal search.'},...result.sources.map(source=>({type:'source',source})),...(result.history?[{type:'history',history:result.history}]:[]),{type:'done'}])controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));controller.close();}}),{headers:{...headers,'Content-Type':'text/event-stream'}});
+ if(body.action==='report_price'){
+   if(!user)return json({error:'Sign in to report a price'},401);
+   const report=reportSchema.parse(body.report);
+   if(!await db('/rpc/integration_reserve',{p_scope:'report',p_subject:subject,p_signed:true}))return json({error:'Report allowance reached'},429);
+   await db('/price_reports',{user_id:user,deal_id:report.dealId,reason:report.reason});return json({ok:true,message:'Thanks. This report is pending review; the published price has not been changed.'});
+ }
+ if(body.action==='lookup_barcode'){
+   if(!v2)return json({fallback:true,message:'Barcode lookup is off. Enter the product name in search.'});
+   const barcode=barcodeSchema.parse(body.barcode);const selected=Array.isArray(body.stores)?body.stores.filter((s):s is string=>typeof s==='string'&&stores.includes(s as typeof stores[number])):[...stores];
+   if(!await db('/rpc/integration_reserve',{p_scope:'assistant',p_subject:subject,p_signed:!!user}))return json({fallback:true,message:'Lookup allowance reached. Normal search remains available.'});
+   const sources=await exactBarcodePrices(barcode,selected,db);
+   const product=flags['enrichment.off']?.enabled?await lookupBarcode(barcode,db,()=>db('/rpc/integration_reserve',{p_scope:'off',p_subject:subject,p_signed:!!user}) as Promise<boolean>):{barcode,message:'External enrichment is off. Only verified retailer barcode matches are shown.'};
+   return json({product,sources,message:sources.length?'Verified retailer barcode matches; compare pack sizes and source conditions.':'No fresh retailer barcode match was found. A name search may find similar products, not guaranteed equivalents.'});
+ }
+ if(v2&&typeof body.prompt==='string'&&Array.isArray(body.stores)&&body.stores.length&&body.stores.length<=7&&body.stores.every(s=>stores.includes(s as typeof stores[number]))){
+   const chosen=[...new Set(body.stores as string[])];const route=routeQuestion(body.prompt,chosen);
+   if(route.kind==='blocked'||route.kind==='faq')return json({message:route.message,mode:'built-in'});
+   if(route.kind!=='model'&&await db('/rpc/integration_reserve',{p_scope:'assistant',p_subject:subject,p_signed:!!user})){
+     if(route.kind==='planner'){
+       const lines=[];for(const item of route.items){const result=await executeTool(validatePlan({tool:'search_deals',query:item.item},chosen),db);lines.push({...item,candidates:result.sources});}
+       const basket=calculateBasket(lines,route.budget);event=crypto.randomUUID();await db('/agent_events',{id:event,subject,agent:'planner',tool:'planner',provider:'rules',reserved_tokens:0,latency_ms:Date.now()-start,status:'ok'});return json({eventId:event,basket,message:basket.note,mode:'built-in'});
+     }
+     const result=await executeTool(route.plan,db);event=crypto.randomUUID();await db('/agent_events',{id:event,subject,agent:'deal',tool:route.plan.tool,provider:'rules',reserved_tokens:0,latency_ms:Date.now()-start,status:result.sources.length?'ok':'no_data'});return emit(result,event);
+   }
+   if(route.kind!=='model')return json({fallback:true,message:'Assistant allowance reached. Use normal search and filters.'});
+ }
  if(body.action==='save_list'){
  if(!user)return json({error:'Sign in to save a list'},401);
  if(body.confirm!==true||!Array.isArray(body.items)||body.items.length<1||body.items.length>12||!Number.isInteger(body.budgetCents)||Number(body.budgetCents)<0||Number(body.budgetCents)>500000||!/^[0-9a-f-]{36}$/i.test(String(body.requestId||'')))return json({error:'Invalid list'},400);
@@ -58,11 +90,13 @@ Deno.serve(async req=>{
  const id=String(body.eventId||'');if(!/^[0-9a-f-]{36}$/i.test(id)||![1,-1].includes(Number(body.vote)))return json({error:'Invalid feedback'},400);
  const owned=await db(`/agent_events?select=id&id=eq.${id}&subject=eq.${subject}&limit=1`) as unknown[];if(!owned.length)return json({error:'Answer not found'},404);
  await db('/agent_feedback?on_conflict=event_id',{event_id:id,vote:Number(body.vote)},'POST');return json({ok:true});}
+ if(!config?.enabled)return json({fallback:true,message:'The AI assistant is switched off. Search and filters are still available.'});
  if(typeof body.prompt!=='string'||!body.prompt.trim()||body.prompt.length>240)return json({error:'Use a question of 1–240 characters'},400);
  if(!Array.isArray(body.stores)||body.stores.length>7||!body.stores.length||body.stores.some(s=>!stores.includes(s as typeof stores[number])))return json({error:'Choose valid stores'},400);
  if(body.consent!==true)return json({error:'Please accept the AI privacy notice first'},400);
  const chosen=[...new Set(body.stores as string[])].sort();const prompt=redact(body.prompt.trim());
  if(blockedRequest(prompt))return json({fallback:true,message:'I can help with current deals and shopping lists. Please use a shopping question or normal search.'});
+ if(flags['security.turnstile']?.enabled&&!owner&&!await verifyChallenge(body.challenge,env('TURNSTILE_SECRET_KEY'),new URL(origin||'https://savehalf.vercel.app').hostname))return json({error:'Please complete the security check, or use normal search.'},403);
  const reserve=(p:string)=>db('/rpc/agent_reserve',{p_subject:subject,p_ip:ip,p_signed:!!user,p_provider:p}) as Promise<boolean>;
  if(!await reserve('request'))return json({fallback:true,message:'Assistant allowance reached. Please use search and filters.'});
  if(body.action==='planner'||body.action==='owner_planner_smoke'){

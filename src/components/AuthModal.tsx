@@ -1,11 +1,13 @@
-import { useState, type FormEvent } from 'react';
+import { lazy,Suspense,useState, type FormEvent } from 'react';
 import { Loader2, MailCheck } from 'lucide-react';
 import Modal from '@/components/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { isConfigured } from '@/lib/supabase';
 
+const Turnstile=lazy(()=>import('./Turnstile'));
 export default function AuthModal({ open, onClose, reason }: { open: boolean; onClose: () => void; reason?: string }) {
   const { signIn, signUp, signInGoogle, resendConfirmation, requestPasswordReset } = useAuth();
+  const [captchaToken,setCaptchaToken]=useState(''),[captchaKey,setCaptchaKey]=useState(0);
   const [mode, setMode] = useState<'login' | 'signup' | 'reset'>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,20 +23,20 @@ export default function AuthModal({ open, onClose, reason }: { open: boolean; on
     if (!isConfigured) return setError('Supabase is not configured yet. Add your env vars.');
     setBusy(true); setError(null);
     try {
-    if(mode==='reset'){const res=await requestPasswordReset(email.trim());if(res.error)return setError('We could not request the reset email. Please try again later.');setResetSent(true);return;}
-    const res = mode === 'login' ? await signIn(email.trim(), password) : await signUp(email.trim(), password);
+    if(mode==='reset'){const res=await requestPasswordReset(email.trim(),captchaToken);if(res.error)return setError('We could not request the reset email. Please try again later.');setResetSent(true);return;}
+    const res = mode === 'login' ? await signIn(email.trim(), password,captchaToken) : await signUp(email.trim(), password,captchaToken);
     if (res.error) return setError(res.error);
     if (mode === 'signup' && res.needsConfirmation) return setConfirm(true);
     reset(); onClose();
     } catch {setError('We could not reach the sign-in service. Please try again.');}
-    finally {setBusy(false);}
+    finally {setBusy(false);setCaptchaToken('');setCaptchaKey(k=>k+1);}
   };
 
   const resend = async () => {
     setBusy(true);setError(null);setResent(false);
-    try{const result=await resendConfirmation(email.trim());if(result.error)setError(result.error);else setResent(true);}
+    try{const result=await resendConfirmation(email.trim(),captchaToken);if(result.error)setError(result.error);else setResent(true);}
     catch{setError('We could not resend the email. Please try again.');}
-    finally{setBusy(false);}
+    finally{setBusy(false);setCaptchaToken('');setCaptchaKey(k=>k+1);}
   };
 
   const google = async () => {
@@ -42,7 +44,7 @@ export default function AuthModal({ open, onClose, reason }: { open: boolean; on
     setBusy(true);setError(null);
     try {const result=await signInGoogle();if(result.error)setError(result.error);}
     catch {setError('Google sign-in could not start. Please try again.');}
-    finally {setBusy(false);}
+    finally {setBusy(false);setCaptchaToken('');setCaptchaKey(k=>k+1);}
   };
 
   return (
@@ -91,6 +93,7 @@ export default function AuthModal({ open, onClose, reason }: { open: boolean; on
           </p>}
         </form>
       )}
+      {open&&<Suspense fallback={null}><Turnstile key={captchaKey} action="savehalf-auth" onToken={setCaptchaToken}/></Suspense>}
     </Modal>
   );
 }

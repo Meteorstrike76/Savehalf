@@ -31,3 +31,8 @@ scraper/.env
 supabase/.temp/
 
 .env.collector
+
+# Local evaluation and audit output (never upload shopper data)
+tools/evals/.promptfoo/
+audit/
+.lighthouseci/

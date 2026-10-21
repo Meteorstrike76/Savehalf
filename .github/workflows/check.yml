@@ -24,6 +24,8 @@ jobs:
           VITE_SUPABASE_URL: https://savehalf-ci.invalid
           VITE_SUPABASE_ANON_KEY: savehalf-ci-public-fixture
       - run: node --test tests/*.test.cjs
+      - run: npm ci --prefix tools/evals --ignore-scripts
+      - run: npm test --prefix tools/evals
       - run: npm run test:ui
       - run: npm ci --prefix scraper
       - run: npm test --prefix scraper

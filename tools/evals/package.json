@@ -1,0 +1,1 @@
+{"name":"savehalf-offline-evals","private":true,"type":"module","scripts":{"test":"PROMPTFOO_DISABLE_TELEMETRY=1 promptfoo eval --config promptfooconfig.yaml --no-cache"},"devDependencies":{"promptfoo":"0.124.1"}}

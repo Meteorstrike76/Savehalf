@@ -1,0 +1,57 @@
+name: Rollout performance and accessibility
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tools/rollout/**'
+      - '.github/workflows/rollout-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: rollout-audit-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Before release — current production
+        run: |
+          mkdir -p audit/before
+          node_modules/.bin/lighthouse https://savehalf.vercel.app/ --chrome-flags='--headless --no-sandbox' --output=json --output-path=audit/before/lighthouse.json --quiet
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://mdbqlcnzbakimfjrfczz.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYnFsY256YmFraW1manJmY3p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MTgyNzcsImV4cCI6MjEwNjM5NDI3N30.B4FqibZN3WPy8h64UaDLUQUFUeQifztJGudJ9a7p8vI
+      - name: After release — local production build
+        run: |
+          npm run preview -- --host 127.0.0.1 > /tmp/savehalf-preview.log 2>&1 &
+          for i in {1..30}; do curl --fail --silent http://127.0.0.1:4173/ > /dev/null && break; sleep 1; done
+          node_modules/.bin/lighthouse http://127.0.0.1:4173/ --chrome-flags='--headless --no-sandbox' --output=json --output-path=audit/after-lighthouse.json --quiet
+          node tools/rollout/audit.mjs
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - name: Record Lighthouse categories
+        if: always()
+        run: |
+          node --input-type=module - <<'JS'
+          import fs from 'node:fs';
+          for(const name of ['before/lighthouse','after-lighthouse']) {const file='audit/'+name+'.json';if(!fs.existsSync(file))continue;const r=JSON.parse(fs.readFileSync(file));if(r.runtimeError)throw Error(r.runtimeError.message);fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'\n'+name+': '+JSON.stringify(Object.fromEntries(Object.entries(r.categories).map(([k,v])=>[k,Math.round(v.score*100)])))+'\n');}
+          JS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rollout-audit-${{ github.run_id }}
+          path: audit/
+          retention-days: 7

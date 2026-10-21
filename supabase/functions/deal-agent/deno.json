@@ -1,1 +1,11 @@
-{"compilerOptions":{"strict":true,"lib":["deno.window"]},"imports":{}}
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": [
+      "deno.window"
+    ]
+  },
+  "imports": {
+    "zod": "npm:zod@4.6.7"
+  }
+}

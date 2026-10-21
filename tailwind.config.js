@@ -6,7 +6,7 @@ export default {
       colors: {
         cream: { DEFAULT: '#f6f3ed', deep: '#e9e4da' },
         ink: { DEFAULT: '#17283f', soft: '#536171', mute: '#647080' },
-        tomato: { DEFAULT: '#e84132', dark: '#c82e22' },
+        tomato: { DEFAULT: '#b73529', dark: '#c82e22' },
         leaf: { DEFAULT: '#294563', light: '#e6e9ec' },
         butter: '#FFD84D',
       },
