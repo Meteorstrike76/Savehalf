@@ -1,0 +1,5 @@
+create or replace function public.integration_health() returns jsonb language sql stable set search_path='' as $$
+select jsonb_build_object('db_bytes',pg_database_size(current_database()),'pending_reports',(select count(*) from public.price_reports where status='pending'),'enrichment_rows',(select count(*) from public.product_enrichment),'agent_last_7_days',(select jsonb_agg(x) from (select status,count(*) as count from public.agent_events where created_at>now()-interval '7 days' group by status)x),'scrapes_last_7_days',(select jsonb_agg(x) from (select store,status,count(*) as count from public.scrape_runs where started_at>now()-interval '7 days' group by store,status)x),'legacy_collectors',(select jsonb_agg(x) from (select store,status,last_success_at,last_finished,saved,review_required from public.collection_status order by store limit 20)x),'low_rated',(select count(*) from public.agent_feedback where vote=-1));
+$$;
+revoke all on function public.integration_health() from public,anon,authenticated;
+grant execute on function public.integration_health() to service_role;

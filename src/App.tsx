@@ -3,7 +3,7 @@ import { ArrowRight, ArrowDownRight, ArrowUpRight, Bookmark, Check, ChevronDown,
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { useDeals, type SortKey } from '@/hooks/useDeals';
 import { useFavourites } from '@/hooks/useFavourites';
-import { CATEGORIES, STORE_IDS, STORES, type StoreId, type DealCategory } from '@/lib/stores';
+import { CATEGORIES, STORE_IDS, type StoreId, type DealCategory } from '@/lib/stores';
 import { supabase, DEAL_COLUMNS, toDeal, isConfigured, authReturnError, isAuthReturn, type Deal } from '@/lib/supabase';
 import ProductImage from '@/components/ProductImage';
 import PasswordRecovery from '@/components/PasswordRecovery';
@@ -37,7 +37,7 @@ const DealRadar=lazy(()=>import('@/components/DealRadar'));
 const HouseholdTools=lazy(()=>import('@/components/HouseholdTools'));
 const money = (n:number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD'}).format(n);
 function readSaved():Deal[] { try {const v=JSON.parse(localStorage.getItem('savehalf-bookmarks-v4') || '[]'); return Array.isArray(v) ? v.filter(d=>typeof d?.id==='string' && typeof d?.title==='string' && typeof d?.discountPrice==='number') : [];} catch {return [];} }
-function StoreLabel({store}:{store:StoreId}) {return <span className="store-label" style={{color:STORES[store].color}}>{store==='Woolworths'?'woolworths':store==='Target'?'◎ Target':store==='Aldi'?'ALDI':store}</span>;}
+function StoreLabel({store}:{store:StoreId}) {return <span className="store-label" style={{color:'#17283f'}}>{store==='Woolworths'?'woolworths':store==='Target'?'◎ Target':store==='Aldi'?'ALDI':store}</span>;}
 function Feed() {
  const [assistantOpen,setAssistantOpen]=useState(false);
  const [aiDisabled,setAiDisabled]=useState(()=>{try{return localStorage.getItem('savehalf-ai-disabled')==='true';}catch{return false;}});

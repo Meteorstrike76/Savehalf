@@ -46,3 +46,8 @@ Set the existing owner SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY securely, then run
 ## Backups
 
 Existing backup workflow is restricted to an explicitly enabled private repository and encrypts before upload. It remains gated until the owner configures the DB URL/encryption key and verifies a restore. Never enable plaintext backups in the public source repository. Use docs/OPERATIONS.md for export and restore procedure; verify auth/schema ownership separately in an isolated project, preserving production IDs and avoiding a destructive restore into live data.
+
+
+## Development-tooling advisories
+
+The old @lhci/cli wrapper pulled obsolete dependencies, so it was replaced with pinned Lighthouse 13.5.0 running directly in GitHub Actions. Compatible Vite/PostCSS/TypeScript-ESLint/Tailwind updates were applied. The subsequent audit reports 24 development-tree advisories (15 high, 7 moderate, 2 low), with remaining direct Vite/Tailwind fixes requiring major upgrades. Production-only audit reports zero known advisories. This is not a security guarantee. CI jobs are read-only, use synthetic fixtures for app tests, do not expose secrets to fork PRs, and audit servers bind to 127.0.0.1. Do not expose the Vite development server publicly. A separate major tooling migration should address the remaining advisories with visual regression checks; no forced audit upgrade was applied.
