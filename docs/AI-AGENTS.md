@@ -2,9 +2,9 @@
 
 ## Release status
 
-Groq Free and Cloudflare Workers AI Free were explicitly approved by the owner. No new dependency was added. The retired recipe endpoint remains retired. New agent code is implemented, but **live inference is disabled** until the owner supplies server credentials and verifies the account/model's Free allowance. No model calls were made during implementation. Mock-provider tests do not demonstrate actual model accuracy or availability.
+Groq Free and Cloudflare Workers AI Free were explicitly approved by the owner. No new dependency was added. Groq inference is now enabled as a capped public pilot after real server-side search and planner checks on 21 October 2026. Cloudflare fallback remains off because its credentials are absent. Provider account billing cannot be independently verified through these tools; no paid account or resource was activated. The retired recipe endpoint remains retired.
 
-Production scraping still uses Supabase Cron and the existing collectors. The GitHub quality step is prepared behind a disabled workflow gate. GitHub write access recovered on 21 October 2026: source and migrations are now on `feature/grounded-agents` in [PR #1](https://github.com/Meteorstrike76/Savehalf/pull/1). CI is being verified; production cron has not been cut over. Do not enable the alternative GitHub scraper while Supabase schedules still collect the same sources.
+Production scraping still uses Supabase Cron and the existing collectors. PR #1 in Meteorstrike76/Savehalf is merged and its validation passed. GitHub collector/quality and backup workflows remain gated pending secret configuration and an explicit collector cutover; do not run duplicate collectors.
 
 ## Design and trust boundaries
 
@@ -161,3 +161,16 @@ Follow-up verification: 102 unit/integration tests passed; frontend and Edge typ
 Write access now works. Source was imported over the README-only main branch as a deployed-app baseline plus seven agent commits. The new production screenshot was omitted after automatic approval review rejected publishing that image; it remains in the downloadable archive. Existing source files and migrations were uploaded without environment files, generated builds or provider credentials. PR #1 is initially a draft while CI runs.
 
 CI uses a reserved `.invalid` Supabase URL and a non-secret fixture key; browser regression tests intercept requests. CI never requires production Supabase access. Branch and PR runs share a concurrency group to cancel superseded validation. This does not change Vercel production variables. Collector and backup workflow enable flags remain off by default, avoiding duplicate production jobs. GitHub secrets and variables still need owner configuration before any scraper cutover.
+
+
+## Live activation and deployment repair — 21 October 2026
+
+The saved replacement Groq key and independent hash secret validate inside Supabase; no credential values are returned or committed. `deal-agent` version 5 is active with JWT verification. Public pilot configuration is enabled, owner_only=false, fallback_enabled=false, daily_tokens=150000. Keep the existing anonymous/account/global and provider caps. The kill switch remains the agent_config enabled flag.
+
+Real fixed tests returned ALDI coffee at $4.99 and $6.39 with database IDs, source URLs and last-checked timestamps. An injection request was refused; an unknown product completed with no invented sources. A two-product planner request returned 467 cents against a 2000-cent budget and passed integer-cent arithmetic validation. These are smoke checks, not comprehensive live-model accuracy scores or proof of all retailer coverage. The production browser displayed the grounded coffee sources successfully. 107 unit/integration tests, frontend type checks, Edge type checks and lint passed. Existing four favourites remain intact.
+
+Private validation uses a service-role-only agent_checks table and a single-use five-minute UUID capability. The JWT-protected agent-check endpoint accepts only that capability, runs fixed cases inside private mode, writes a bounded private report and restores the original enabled flag. No arbitrary prompts, credentials or results are exposed. Claims are blocked while public mode is enabled. The pruning cron deletes reports older than a day. To rerun checks, close public access first and create a new short-lived job through the management connection; never publish its UUID.
+
+A browser check found Vercel still connected to Meteorstrike76/savehalf-etl. Retiring that workflow had triggered an empty deployment. The verified frontend deployment dpl_8bVU6BBEWn67fpDnZYGeSRffd5LT was restored, and Vercel Git settings were corrected to Meteorstrike76/Savehalf. The old ETL repository now disables Vercel Git deployments. A limited project API response omits Git-link metadata: absence of a link in that response must never be treated as evidence of no connection. Rollback pauses automatic production alias assignment until a verified source build is promoted.
+
+Earlier release sections above record historical disabled-state checks. This section supersedes their activation status. Cloudflare failover, authenticated cross-account browser saves and before/after Lighthouse remain unverified. The GitHub quality job is implemented but is not yet running in production.
