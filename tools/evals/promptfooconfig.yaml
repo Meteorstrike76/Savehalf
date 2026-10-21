@@ -1,0 +1,6 @@
+description: SaveHalf deterministic router contracts; zero provider calls
+prompts:
+  - '{{question}}'
+providers:
+  - file://provider.cjs
+tests: file://cases.yaml
