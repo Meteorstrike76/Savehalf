@@ -14,7 +14,7 @@ if(stores.some(s=>!s))throw Error('Unsupported store; community-only retailers h
 if(stores.length>7||new Set(stores).size!==stores.length)throw Error('Invalid store selection');
 let failed=false;
 for(const store of stores){
- if(dry){try{if(store==='Woolworths')throw Error('Permission required');const limits=sourceLimits(store),budget={used:0,limit:limits.bytes};let calls=0;const result=await collect(store,async u=>{if(calls>=limits.requests)throw Error('Request budget reached');calls++;return getHtml(u,budget);});if(!result.rows.length)throw Error('No verified products');console.log(`${store}: dry run ${result.rows.length} rows, ${calls} requests, ${budget.used} bytes; no writes`);}catch{failed=true;console.error(`${store}: dry run failed`);}continue;}
+ if(dry){try{if(store==='Woolworths')throw Object.assign(Error('Source permission requires review'),{kind:'policy'});const limits=sourceLimits(store),budget={used:0,limit:limits.bytes};let calls=0;const result=await collect(store,async u=>{if(calls>=limits.requests)throw Error('Request budget reached');calls++;return getHtml(u,budget);});if(!result.rows.length)throw Error('No verified products');console.log(`${store}: dry run ${result.rows.length} rows, ${calls} requests, ${budget.used} bytes; no writes`);}catch(error){failed=true;console.error(`${store}: dry run failed; ${publicFailureMessage(error)}`);}continue;}
  const {data:lease,error}=await sb.rpc('begin_public_scrape',{p_store:store});
  if(error||!lease?.allowed){console.error(`${store}: paused, not due or unavailable; no upstream request made`);failed=true;continue;}
  const limits=sourceLimits(store),budget={used:0,limit:limits.bytes,exceeded:false};let calls=0,added=0,updated=0,candidateRows=0,kind=null,retry=null,status='failed';
