@@ -3,10 +3,10 @@ set -euo pipefail
 # Requires a local Chrome/Chromium executable. Lighthouse is a build tool, not a hosted service.
 : "${CHROME_PATH:?Set CHROME_PATH to Chrome or Chromium}"
 : "${AUDIT_URL:?Set AUDIT_URL to a public deployment or locally served build}"
-case "$AUDIT_URL" in https://*|http://127.0.0.1:*) ;; *) exit 2;; esac
+case "$AUDIT_URL" in https://savehalf.vercel.app|https://savehalf.vercel.app/|https://savehalf-au.vercel.app|https://savehalf-au.vercel.app/|http://127.0.0.1:4173|http://127.0.0.1:4173/) ;; *) exit 2;; esac
 mkdir -p "${AUDIT_PREFIX:-audit}"
 for width in 375 768 1280; do
-  npm exec --yes --package=lighthouse@13.5.0 -- lighthouse "$AUDIT_URL" --chrome-flags='--headless --no-sandbox' --output=json --output=html --output-path="${AUDIT_PREFIX:-audit}/width-$width" --screenEmulation.width="$width" --screenEmulation.height=900 --screenEmulation.deviceScaleFactor=1 --screenEmulation.mobile=true --quiet
+  node_modules/.bin/lighthouse "$AUDIT_URL" --chrome-flags='--headless --no-sandbox' --output=json --output=html --output-path="${AUDIT_PREFIX:-audit}/width-$width" --screenEmulation.width="$width" --screenEmulation.height=900 --screenEmulation.deviceScaleFactor=1 --screenEmulation.mobile=true --quiet
  done
 node --input-type=module - <<'JS'
 import fs from 'node:fs';

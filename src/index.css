@@ -54,3 +54,7 @@ html{scroll-behavior:smooth;scroll-padding-top:28px}.wrap{max-width:1320px}.topl
 .budget-input{display:flex;align-items:center;gap:5px;border:1px solid #c9bcaa;padding:6px 8px;min-height:48px;font-size:12px}.budget-input input{width:66px;min-height:32px;background:transparent;border:0}
 
 .retailer-offers{margin-top:48px;padding-top:28px;border-top:1px solid #c8c9bd}.retailer-offers .category-tabs{display:flex;flex-wrap:wrap;gap:8px}.retailer-offers .category-tabs button{min-height:48px}.retailer-offers .category-tabs button[aria-pressed=true]{background:#242b2a;color:#fffdf8}.retailer-offers .half-toggle{display:flex;gap:10px;align-items:center;min-height:48px}
+
+.deferred-feed{padding:24px;border:1px solid #b8b9b4;border-radius:16px;margin:24px 0;background:#f6f3ed;color:#17283f}.deferred-feed button{min-height:48px;padding:10px 18px;border:1px solid currentColor;border-radius:10px}.deferred-feed button:focus-visible{outline:3px solid #17283f;outline-offset:3px}
+
+.deferred-section:focus-visible{outline:3px solid #17283f;outline-offset:3px}
