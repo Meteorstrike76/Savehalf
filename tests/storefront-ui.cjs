@@ -4,7 +4,7 @@ const fs=require('node:fs');const path=require('node:path');const assert=require
 const html=fs.readFileSync(path.join(__dirname,'../standalone-preview.html'),'utf8');
 const vc=new VirtualConsole();vc.on('jsdomError',e=>{if(!e.message.includes('CSS stylesheet'))console.error(e.message);});
 let downloads=0;
-const dom=new JSDOM(html,{url:'https://example.test',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:vc,beforeParse(w){w.fetch=global.fetch;w.Headers=global.Headers;w.Request=global.Request;w.Response=global.Response;w.URL.createObjectURL=()=>{downloads++;return 'blob:test';};w.URL.revokeObjectURL=()=>{};w.HTMLAnchorElement.prototype.click=()=>{};}});
+const dom=new JSDOM(html,{url:'https://example.test',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:vc,beforeParse(w){w.fetch=async()=>{throw Error('Network disabled in offline preview test');};w.Headers=global.Headers;w.Request=global.Request;w.Response=global.Response;w.URL.createObjectURL=()=>{downloads++;return 'blob:test';};w.URL.revokeObjectURL=()=>{};w.HTMLAnchorElement.prototype.click=()=>{};}});
 dom.window.eval(html.match(/<script type="module">([\s\S]*?)<\/script>/)[1]);
 const pause=()=>new Promise(r=>setTimeout(r,40));const doc=dom.window.document;
 const button=t=>[...doc.querySelectorAll('button')].find(x=>x.textContent.trim()===t);
