@@ -1,6 +1,11 @@
 import {jsonScripts} from './kmart-html.mjs';
 import {buildDeal} from './normalize.mjs';
 const BASE='https://www.bestandless.com.au';
+// Accept only this observed, already-applied promotion. Unknown or conditional
+// offers still require review; never apply the percentage to sale_price ourselves.
+function publishedPricePromotion(promotions){
+ return Array.isArray(promotions)&&promotions.every(p=>typeof p==='string'&&p.trim()==='20% Off Selected Styles Applied. Prices as marked.');
+}
 export function bestlessProducts(html){
  const scripts=jsonScripts(html);
  const aud=scripts.some(s=>Object.values(s).some(v=>v?.b?.baseSites?.some(site=>site.stores?.some(store=>store.defaultCurrency?.isocode==='AUD'))));
@@ -10,7 +15,7 @@ export function bestlessProducts(html){
  for(const item of result){
   const d=item?.data;
   // Use the published variant's sale price; never calculate member/promotion discounts.
-  if(!d||d.deactivated!==false||!Number.isFinite(d.quantity)||d.quantity<=0||!Array.isArray(d.promotion)||d.promotion.length||!d.sku||!d.color_sku)continue;
+  if(!d||d.deactivated!==false||!Number.isFinite(d.quantity)||d.quantity<=0||!publishedPricePromotion(d.promotion)||!d.sku||!d.color_sku)continue;
   let u;try{u=new URL(d.url);}catch{continue;}
   if(u.origin!==BASE||!u.pathname.startsWith('/Categories/')||u.search||u.hash)continue;
   const title=[item.value,d.display_colour,d.size?`size ${d.size}`:''].filter(Boolean).join(' · ');
