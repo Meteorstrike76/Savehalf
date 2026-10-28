@@ -23,6 +23,7 @@ export async function collect(store,get){
   const robots=await get(base+'/robots.txt');attempted++;
   if(!bestlessRobotsAllows(robots))throw Error('Best & Less robots policy requires review');
   rows=bestlessProducts(await get(base+'/sale-clearance/'));attempted++;
+  if(!rows.length)throw new CollectionError('Best & Less returned no eligible published prices; parser review required','parser');
  }else if(store==='Aldi'){
   const paths=['/products/lower-prices/k/1588161425841179','/products/super-savers/k/1588161426952145','/products/pantry/pasta-rice-grains/k/1111111179','/products/pantry/canned-food/k/1111111171','/products/dairy-eggs-fridge/eggs/k/1111111162','/products/dairy-eggs-fridge/k/960000000','/products/bakery/k/920000000','/products/freezer/k/980000000','/products/fruits-vegetables/k/950000000','/products/pantry/k/970000000','/products/cleaning-household/k/1050000000','/products/health-beauty/k/1040000000','/products/drinks/k/1000000000'];
   const robots=await get(base+'/robots.txt');attempted++;

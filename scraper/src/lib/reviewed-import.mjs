@@ -15,6 +15,8 @@ export function validateReviewed(input,now=Date.now()){
   if(['Coles','Woolworths'].includes(p.store)){
    const end=Date.parse(p.promotionEndsAt);if(!Number.isFinite(end)||end<=now||end>now+8*86400000)throw Error('Supermarket catalogue needs a verified current promotion end');
   }
-  return {...row,source_feed:'reviewed',source_url:source.href,observed_region:p.region.trim(),promotion_ends_at:p.promotionEndsAt?new Date(p.promotionEndsAt).toISOString():null,last_seen_at:new Date(checked).toISOString(),is_active:true};
+  // Reviewed observations use the existing direct-import provenance value.
+  // `reviewed` is a validation requirement, not an accepted database enum.
+  return {...row,source_feed:'direct',source_url:source.href,observed_region:p.region.trim(),promotion_ends_at:p.promotionEndsAt?new Date(p.promotionEndsAt).toISOString():null,last_seen_at:new Date(checked).toISOString(),is_active:true};
  });
 }
