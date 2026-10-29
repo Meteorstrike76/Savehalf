@@ -4,3 +4,5 @@ test('provider data preserves dated catalogue price and average without a was-pr
 test('provider import rejects stale, stock, external-host and currency failures',()=>{for(const patch of [{updated_at:'2026-10-01T00:00:00Z'},{out_of_stock:true},{url:'https://evil.example/'},{currency:'USD'},{price:0},{store:'target'}])assert.equal(providerRows([{data:[{...p,...patch}]}],now).length,0);});
 
 test('provider capacity counts new IDs only so idempotent refreshes remain possible',()=>{assert.equal(projectedProviderCount(999,[{id:'a'},{id:'b'},{id:'b'}],['a']),1000);assert.equal(projectedProviderCount(1000,[{id:'a'}],['a']),1000);assert.equal(projectedProviderCount(1000,[{id:'new'}],[]),1001);});
+
+test('pharmacy snapshots require their exact retailer host and retain provider provenance',()=>{for(const [store,host] of [['chemist_warehouse','www.chemistwarehouse.com.au'],['priceline','www.priceline.com.au']]){const product={...p,id:store+'_123',store,url:'https://'+host+'/product/123'};assert.equal(providerRows([{data:[product]}],now).length,1);assert.equal(providerRows([{data:[{...product,url:'https://evil.example/product/123'}]}],now).length,0);}});

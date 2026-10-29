@@ -1,5 +1,5 @@
 import {classify} from './normalize.mjs';
-const stores={coles:['Coles','www.coles.com.au'],woolworths:['Woolworths','www.woolworths.com.au'],big_w:['Big W','www.bigw.com.au'],kmart:['Kmart','www.kmart.com.au']};
+const stores={coles:['Coles','www.coles.com.au'],woolworths:['Woolworths','www.woolworths.com.au'],big_w:['Big W','www.bigw.com.au'],kmart:['Kmart','www.kmart.com.au'],chemist_warehouse:['Chemist Warehouse','www.chemistwarehouse.com.au'],priceline:['Priceline','www.priceline.com.au']};
 export function providerRows(pages,now=Date.now()){
  if(!Array.isArray(pages)||pages.length>8)throw Error('At most eight provider pages');
  const rows=new Map();
