@@ -1,5 +1,5 @@
 import {RECIPES,type Recipe} from './recipes';
-import {planMeals,scaleRecipe,type PantryItem,type MealLine} from '../household';
+import {planMeals,prepareMealProducts,scaleRecipe,type PantryItem,type MealLine} from '../household';
 import type {Deal} from '../supabase';
 
 export type WeeklyOptions={budget:number;servings:number;vegan:boolean;pantry:PantryItem[]};
@@ -13,8 +13,9 @@ export function createWeeklyPlan(options:WeeklyOptions,products:Deal[]):WeeklyPl
  if(!Number.isFinite(options.budget)||options.budget<=0||options.budget>5000)throw Error('Choose a budget above $0 and at most $5,000.');
  if(!Number.isInteger(options.servings)||options.servings<1||options.servings>8)throw Error('Choose one to eight people.');
  const choices=weeklyRecipes.filter(r=>!options.vegan||!r.ingredients.some(i=>i.kind==='eggs')).map(r=>scaleRecipe(r,options.servings));
+ const available=prepareMealProducts(products);
  const evaluate=(meals:Recipe[]):WeeklyPlan=>{
-  const lines=planMeals(meals,options.pantry,products);
+  const lines=planMeals(meals,options.pantry,products,undefined,available);
   const known=Math.round(lines.reduce((n,l)=>n+(l.cost===null?0:Math.round(l.cost*100)),0))/100;
   const missing=lines.filter(l=>l.cost===null).length;
   return {meals,lines,known,missing,complete:missing===0,withinBudget:missing===0&&known<=options.budget};
