@@ -60,3 +60,18 @@ html{scroll-behavior:smooth;scroll-padding-top:28px}.wrap{max-width:1320px}.topl
 .deferred-section:focus-visible{outline:3px solid #17283f;outline-offset:3px}
 
 .community-panel{color:#292c24}.community-panel h2{font-size:24px;margin-bottom:16px}.community-panel p{line-height:1.65;margin:12px 0}.community-panel label{display:grid;gap:8px;margin:14px 0}.community-panel input,.community-panel select,.community-panel textarea{padding:12px;border:1px solid #a99e8c;background:#fff;color:#292c24;border-radius:6px;min-height:48px;width:100%}.community-panel button,.community-panel a{display:inline-flex;align-items:center;min-height:48px;padding:12px;border:1px solid #a99e8c;border-radius:6px;margin:6px 8px 6px 0}.community-panel button:disabled{opacity:.55}.community-panel article{border-top:1px solid #c9bcaa;margin-top:20px;padding-top:16px}.community-panel nav{display:flex;align-items:center;gap:12px}.community-panel :focus-visible{outline:3px solid #a73c28;outline-offset:3px}.admin-qr{max-width:240px;width:100%;background:white;padding:12px}
+
+/* Additional retailer coverage stays distinct from the direct catalogue. */
+.retailer-expansion{margin:40px 0;scroll-margin-top:24px;outline-offset:6px}
+.retailer-expansion>p{max-width:76ch;line-height:1.65;color:var(--muted,#536074)}
+.retailer-expansion .directory-groups{margin:20px 0;display:flex;flex-wrap:wrap;gap:8px}
+.retailer-expansion .directory-groups button{min-height:44px;padding:10px 16px}
+.retailer-expansion .directory-groups button[aria-pressed="true"]{background:#17283f;color:#fff;border-color:#17283f}
+.retailer-expansion-link{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:14px 18px;margin:16px 0;border:1px solid #c9c7bf;border-radius:8px;font-weight:700}
+.retailer-handoff{padding:24px;background:#f3efe6;border:1px solid #d9d3c6;border-radius:12px}
+.retailer-handoff h3{font-size:26px;margin:12px 0}.retailer-handoff p{max-width:72ch;line-height:1.65;margin:14px 0}
+.retailer-category-override{display:flex;align-items:center;gap:10px;min-height:44px;margin:12px 0;line-height:1.5}
+.retailer-category-override input{width:18px;height:18px;flex-shrink:0}
+@media(max-width:480px){.retailer-expansion .section-head{align-items:flex-start;flex-direction:column;gap:12px}.retailer-handoff{padding:18px}.retailer-handoff .hero-button{white-space:normal}}
+
+.admin-operations{border-bottom:1px solid #d9d3c6;padding-bottom:24px;margin-bottom:24px}.admin-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.admin-metrics>div{display:flex;flex-direction:column;padding:16px;border:1px solid #d9d3c6;border-radius:10px}.admin-metrics strong{font-size:28px}.admin-operations .directory-groups{display:flex;flex-wrap:wrap;gap:8px}.community-panel input[type=search]{width:100%;min-height:44px;padding:10px;border:1px solid #64786c;border-radius:8px}

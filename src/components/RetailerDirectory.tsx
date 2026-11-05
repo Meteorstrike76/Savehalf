@@ -11,7 +11,7 @@ export default function RetailerDirectory({open,onClose}:{open:boolean;onClose:(
  return <Modal open={open} onClose={onClose} title="More retailers" wide>
   <div className="eyebrow">BEYOND THE SHORTLIST</div>
   <h2 className="modal-heading">More places to find a deal.</h2>
-  <p className="modal-copy">{MORE_RETAILERS.length} retailer discovery entries. These stores are not collected in our product feed. Open a retailer to check its current offers, stock and delivery costs. Deal Radar separately includes community feeds for selected pharmacy, beauty, stationery and fast-food retailers. Feed availability and freshness vary.</p>
+  <p className="modal-copy">{MORE_RETAILERS.length} retailer discovery entries. These stores are not collected in our direct product feed. Chemist Warehouse and Priceline have a separate dated provider-snapshot section; only current snapshots appear there. Officeworks remains an official-site handoff. Open a retailer to check its current offers, stock and delivery costs. Deal Radar separately includes community feeds for selected pharmacy, beauty, stationery and fast-food retailers. Feed availability and freshness vary.</p>
   <button className="text-button" aria-pressed={requested} onClick={()=>{setRequested(!requested);setGroup('All');setSearch('');}}>Pharmacy, beauty &amp; everyday stores</button>
   <label className="search-box directory-search"><Search size={18}/><input aria-label="Search more retailers" placeholder="A retailer, category or something you need…" value={search} onChange={e=>setSearch(e.target.value)}/></label>
   <div className="directory-groups" aria-label="Retailer categories">{RETAILER_GROUPS.map(g=><button key={g} aria-pressed={g===group} onClick={()=>setGroup(g)}>{g}</button>)}</div>
