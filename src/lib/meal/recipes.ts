@@ -6,7 +6,13 @@ export const FOOD:Record<FoodKind,{label:string;pattern:RegExp}>={
 const notIngredient=/\b(brush|mask|mist|shampoo|detergent|cleaner|gloves|mug|cup|cable|lotion|cream|skincare|fragrance|chips|crackers|biscuits|cake|chocolate|snack|soup|pasta sauce|ready meal|fried rice|rice pudding|microwave|ready rice|split peas|dried peas|pasta salad|baby food)\b/i;
 export function foodKind(d:Pick<Deal,'title'|'category'>):FoodKind|null {
  if(d.category!=='Groceries'||notIngredient.test(d.title))return null;
- return (Object.keys(FOOD) as FoodKind[]).find(k=>FOOD[k].pattern.test(d.title))??null;
+ const kind=(Object.keys(FOOD) as FoodKind[]).find(k=>FOOD[k].pattern.test(d.title))??null;
+ // These recipes need plain grains/pasta and ordinary peas, not prepared dishes
+ // or different legumes that happen to contain the same title word.
+ if(kind==='rice'&&/\b(creamed|pudding|flavou?red|vanilla|instant|precooked|pre-cooked|cakes?|risotto)\b/i.test(d.title))return null;
+ if(kind==='pasta'&&/\b(in\s+(?:tomato\s+)?sauce|canned|tinned|cooked|ready|filled|ravioli|tortellini)\b/i.test(d.title))return null;
+ if(kind==='peas'&&/\b(chick\s*peas?|snow\s+peas?|sugar\s+snap)\b/i.test(d.title))return null;
+ return kind;
 }
 export type Ingredient={kind:FoodKind;amount:number;unit:'g'|'ml'|'each'};
 export type Recipe={title:string;servings:number;minutes:number;ingredients:Ingredient[];steps:string[];source:'built-in'};
