@@ -12,3 +12,27 @@ test('tiny budgets show over-budget outcome and invalid inputs reject',()=>{cons
 test('prepared rice/pasta and chickpeas cannot supply plain recipe ingredients',()=>{const wrong=products.map(p=>p.title==='Rice 1kg'?{...p,title:'BROOKDALE Creamed Rice Vanilla Flavoured 430g'}:p.title==='Pasta 500g'?{...p,title:'CORALE Spaghetti in Tomato Sauce 420g'}:p.title==='Peas 1kg'?{...p,title:'NEW SEASON Chick Peas 420g'}:p);const p=createWeeklyPlan({...options,vegan:true},wrong);for(const line of p.lines)if(['rice','pasta','peas'].includes(line.ingredient.kind)){assert.equal(line.product,null);assert.equal(line.cost,null);}assert(!p.withinBudget);});
 
 test('time and exclusions constrain every dinner and infeasible preferences reject',()=>{const p=createWeeklyPlan({...options,maxMinutes:30,exclude:['eggs','pasta']},products);assert.equal(p.meals.length,7);assert(p.meals.every(r=>r.minutes<=30&&!r.ingredients.some(i=>['eggs','pasta'].includes(i.kind))));assert.throws(()=>createWeeklyPlan({...options,maxMinutes:1},products),/No recipes match/);assert.throws(()=>createWeeklyPlan({...options,exclude:['unknown']},products),/recognised/);for(const maxMinutes of [0,NaN,181,2.5])assert.throws(()=>createWeeklyPlan({...options,maxMinutes},products));});
+
+
+test('empty, partial and full prices cannot collapse variety to one repeated dinner',()=>{
+ for(const data of [[],products.slice(0,2),products]){
+  const p=createWeeklyPlan(options,data),counts=new Map();
+  for(const r of p.meals)counts.set(r.title,(counts.get(r.title)||0)+1);
+  assert.equal(p.recipeLimit,2);assert.equal(p.eligibleRecipes,7);
+  assert([...counts.values()].every(n=>n<=2));assert(counts.size>=4);
+  assert(p.meals.every((r,i)=>!i||r.title!==p.meals[i-1].title));
+  const requirements=new Map();
+  for(const r of p.meals)for(const x of r.ingredients)requirements.set(x.kind,(requirements.get(x.kind)||0)+x.amount);
+  for(const line of p.lines)assert.equal(line.ingredient.amount,requirements.get(line.ingredient.kind));
+ }
+});
+test('small eligible pools relax only as needed and keep time/exclusions intact',()=>{
+ const two=createWeeklyPlan({...options,exclude:['eggs','pasta']},[]);
+ assert.equal(two.eligibleRecipes,2);assert.equal(two.recipeLimit,4);
+ assert.equal(new Set(two.meals.map(r=>r.title)).size,2);
+ assert(two.meals.every((r,i)=>!i||r.title!==two.meals[i-1].title));
+ const one=createWeeklyPlan({...options,maxMinutes:25,exclude:['eggs','pasta']},[]);
+ assert.equal(one.eligibleRecipes,1);assert.equal(one.recipeLimit,7);
+ assert.equal(one.meals.length,7);assert(!one.withinBudget);
+ assert(one.meals.every(r=>r.minutes<=25&&!r.ingredients.some(x=>['eggs','pasta'].includes(x.kind))));
+});
