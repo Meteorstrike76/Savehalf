@@ -1,21 +1,22 @@
-import {RECIPES,FOOD,type FoodKind,type Recipe} from './recipes';
+import {RECIPES,FOOD,EQUIPMENT,type Equipment,type FoodKind,type Recipe} from './recipes';
 import {planMeals,prepareMealProducts,scaleRecipe,type PantryItem,type MealLine} from '../household';
 import type {Deal} from '../supabase';
 
-export type WeeklyOptions={budget:number;servings:number;vegan:boolean;pantry:PantryItem[];maxMinutes?:number;exclude?:FoodKind[]};
+export type WeeklyOptions={budget:number;servings:number;vegan:boolean;pantry:PantryItem[];equipment?:Equipment[];maxMinutes?:number;exclude?:FoodKind[]};
 export type WeeklyPlan={meals:Recipe[];lines:MealLine[];known:number;missing:number;complete:boolean;withinBudget:boolean;recipeLimit:number;eligibleRecipes:number};
 const weeklyRecipes:Recipe[]=[...RECIPES,
- {title:'Potato, carrot & pea mash',servings:2,minutes:30,source:'built-in',ingredients:[{kind:'potato',amount:500,unit:'g'},{kind:'carrot',amount:200,unit:'g'},{kind:'peas',amount:200,unit:'g'},{kind:'oil',amount:10,unit:'ml'}],steps:['Peel and chop the potatoes and carrots.','Boil until tender, adding peas for their packet cooking time.','Drain, mash with the oil and a little hot water, then divide into the requested servings.']},
- {title:'Tomato & egg pasta',servings:2,minutes:25,source:'built-in',ingredients:[{kind:'pasta',amount:200,unit:'g'},{kind:'tomato',amount:400,unit:'g'},{kind:'eggs',amount:2,unit:'each'},{kind:'oil',amount:10,unit:'ml'}],steps:['Cook pasta following the packet.','Heat oil in a separate pan, add tomatoes and simmer for 10 minutes.','Stir beaten eggs into the simmering sauce and cook until fully set.','Drain pasta and combine with the sauce. Divide into the requested servings.']},
- {title:'Bean & pea tomato pasta',servings:2,minutes:25,source:'built-in',ingredients:[{kind:'pasta',amount:200,unit:'g'},{kind:'beans',amount:400,unit:'g'},{kind:'tomato',amount:400,unit:'g'},{kind:'peas',amount:150,unit:'g'},{kind:'oil',amount:10,unit:'ml'}],steps:['Cook pasta following the packet.','Drain and rinse tinned beans.','Heat oil, add tomatoes, beans and peas, then simmer until hot throughout and peas are cooked.','Drain pasta and stir into the sauce. Divide into the requested servings.']}
+ {equipment:["hob", "saucepan"],title:'Potato, carrot & pea mash',servings:2,minutes:30,source:'built-in',ingredients:[{kind:'potato',amount:500,unit:'g'},{kind:'carrot',amount:200,unit:'g'},{kind:'peas',amount:200,unit:'g'},{kind:'oil',amount:10,unit:'ml'}],steps:['Peel and chop the potatoes and carrots.','Boil until tender, adding peas for their packet cooking time.','Drain, mash with the oil and a little hot water, then divide into the requested servings.']},
+ {equipment:["hob", "saucepan", "fryingPan"],title:'Tomato & egg pasta',servings:2,minutes:25,source:'built-in',ingredients:[{kind:'pasta',amount:200,unit:'g'},{kind:'tomato',amount:400,unit:'g'},{kind:'eggs',amount:2,unit:'each'},{kind:'oil',amount:10,unit:'ml'}],steps:['Cook pasta following the packet.','Heat oil in a separate pan, add tomatoes and simmer for 10 minutes.','Stir beaten eggs into the simmering sauce and cook until fully set.','Drain pasta and combine with the sauce. Divide into the requested servings.']},
+ {equipment:["hob", "saucepan", "fryingPan"],title:'Bean & pea tomato pasta',servings:2,minutes:25,source:'built-in',ingredients:[{kind:'pasta',amount:200,unit:'g'},{kind:'beans',amount:400,unit:'g'},{kind:'tomato',amount:400,unit:'g'},{kind:'peas',amount:150,unit:'g'},{kind:'oil',amount:10,unit:'ml'}],steps:['Cook pasta following the packet.','Drain and rinse tinned beans.','Heat oil, add tomatoes, beans and peas, then simmer until hot throughout and peas are cooked.','Drain pasta and stir into the sauce. Divide into the requested servings.']}
 ];
 export function createWeeklyPlan(options:WeeklyOptions,products:Deal[]):WeeklyPlan {
  if(!Number.isFinite(options.budget)||options.budget<=0||options.budget>5000)throw Error('Choose a budget above $0 and at most $5,000.');
  if(!Number.isInteger(options.servings)||options.servings<1||options.servings>8)throw Error('Choose one to eight people.');
  if(options.maxMinutes!==undefined&&(!Number.isInteger(options.maxMinutes)||options.maxMinutes<1||options.maxMinutes>180))throw Error('Choose a cooking time between 1 and 180 minutes.');
  if(options.exclude&&(!Array.isArray(options.exclude)||options.exclude.some(k=>!Object.prototype.hasOwnProperty.call(FOOD,k))))throw Error('Choose recognised ingredients to exclude.');
- const choices=weeklyRecipes.filter(r=>(options.maxMinutes===undefined||r.minutes<=options.maxMinutes)&&!r.ingredients.some(i=>options.exclude?.includes(i.kind))).filter(r=>!options.vegan||!r.ingredients.some(i=>i.kind==='eggs')).map(r=>scaleRecipe(r,options.servings));
- if(!choices.length)throw Error('No recipes match these preferences. Increase cooking time or remove an ingredient exclusion.');
+ if(options.equipment!==undefined&&(!Array.isArray(options.equipment)||options.equipment.some(k=>!Object.prototype.hasOwnProperty.call(EQUIPMENT,k))))throw Error('Choose recognised cooking equipment.');
+ const choices=weeklyRecipes.filter(r=>options.equipment===undefined||r.equipment.every(k=>options.equipment!.includes(k))).filter(r=>(options.maxMinutes===undefined||r.minutes<=options.maxMinutes)&&!r.ingredients.some(i=>options.exclude?.includes(i.kind))).filter(r=>!options.vegan||!r.ingredients.some(i=>i.kind==='eggs')).map(r=>scaleRecipe(r,options.servings));
+ if(!choices.length)throw Error('No recipes match these preferences. Check your cooking equipment, increase cooking time or remove an ingredient exclusion.');
  // Keep variety a hard constraint, even when prices are missing. Relax only
  // when the eligible recipe pool cannot fill seven slots at two uses each.
  const recipeLimit=Math.max(2,Math.ceil(7/choices.length));
