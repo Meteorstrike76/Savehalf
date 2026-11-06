@@ -7,6 +7,7 @@ import { useFavourites } from '@/hooks/useFavourites';
 import { CATEGORIES, STORE_IDS, type StoreId, type DealCategory } from '@/lib/stores';
 import { supabase, DEAL_COLUMNS, toDeal, isConfigured, authReturnError, isAuthReturn, type Deal } from '@/lib/supabase';
 import ProductImage from '@/components/ProductImage';
+import LiveCoverage from '@/components/LiveCoverage';
 import DeferredSection from '@/components/DeferredSection';
 import PasswordRecovery from '@/components/PasswordRecovery';
 import AuthModal from '@/components/AuthModal';
@@ -103,6 +104,7 @@ function Feed() {
  <button className="load-more" onClick={()=>setDecisionOpen(true)}>Buying decisions · delivery, multibuy & real costs <ArrowRight size={17}/></button>
  <SearchShortcuts filters={browseState} apply={applyBrowse}/>
  {tab!=='saved'&&<a className="retailer-expansion-link" href="#more-retailer-products">Chemist Warehouse, Priceline &amp; Officeworks <ArrowRight size={17}/></a>}
+ <LiveCoverage/>
  <section className="retailer-strip" aria-label="Filter by retailer"><div><span>THE STORES YOU KNOW</span><small>All in one place</small></div>{STORE_IDS.map(store=><button key={store} aria-pressed={stores.includes(store)} className={stores.includes(store)?'selected':''} onClick={()=>setStores(prev=>prev.includes(store)?prev.filter(x=>x!==store):[...prev,store])}><StoreLabel store={store}/></button>)}</section>
  <section className="planning-tools" aria-label="Budget tools"><button className="meal-entry" onClick={()=>setWeekOpen(true)}><ChefHat size={23}/><span><b>Plan my week</b><small>Seven dinners. Your budget. One shopping list.</small></span><ArrowRight size={17}/></button><button className="meal-entry" onClick={()=>setMealOpen(true)}><ChefHat size={23}/><span><b>Turn your shop into dinner.</b><small>Cheap recipes, pantry ingredients and where to buy.</small></span><span className="meal-entry-action">{mealFoods.length?`Plan with ${mealFoods.length} foods`:"Plan a cheap meal"} <ArrowRight size={17}/></span></button>
  <button className="eats-entry" onClick={()=>setEatsOpen(true)}><span className="eyebrow">SYDNEY CHEAP EATS</span><span><b>Lunch money, well spent.</b><small>Budget bites, Friday meals and restaurant discounts.</small></span><ArrowUpRight size={23}/></button>

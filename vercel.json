@@ -42,8 +42,18 @@
   "installCommand": "npm ci",
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/api/storefront"
+    },
+    {
       "source": "/admin",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/storefront.mjs": {
+      "includeFiles": "dist/index.html",
+      "maxDuration": 10
+    }
+  }
 }
