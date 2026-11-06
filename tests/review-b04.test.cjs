@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const {PGlite}=require('@electric-sql/pglite');
 // Do NOT execute the migration. Compile only its parser definition under a test
 // name in disposable in-memory PostgreSQL. No application tables or backfill.
-const migration='supabase/migrations/20261106093109_review_unit_price_parser.sql';
+const migration='docs/proposed-migrations/20261106093109_review_unit_price_parser.sql';
 test('B04 PostgreSQL parser body handles all requested cases',async()=>{
  const sql=fs.readFileSync(migration,'utf8');
  assert(!/\b(update|insert|delete|alter table|cron\.)\b/i.test(sql.replace(/^--.*$/gm,'')));

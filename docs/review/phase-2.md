@@ -124,6 +124,10 @@ The existing STABLE SECURITY INVOKER catalogue_counts RPC groups current_deals. 
 - Git shell push failed: no HTTPS credentials. Connected GitHub API is the publication fallback.
 - Chromium installation failed in the earlier review. No new Lighthouse score or real-browser account mutation result is claimed.
 
+## B04 proposal location
+
+The unapplied parser proposal is at `docs/proposed-migrations/20261106093109_review_unit_price_parser.sql`, outside the Supabase migration discovery directory. No migration from this PR remains under `supabase/migrations/`.
+
 ## Owner actions
 
 1. Keep this PR draft; do not apply the B04 migration or any generated-column backfill without separate approval. Function replacement alone will NOT recalculate existing stored generated values.
