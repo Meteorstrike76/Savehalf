@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
 test('B01 cards qualify reference reductions beside the price',()=>{
- const app=fs.readFileSync('src/App.tsx','utf8');
+ const app=fs.readFileSync('src/components/FeedDealCard.tsx','utf8');
  assert(app.includes('Retailer-reported ${d.discountPct}% reduction'));
  assert(app.includes('below retailer reference'));
  assert(!app.includes('% OFF'));assert(!app.includes('Biggest savings'));
