@@ -30,3 +30,25 @@ reconciliation remain pending. No new departments are introduced.
 Rollback: existing clients do not call this function, so it can remain unused.
 Reverting frontend integration later does not require removing this additive RPC.
 Avoid changing the existing catalogue_counts/search_deals_range signatures.
+
+## Integration verification
+
+PR #29 was merged and its additive migration applied. Post-installation checks
+confirmed security invoker, an empty search path, the five-second timeout and
+execute grants limited to postgres/anon/authenticated/service_role. Anonymous
+API comparisons matched for unit sorting (24), a price range (2), a search (0)
+and no-match search (0); unfiltered aggregation matched current_deals (24).
+These are timestamped observations, not guaranteed future coverage.
+
+The frontend now calls catalogue_facets with stores, text, min/max price, sale,
+discount and unit-sort mode. It excludes the selected category from the cache
+key so sibling totals remain visible. Text requests debounce for 250ms; results
+are shared for up to two minutes. Snapshot keys and effect/request guards prevent
+old-filter totals from appearing while a newer request loads or resolves.
+Expired/failing reads remain unknown; empty successful responses are zero.
+
+Local integration checks passed for search/price/discount parameters, full totals
+above one page, sibling reuse, expiry/failure/recovery, a delayed stale response,
+and empty-versus-unknown display. Typecheck, lint and build passed. Required CI
+and production verification remain release gates for this frontend change.
+Expanded departments, source recovery and provider deduplication remain pending.
