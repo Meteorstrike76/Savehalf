@@ -1,0 +1,56 @@
+name: B04 native PostgreSQL regression
+on:
+  push:
+    branches: [review/phase-2]
+    paths:
+      - 'docs/proposed-migrations/**'
+      - 'tools/review/b04-native-sql.py'
+      - '.github/workflows/b04-native-postgres.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/proposed-migrations/**'
+      - 'tools/review/b04-native-sql.py'
+      - '.github/workflows/b04-native-postgres.yml'
+permissions:
+  contents: read
+concurrency:
+  group: b04-native-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  parser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: parser_fixture
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd "pg_isready -U postgres -d parser_fixture"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Extract only parser and fixture assertions
+        run: python3 tools/review/b04-native-sql.py > "$RUNNER_TEMP/b04-native.sql"
+      - name: Isolate service and run native PostgreSQL via local socket
+        shell: bash
+        env:
+          PG_SERVICE_ID: ${{ job.services.postgres.id }}
+        run: |
+          set -euo pipefail
+          # No published ports or Supabase credentials. Detach every network
+          # before SQL is copied or executed: the tested code cannot egress.
+          mapfile -t networks < <(docker inspect --format '{{range $name, $_ := .NetworkSettings.Networks}}{{println $name}}{{end}}' "$PG_SERVICE_ID")
+          for network in "${networks[@]}"; do
+            test -z "$network" || docker network disconnect "$network" "$PG_SERVICE_ID"
+          done
+          test "$(docker inspect --format '{{len .NetworkSettings.Networks}}' "$PG_SERVICE_ID")" = 0
+          echo 'PASS: PostgreSQL service has zero attached networks'
+          docker cp "$RUNNER_TEMP/b04-native.sql" "$PG_SERVICE_ID:/tmp/b04-native.sql"
+          docker exec "$PG_SERVICE_ID" psql --host=/var/run/postgresql --username=postgres --dbname=parser_fixture --no-psqlrc --set=ON_ERROR_STOP=1 --file=/tmp/b04-native.sql
