@@ -12,6 +12,14 @@ export function foodKind(d:Pick<Deal,'title'|'category'>):FoodKind|null {
  if(kind==='rice'&&/\b(creamed|pudding|flavou?red|vanilla|instant|precooked|pre-cooked|cakes?|risotto)\b/i.test(d.title))return null;
  if(kind==='pasta'&&/\b(in\s+(?:tomato\s+)?sauce|canned|tinned|cooked|ready|filled|ravioli|tortellini)\b/i.test(d.title))return null;
  if(kind==='peas'&&/\b(chick\s*peas?|snow\s+peas?|sugar\s+snap)\b/i.test(d.title))return null;
+ // A matching ingredient word does not make a processed product a compatible
+ // recipe ingredient. Keep uncertain forms unpriced instead of using their pack.
+ if(kind&&['rice','pasta','lentils','beans','peas'].includes(kind)&&/\b(flour|powder|protein|noodles?|vermicelli|sauce|dip|spread|puree|purée|hummus|hommus|sprouts?|puffs?|noodle|seasoning|extract)\b/i.test(d.title))return null;
+ if(kind==='rice'&&/\b(rice\s+paper|rice\s+bran|rice\s+milk|rice\s+drink|rice\s+vinegar|rice\s+syrup|rice\s+oil)\b/i.test(d.title))return null;
+ if(kind==='beans'&&/\b(refried|mixed\s+salad|salad\s+mix)\b/i.test(d.title))return null;
+ if(kind==='eggs'&&/\b(powder|powdered|liquid|whites?|yolks?|pickled|replacer|substitute)\b/i.test(d.title))return null;
+ if(kind==='potato'&&/\b(mash|mashed|flakes?|wedges|fries|roast|roasted|gems|hash\s+browns?)\b/i.test(d.title))return null;
+
  return kind;
 }
 export type Ingredient={kind:FoodKind;amount:number;unit:'g'|'ml'|'each'};
