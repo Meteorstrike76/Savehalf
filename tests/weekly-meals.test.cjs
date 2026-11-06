@@ -36,3 +36,17 @@ test('small eligible pools relax only as needed and keep time/exclusions intact'
  assert.equal(one.meals.length,7);assert(!one.withinBudget);
  assert(one.meals.every(r=>r.minutes<=25&&!r.ingredients.some(x=>['eggs','pasta'].includes(x.kind))));
 });
+
+
+test('equipment constrains every dinner, rejects impossible kitchens and preserves cost uncertainty',()=>{
+ const equipment=['hob','saucepan'];
+ const p=createWeeklyPlan({...options,equipment},[]);
+ assert.equal(p.eligibleRecipes,2);assert.equal(p.meals.length,7);
+ assert(p.meals.every(r=>r.equipment.every(k=>equipment.includes(k))));
+ assert(!p.complete);assert(!p.withinBudget);
+ for(const equipment of [[],['saucepan'],['grill']])assert.throws(()=>createWeeklyPlan({...options,equipment},products),/cooking equipment/);
+ for(const equipment of [['microwave'],'hob',null])assert.throws(()=>createWeeklyPlan({...options,equipment},products),/recognised cooking equipment/);
+ const noGrill=createWeeklyPlan({...options,equipment:['hob','saucepan','fryingPan']},products);
+ assert.equal(noGrill.eligibleRecipes,6);assert(noGrill.meals.every(r=>!r.equipment.includes('grill')));
+ assert.throws(()=>createWeeklyPlan({...options,equipment,exclude:['rice','potato']},products),/No recipes match/);
+});
