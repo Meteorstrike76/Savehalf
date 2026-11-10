@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {importCandidates,checkedBatch,reviewedCsv,validateCandidate} from '../src/lib/manual-intake.mjs';
+import {parseReviewedCsv} from '../src/lib/reviewed-csv.mjs';
+const now = Date.parse('2026-11-11T00:00:00Z');
+const item = {store:'Coles',externalId:'100',title:'Coffee, 200g',price:5,was:10,url:'https://www.coles.com.au/product/100',sourceUrl:'https://www.coles.com.au/catalogues',region:'NSW',checkedAt:'2026-11-10T23:00:00Z',promotionEndsAt:'2026-11-17T00:00:00Z',reviewed:true,image:''};
+const csv = reviewedCsv([item], now);
+test('verified CSV round trip keeps retailer price, source, and expiry',()=>{const [r]=parseReviewedCsv(csv);assert.equal(r.title,'Coffee, 200g');assert.equal(r.sourceUrl,item.sourceUrl);assert.equal(r.promotionEndsAt,item.promotionEndsAt);assert.equal(r.reviewed,true);});
+test('imported review labels never grant approval',()=>{const [r]=importCandidates(csv,now);assert.equal(r.reviewed,false);assert.throws(()=>checkedBatch([r],now),/explicit review/);});
+test('rejects unsafe source and claimed price comparisons',()=>{assert(validateCandidate({...item,sourceUrl:'https://evil.example'},now).length);assert(validateCandidate({...item,was:4},now).length);assert(validateCandidate({...item,title:'=HYPERLINK("http://attacker")'},now).length);assert(validateCandidate({...item,checkedAt:'2026-10-10T00:00:00Z'},now).length);});
+test('upholds per-retailer cap, duplicate product guard and verification freshness',()=>{assert.throws(()=>checkedBatch([item,item],now),/Duplicate/);assert.throws(()=>checkedBatch(Array.from({length:31},(_,i)=>({...item,externalId:String(i)})),now),/cap/);assert.throws(()=>reviewedCsv([item],now + 73*3600*1000),/checked/);});
+test('shared CSV parser runs in browser-like runtime without Buffer',()=>{const [r]=parseReviewedCsv(csv);assert.equal(r.price,5);});

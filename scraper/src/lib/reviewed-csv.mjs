@@ -36,7 +36,7 @@ function aud(value, column, row) {
 }
 
 export function parseReviewedCsv(source) {
-  if (typeof source !== 'string' || Buffer.byteLength(source, 'utf8') > 128 * 1024) throw Error('CSV must be text under 128 KiB');
+  if (typeof source !== 'string' || new TextEncoder().encode(source).length > 128 * 1024) throw Error('CSV must be text under 128 KiB');
   const parsed = records(source.replace(/^\uFEFF/, ''));
   if (parsed.length < 2) throw Error('CSV needs a header and at least one product');
   const header = parsed.shift().map(value => value.trim());
