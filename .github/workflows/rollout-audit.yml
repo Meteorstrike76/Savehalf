@@ -30,10 +30,18 @@ jobs:
           node_modules/.bin/lighthouse https://savehalf.vercel.app/ --chrome-flags='--headless --no-sandbox' --output=json --output-path=audit/before/lighthouse.json --quiet
         env:
           CHROME_PATH: /usr/bin/google-chrome
+      - name: Require public client configuration
+        env:
+          PUBLIC_CLIENT_KEY: ${{ vars.SAVEHALF_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$PUBLIC_CLIENT_KEY" ]; then
+            echo '::error::Set repository variable SAVEHALF_SUPABASE_ANON_KEY (public anon key, never service_role).'
+            exit 1
+          fi
       - run: npm run build
         env:
           VITE_SUPABASE_URL: https://mdbqlcnzbakimfjrfczz.supabase.co
-          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYnFsY256YmFraW1manJmY3p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MTgyNzcsImV4cCI6MjEwNjM5NDI3N30.B4FqibZN3WPy8h64UaDLUQUFUeQifztJGudJ9a7p8vI
+          VITE_SUPABASE_ANON_KEY: ${{ vars.SAVEHALF_SUPABASE_ANON_KEY }}
       - name: After release — local production build
         run: |
           npm run preview -- --host 127.0.0.1 > /tmp/savehalf-preview.log 2>&1 &
