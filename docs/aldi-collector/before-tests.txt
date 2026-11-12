@@ -1,0 +1,155 @@
+✔ captured public Nuxt product shape still parses without changing prices (10.552378ms)
+✖ observed ALDI 301 does not poison a run: use verified canonical path, do not follow redirects (15.334615ms)
+✖ essential ALDI page keeps its real kind, HTTP status, stage and safe path (14.565244ms)
+✖ zero-row ALDI HTML is parser drift at parse stage, never healthy empty or upstream (0.681929ms)
+✖ all ALDI request failures retain transport diagnostics instead of generic upstream (0.711874ms)
+✖ circuit opens after three consecutive zero-row failures, not isolated or partial runs (0.261655ms)
+✖ open ALDI circuit performs robots plus one listing only, with no importable rows (6.79776ms)
+✖ open circuit never resumes after an empty probe or robots refusal (0.394976ms)
+✖ body cap after bytes retains budget kind, HTTP 200 and read-body stage (5.45905ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 1
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 203.171513
+
+✖ failing tests:
+
+test at scraper/test/aldi-recovery.test.mjs:19:1
+✖ observed ALDI 301 does not poison a run: use verified canonical path, do not follow redirects (15.334615ms)
+  Error [CollectionError]: ALDI promotion page unavailable; previous products retained
+      at collect (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/supabase/functions/catalogue-collect/http-collect.mjs:38:62)
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:21:15)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    kind: 'upstream',
+    httpStatus: null,
+    retryAfterSeconds: null
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:32:1
+✖ essential ALDI page keeps its real kind, HTTP status, stage and safe path (14.565244ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  CollectionError: ALDI promotion page unavailable; previous products retained
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:33:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: CollectionError: ALDI promotion page unavailable; previous products retained
+        at collect (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/supabase/functions/catalogue-collect/http-collect.mjs:38:62)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:33:2)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:39:1
+✖ zero-row ALDI HTML is parser drift at parse stage, never healthy empty or upstream (0.681929ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:40:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:45:1
+✖ all ALDI request failures retain transport diagnostics instead of generic upstream (0.711874ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: All ALDI category requests failed
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:46:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: All ALDI category requests failed
+        at collect (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/supabase/functions/catalogue-collect/http-collect.mjs:34:52)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:46:2)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:51:1
+✖ circuit opens after three consecutive zero-row failures, not isolated or partial runs (0.261655ms)
+  TypeError [Error]: governance.zeroRowCircuitOpen is not a function
+      at TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:53:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at scraper/test/aldi-recovery.test.mjs:56:1
+✖ open ALDI circuit performs robots plus one listing only, with no importable rows (6.79776ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  13 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:59:9)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 13,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:62:1
+✖ open circuit never resumes after an empty probe or robots refusal (0.394976ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:64:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scraper/test/aldi-recovery.test.mjs:67:1
+✖ body cap after bytes retains budget kind, HTTP 200 and read-body stage (5.45905ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: Source byte budget reached
+      at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:69:6)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Source byte budget reached
+        at readResource (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/supabase/functions/catalogue-collect/http-collect.mjs:80:213)
+        at async getResource (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/supabase/functions/catalogue-collect/http-collect.mjs:89:13)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:69:6)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }
