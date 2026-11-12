@@ -33,9 +33,9 @@ test at scraper/test/aldi-recovery.test.mjs:19:1
 test at scraper/test/aldi-recovery.test.mjs:32:1
 ✖ essential ALDI page keeps its real kind, HTTP status, stage and safe path (14.565244ms)
   AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
-  
+
   Caught error:
-  
+
   CollectionError: ALDI promotion page unavailable; previous products retained
       at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:33:2)
       at async Test.run (node:internal/test_runner/test:1409:7)
@@ -69,9 +69,9 @@ test at scraper/test/aldi-recovery.test.mjs:39:1
 test at scraper/test/aldi-recovery.test.mjs:45:1
 ✖ all ALDI request failures retain transport diagnostics instead of generic upstream (0.711874ms)
   AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
-  
+
   Caught error:
-  
+
   Error: All ALDI category requests failed
       at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:46:2)
       at async Test.run (node:internal/test_runner/test:1409:7)
@@ -103,9 +103,9 @@ test at scraper/test/aldi-recovery.test.mjs:51:1
 test at scraper/test/aldi-recovery.test.mjs:56:1
 ✖ open ALDI circuit performs robots plus one listing only, with no importable rows (6.79776ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   13 !== 2
-  
+
       at TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:59:9)
       at async Test.run (node:internal/test_runner/test:1409:7)
       at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
@@ -133,9 +133,9 @@ test at scraper/test/aldi-recovery.test.mjs:62:1
 test at scraper/test/aldi-recovery.test.mjs:67:1
 ✖ body cap after bytes retains budget kind, HTTP 200 and read-body stage (5.45905ms)
   AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
-  
+
   Caught error:
-  
+
   Error: Source byte budget reached
       at async TestContext.<anonymous> (file:///workspace/scratch/c73c012eb537/savehalf-aldi-collector/scraper/test/aldi-recovery.test.mjs:69:6)
       at async Test.run (node:internal/test_runner/test:1409:7)
