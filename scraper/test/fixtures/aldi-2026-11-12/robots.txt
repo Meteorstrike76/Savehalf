@@ -1,0 +1,7 @@
+# Sanitised capture: wildcard group applicable to the declared SaveHalf agent.
+User-agent: *
+Disallow: /results$
+Disallow: /results?
+Disallow: /brands$
+Disallow: /brands?
+Disallow: /tools

@@ -1,0 +1,22 @@
+{
+  "captured_utc": "2026-11-12",
+  "requests": 4,
+  "agent": "SaveHalf/1.0 (+https://savehalf.vercel.app)",
+  "sanitisation": "Retained only public product fields and their Nuxt referenced values; removed app state, cookies, headers, scripts and other markup. Numeric amounts and identifiers unchanged. No fixtures are ingestion inputs.",
+  "responses": [
+    {
+      "capture": "new-low",
+      "status": 200,
+      "body_bytes": 737757,
+      "sha256_raw": "b882576e613504e03dd0c97bb70aa98798f93368a15807174b7068b180ec3dda",
+      "retained_products": 30
+    },
+    {
+      "capture": "savers",
+      "status": 200,
+      "body_bytes": 579368,
+      "sha256_raw": "93ef3e1d91b15b46cc277341b176cc6c3dc5159df8829814457607e89cba1ce6",
+      "retained_products": 6
+    }
+  ]
+}

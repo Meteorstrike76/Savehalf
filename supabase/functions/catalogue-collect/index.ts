@@ -1,6 +1,6 @@
 import {collectCommunity} from './community.mjs';
 import {collect,getHtml,getResource} from './http-collect.mjs';
-import {sourceLimits,parserDrift} from './governance.mjs';
+import {sourceLimits,parserDrift,zeroRowCircuitOpen,ZERO_ROW_FAILURE_LIMIT} from './governance.mjs';
 import {CollectionError,diagnostic,publicFailureMessage} from './recovery.mjs';
 Deno.serve(async(req:Request)=>{
  const reply=(x:unknown,status=200)=>new Response(JSON.stringify(x),{status,headers:{'Content-Type':'application/json'}});
@@ -15,10 +15,35 @@ Deno.serve(async(req:Request)=>{
  const boundedResource=async(u:string,options={})=>{if(budget.exceeded)throw Error('Source byte budget reached');if(++calls>limits.requests)throw Error('Source request budget reached');return await getResource(u,budget,options);};
  try{
  if(store==='Woolworths')throw new CollectionError('Direct source permission requires review','policy');
+ if(store==='Big W')throw new CollectionError('Big W remains paused pending source permission review','policy');
  if(store==='OzBargain'){const result=await collectCommunity({api:url+'/rest/v1',headers,get:boundedResource});if(budget.exceeded)throw Error('Source byte budget reached');const now=new Date().toISOString();stage='status';const recorded=await rest('collection_status?store=eq.OzBargain',{failure_kind:null,http_status:null,retry_after_seconds:null,review_required:false,diagnostics:[],status:'ok',last_finished:now,last_success_at:now,saved:result.saved,sales:0,message:result.message,request_count:calls,body_bytes:budget.used,image_count:0,drift_flag:false},'PATCH');if(!recorded.ok)throw Error('Could not record community collection status');await rest('collection_audit',{store,status:'ok',rows:result.saved,requests:calls,body_bytes:budget.used,image_count:0,drift:false});return reply(result);}
- const previousStatus=await fetch(url+'/rest/v1/collection_status?select=saved&store=eq.'+encodeURIComponent(store),{headers,signal:AbortSignal.timeout(12000)});if(!previousStatus.ok)throw Error('Could not read previous collection health');const old=(await previousStatus.json())[0];
- const boundedGet=async(u:string,options={})=>{if(budget.exceeded)throw Error('Source byte budget reached');if(++calls>limits.requests)throw Error('Source request budget reached');return await getHtml(u,budget,options);};
- const {rows,attempted,sales,diagnostics=[]}=await collect(store,boundedGet);requestDiagnostics.push(...diagnostics);stage='validation';const now=new Date().toISOString();if(budget.exceeded)throw Error('Source byte budget reached');
+ const previousStatus=await fetch(url+'/rest/v1/collection_status?select=saved,review_required&store=eq.'+encodeURIComponent(store),{headers,signal:AbortSignal.timeout(12000)});if(!previousStatus.ok)throw Error('Could not read previous collection health');const old=(await previousStatus.json())[0];
+ if(old?.review_required)throw new CollectionError('Source remains paused for review','policy');
+ // Reservation/due/backoff checks remain in start_catalogue_run. Read bounded
+ // audit history afterwards: reservation changes status to running, and saved
+ // deliberately retains the last successful snapshot even on zero-row failures.
+ let probe=false;
+ if(store==='Aldi'){
+  stage='circuit';
+  const history=await fetch(url+'/rest/v1/collection_audit?select=status,rows&store=eq.Aldi&order=at.desc,id.desc&limit='+ZERO_ROW_FAILURE_LIMIT,{headers,signal:AbortSignal.timeout(12000)});
+  if(!history.ok)throw Error('Could not read source circuit state');
+  const recent=await history.json();if(!Array.isArray(recent))throw Error('Invalid source circuit state');
+  probe=zeroRowCircuitOpen(recent);
+ }
+ stage='fetch';
+ const requestLimit=probe?2:limits.requests;
+ const boundedGet=async(u:string,options={})=>{if(budget.exceeded)throw Error('Source byte budget reached');if(++calls>requestLimit)throw Error('Source request budget reached');return await getHtml(u,budget,options);};
+ const result=await collect(store,boundedGet,{probe});
+ const {rows,attempted,sales,diagnostics=[]}=result;requestDiagnostics.push(...diagnostics);stage='validation';const now=new Date().toISOString();if(budget.exceeded)throw Error('Source byte budget reached');
+ if(result.probeRecovered){
+  stage='probe';
+  const message=`ALDI probe parsed ${result.probeRows} rows; no products refreshed. Full collection may resume at the next due run.`;
+  const recorded=await rest('collection_status?store=eq.Aldi',{status:'empty',last_finished:now,request_count:calls,body_bytes:budget.used,failure_kind:null,http_status:null,retry_after_seconds:null,review_required:false,diagnostics:[{stage:'probe',path:'/products/new-low-price/k/1588161425841179',kind:'probe',http_status:200,rows:result.probeRows}],message},'PATCH');
+  if(!recorded.ok)throw Error('Could not record source probe');
+  const audited=await rest('collection_audit',{store,status:'probe_ok',rows:result.probeRows,requests:calls,body_bytes:budget.used,image_count:0,drift:false});
+  if(!audited.ok)throw Error('Could not audit source probe');
+  return reply({store,message,probe:true});
+ }
  const drift=parserDrift(old?.saved||0,rows.length);
  const metrics={failure_kind:null,http_status:null,retry_after_seconds:null,review_required:false,diagnostics:requestDiagnostics,request_count:calls,body_bytes:budget.used,image_count:rows.filter(r=>r.image_url).length,drift_flag:drift};
  if(drift){await rest('collection_status?store=eq.'+encodeURIComponent(store),{...metrics,review_required:true,failure_kind:'parser',status:'failed',last_finished:now,message:'Large row-count drop quarantined for parser review; prior products were not refreshed.'},'PATCH');await rest('collection_audit',{store,status:'quarantined',rows:rows.length,requests:calls,body_bytes:budget.used,image_count:metrics.image_count,drift:true});return reply({store,message:'Parser drift quarantined'},502);}
