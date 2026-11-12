@@ -3,7 +3,7 @@ import {bestlessProducts,bestlessRobotsAllows} from './bestless-html.mjs';
 import {jsonProducts,productImage} from './images.mjs';
 import {buildDeal,pct} from './normalize.mjs';import {jsonScripts,kmartLinks,kmartProduct} from './kmart-html.mjs';import {aldiProducts} from './aldi-html.mjs';
 import {robotsAllows} from './robots.mjs';
-import {CollectionError,retryAfter,diagnostic,listingFailure} from './recovery.mjs';
+import {CollectionError,retryAfter,diagnostic,listingFailure,transportReason} from './recovery.mjs';
 const BASES={'Best & Less':'https://www.bestandless.com.au',Kmart:'https://www.kmart.com.au',Aldi:'https://www.aldi.com.au','Big W':'https://www.bigw.com.au',Target:'https://www.target.com.au',Coles:'https://www.coles.com.au',Woolworths:'https://www.woolworths.com.au'};
 const LISTS={'Big W':['/collection/clearance','/collection/tech-audio-clearance'],Target:['/c/clearance/W676714']};
 let bigwHttpClient;
@@ -16,8 +16,9 @@ function transportOptions(url){
  }
  return {};
 }
-export async function collect(store,get){
+export async function collect(store,get,{probe=false}={}){
  if(['Coles','Woolworths'].includes(store))return collectSupermarket(store,get);
+ if(store==='Big W')throw new CollectionError('Big W remains paused pending source permission review','policy');
  const base=BASES[store];if(!base)throw Error('Unsupported retailer');let rows=[];let attempted=0;const diagnostics=[];
  if(store==='Best & Less'){
   const robots=await get(base+'/robots.txt');attempted++;
@@ -25,17 +26,36 @@ export async function collect(store,get){
   rows=bestlessProducts(await get(base+'/sale-clearance/'));attempted++;
   if(!rows.length)throw new CollectionError('Best & Less returned no eligible published prices; parser review required','parser');
  }else if(store==='Aldi'){
-  const paths=['/products/lower-prices/k/1588161425841179','/products/super-savers/k/1588161426952145','/products/pantry/pasta-rice-grains/k/1111111179','/products/pantry/canned-food/k/1111111171','/products/dairy-eggs-fridge/eggs/k/1111111162','/products/dairy-eggs-fridge/k/960000000','/products/bakery/k/920000000','/products/freezer/k/980000000','/products/fruits-vegetables/k/950000000','/products/pantry/k/970000000','/products/cleaning-household/k/1050000000','/products/health-beauty/k/1040000000','/products/drinks/k/1000000000'];
+  const paths=['/products/new-low-price/k/1588161425841179','/products/super-savers/k/1588161426952145','/products/pantry/pasta-rice-grains/k/1111111179','/products/pantry/canned-food/k/1111111171','/products/dairy-eggs-fridge/eggs/k/1111111162','/products/dairy-eggs-fridge/k/960000000','/products/bakery/k/920000000','/products/freezer/k/980000000','/products/fruits-vegetables/k/950000000','/products/pantry/k/970000000','/products/cleaning-household/k/1050000000','/products/health-beauty/k/1040000000','/products/drinks/k/1000000000'];
   const robots=await get(base+'/robots.txt');attempted++;
   if(paths.some(p=>!robotsAllows(robots,base+p)))throw new CollectionError('Robots policy requires review','policy');
   paths.pop(); // Keep the existing thirteen-request cap: robots plus twelve categories.
+  const parsePage=async path=>{
+   const html=await get(base+path);
+   try{
+    const parsed=aldiProducts(html);
+    if(!parsed.length)throw new CollectionError('ALDI listing returned zero eligible rows; parser review required','parser',200);
+    return parsed;
+   }catch(error){
+    const e=error instanceof CollectionError?error:new CollectionError('ALDI product shape could not be parsed','parser',200);
+    e.sourcePath=path;e.stage='parse';throw e;
+   }
+  };
+  if(probe){
+   // Owner-approved: one fresh robots check + exactly one promotion-page probe.
+   // Never ingest a partial probe or refresh any product observation timestamp.
+   const parsed=await parsePage(paths[0]);
+   return {rows:[],attempted:2,sales:0,diagnostics:[],probeRecovered:true,probeRows:parsed.length};
+  }
   const results=[];
-  for(let i=0;i<paths.length;i+=3)results.push(...await Promise.allSettled(paths.slice(i,i+3).map(async p=>aldiProducts(await get(base+p)))));
-  if(results.every(r=>r.status==='rejected'))throw Error('All ALDI category requests failed');
+  for(let i=0;i<paths.length;i+=3)results.push(...await Promise.allSettled(paths.slice(i,i+3).map(parsePage)));
+  if(results.every(r=>r.status==='rejected'))throw listingFailure(results,paths);
   diagnostics.push(...results.flatMap((r,i)=>r.status==='rejected'?[diagnostic(r.reason,'listing',paths[i])]:[]));
-  // The two promotion pages are essential; never silently publish an apparently
-  // healthy zero-sale run when either was unavailable.
-  if(results.slice(0,2).some(r=>r.status==='rejected'))throw new CollectionError('ALDI promotion page unavailable; previous products retained','upstream');
+  // Preserve the essential page's actual error classification and diagnostics.
+  if(results.slice(0,2).some(r=>r.status==='rejected')){
+   const e=listingFailure(results.slice(0,2),paths.slice(0,2));
+   e.message='ALDI promotion page unavailable; previous products retained';throw e;
+  }
 
   const buckets=results.map(r=>r.status==='fulfilled'?r.value:[]);
   for(let i=0;i<30;i++)for(const bucket of buckets)if(bucket[i])rows.push(bucket[i]);attempted+=paths.length;
@@ -70,14 +90,14 @@ export async function collect(store,get){
 async function readResource(url,budget=null,options={}){
  let r;
  try{r=await fetch(url,{...options,...transportOptions(url),signal:AbortSignal.timeout(12000),redirect:'error',headers:{'User-Agent':'SaveHalf/1.0 (+https://savehalf.vercel.app)',...options.headers}});}
- catch{throw new CollectionError('Source network request failed','transport');}
+ catch(error){const e=new CollectionError('Source network request failed','transport');e.transportReason=transportReason(error);e.stage=new URL(url).pathname==='/robots.txt'?'robots':'fetch';throw e;}
  if(r.status===304)return {status:304,text:'',etag:r.headers.get('etag'),modified:r.headers.get('last-modified')};
  if(!r.ok){await r.body?.cancel();throw new CollectionError(`Retailer returned HTTP ${r.status}`,[401,403].includes(r.status)?'access':r.status===429?'rate_limit':r.status===404?'missing':'upstream',r.status,retryAfter(r.headers.get('retry-after')));}
  const limit=new URL(url).pathname==='/robots.txt'?50000:3500000;
- if(Number(r.headers.get('content-length'))>limit){await r.body?.cancel();throw Error('Retailer page exceeds collection limit');}
- if(!r.body)throw Error('Retailer returned no page');
+ if(Number(r.headers.get('content-length'))>limit){await r.body?.cancel();const e=new CollectionError('Retailer page exceeds collection limit','budget',r.status);e.stage='read_body';throw e;}
+ if(!r.body){const e=new CollectionError('Retailer returned no page','transport',r.status);e.stage='read_body';throw e;}
  const reader=r.body.getReader(),chunks=[];let size=0;
- try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(budget){budget.used+=value.byteLength;if(budget.used>budget.limit){budget.exceeded=true;await reader.cancel();throw Error('Source byte budget reached');}}if(size>limit){await reader.cancel();throw Error('Retailer page exceeds collection limit');}chunks.push(value);}}finally{reader.releaseLock();}
+ try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(budget){budget.used+=value.byteLength;if(budget.used>budget.limit){budget.exceeded=true;await reader.cancel();throw new CollectionError('Source byte budget reached','budget',r.status);}}if(size>limit){await reader.cancel();throw new CollectionError('Retailer page exceeds collection limit','budget',r.status);}chunks.push(value);}}catch(error){const e=error instanceof CollectionError?error:new CollectionError('Source body stream failed','transport',r.status);if(e.kind==='transport')e.transportReason=transportReason(error);e.stage='read_body';throw e;}finally{reader.releaseLock();}
  const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.byteLength;}
  return {status:r.status,text:new TextDecoder().decode(bytes),etag:r.headers.get('etag'),modified:r.headers.get('last-modified')};
 }
@@ -87,7 +107,7 @@ export async function getHtml(url,budget=null,options={}){return (await getResou
 // Preserve only the safe pathname for diagnosis; never keep query strings or credentials.
 export async function getResource(url,budget=null,options={}){
  try{return await readResource(url,budget,options);}catch(error){
-  if(error instanceof Error)error.sourcePath=new URL(url).pathname;
+  if(error instanceof Error){error.sourcePath=new URL(url).pathname;error.stage??=new URL(url).pathname==='/robots.txt'?'robots':'fetch';}
   throw error;
  }
 }
