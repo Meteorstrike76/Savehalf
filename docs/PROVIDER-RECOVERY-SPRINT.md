@@ -74,6 +74,11 @@ The projected-count guard is not a cross-process reservation; do not run multipl
 publishers concurrently. The existing database upsert is idempotent by product ID.
 Source prices with more than two decimal places are rejected before any write,
 so the existing cents column cannot silently round them into different prices.
+The publisher also reads existing source/retrieval timestamps. An out-of-order
+capture cannot overwrite a newer retrieval or newer source observation. It
+reports preserved rows separately and performs no write when all candidates are
+older. Missing prior timestamps fail closed. These guards assume sequential
+publishers; the lookup and upsert are not an atomic compare-and-write transaction.
 
 ## Read-only health check
 
@@ -85,6 +90,41 @@ overdue jobs. Stored product totals are not labelled as fresh counts.
 
 This is a manual operational report, not an enabled scheduled alert. It does not
 fetch retailer pages, consume provider credits or alter any database objects.
+
+## Bounded refresh preview
+
+`node scraper/src/provider-refresh-plan.mjs observations.json` accepts:
+
+- `health`: the unwrapped `collection_health` object from the read-only SQL report;
+- `balance`: `{checked_at, credits_remaining}` recorded when the connector's free
+  account check returns. Do not include account details, keys or headers.
+
+Health must be at most five minutes old and balance at most one minute old.
+The planner preserves a 60-credit reserve, proposes at most three one-page
+listings (25 products per page), and prioritises missing coverage, older
+retrievals and source observations approaching expiry. Rotation starts after
+24 hours so six stores can alternate across daily three-page batches before
+the existing 72-hour retrieval window expires. Equal-priority cold/failed stores
+rotate instead of repeatedly spending the allowance on the same three stores.
+
+The tool is advisory: `ready_for_execution=false`, `reserved_credits=0`. It does
+not fetch, publish, activate a schedule, reserve shared credits or reset a billing
+period. A shared credit reservation and serial executor must be implemented and
+reviewed before any automatic production refresh is enabled. The current live
+observations produced zero due pages and zero proposed credit consumption.
+
+## Live interface and follow-up review
+
+Verified the live pharmacy section in the browser: 50 combined products, 25 under
+each retailer filter, source updated 13 November / retrieved 14 November, and
+links pointing to the expected retailer domains. Retailer destinations were not
+opened. Some provider thumbnails are unavailable; the interface shows an honest
+image fallback instead of inventing a photo.
+
+A separate, one-time read-only Aldi follow-up is scheduled for 18:25 Sydney on
+14 November 2026, after its next eligible full run. It checks real imports and
+fresh counts and cannot trigger collection, alter backoff or clear review stops.
+This does not enable provider refresh or change database cron configuration.
 
 ## Tests and release boundaries
 
@@ -98,7 +138,7 @@ Final checks completed during this sprint:
 
 | Check | Result |
 | --- | --- |
-| Provider branch `npm test --prefix scraper` | 72/72 passed |
+| Provider branch `npm test --prefix scraper` | 81/81 passed after review hardening |
 | Deployed collector parity | All 13 deployed files exactly match PR #35 |
 | PR #35 collector suite, separate checkout | 79/79 passed |
 | App `node --test tests/*.test.cjs` | 193/193 passed |
@@ -113,9 +153,10 @@ Final checks completed during this sprint:
 
 The two collector test suites overlap; report them as separate runs rather than
 adding their counts together. Existing npm deprecation/Zod build warnings remain.
-No browser visual check was performed: production verification is at database
-level, and no frontend files are changed. Deno runtime is not emulated by the
-Node fixture tests; actual deployed-source parity is verified separately.
+Live pharmacy controls, dates, link destinations and image fallback were checked
+in the browser during follow-up review; no frontend files are changed. Deno
+runtime is not emulated by the Node fixture tests; actual deployed-source parity
+is verified separately.
 
 The new importer is an operator CLI, not an Edge Function or website bundle. No
 Vercel deployment, Edge redeployment, schema/RLS change or new secret is needed

@@ -23,12 +23,21 @@ export async function publishProviderSnapshot(snapshot,db,now=Date.now()){
  const plan=prepareProviderSnapshot(snapshot,now);
  const {count,error}=await db.from('provider_products').select('id',{count:'exact',head:true});
  if(error||!Number.isInteger(count)||count<0)throw Error('Cannot check snapshot budget');
- const existing=await db.from('provider_products').select('id').in('id',plan.rows.map(p=>p.id)).limit(200);
+ const existing=await db.from('provider_products').select('id,retrieved_at,source_updated_at').in('id',plan.rows.map(p=>p.id)).limit(200);
  if(existing.error||!Array.isArray(existing.data))throw Error('Cannot check existing snapshot IDs');
+ const previous=new Map(existing.data.map(row=>[row.id,row]));
+ const publishable=plan.rows.filter(row=>{
+  const old=previous.get(row.id);if(!old)return true;
+  const retrieved=Date.parse(old.retrieved_at),source=Date.parse(old.source_updated_at);
+  if(!Number.isFinite(retrieved)||!Number.isFinite(source))throw Error('Cannot verify existing snapshot timestamps');
+  return Date.parse(row.retrieved_at)>=retrieved&&Date.parse(row.source_updated_at)>=source;
+ });
+ const skipped_newer=plan.rows.length-publishable.length;
+ if(!publishable.length)return {...plan,rows:[],published:0,skipped_newer};
  if(projectedProviderCount(count,plan.rows,existing.data.map(p=>p.id))>MAX_PROVIDER_ROWS)throw Error('Conservative 1000-row budget requires retention review');
- const result=await db.from('provider_products').upsert(plan.rows,{onConflict:'id'});
+ const result=await db.from('provider_products').upsert(publishable,{onConflict:'id'});
  if(result.error)throw Error('Provider upsert failed; no successful import recorded');
- return plan;
+ return {...plan,rows:publishable,published:publishable.length,skipped_newer};
 }
 
 export function boundedProviderFetch(fetcher=globalThis.fetch){

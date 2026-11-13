@@ -10,7 +10,7 @@ function database({count=999,existing=[],countError=null,lookupError=null,writeE
  return {writes,calls,from(table){assert.equal(table,'provider_products');return {
   select(_columns,options){
    if(options?.head){calls.push('count');return Promise.resolve({count,error:countError});}
-   return {in(_column,ids){assert(ids.length<=200);return {limit(limit){assert.equal(limit,200);calls.push('lookup');return Promise.resolve({data:existing.map(id=>({id})),error:lookupError});}};}};
+   return {in(_column,ids){assert(ids.length<=200);return {limit(limit){assert.equal(limit,200);calls.push('lookup');const data=existing.map(row=>typeof row==='string'?{id:row,retrieved_at:'2026-11-14T00:00:00Z',source_updated_at:'2026-11-12T00:00:00Z'}:row).map(row=>Object.fromEntries(Object.entries(row).filter(([key])=>_columns.split(',').includes(key))));return Promise.resolve({data,error:lookupError});}};}};
   },
   async upsert(rows,options){calls.push('write');assert.deepEqual(options,{onConflict:'id'});writes.push(rows);return {error:writeError};}
  };}};
@@ -45,6 +45,27 @@ test('prices that cannot be stored exactly as cents are rejected rather than rou
 test('row budget allows idempotent updates but refuses new IDs at capacity',async()=>{
  const existing=database({count:1000,existing:[product.id]});await publishProviderSnapshot(snapshot(),existing,now);assert.equal(existing.writes.length,1);
  const full=database({count:1000});await assert.rejects(publishProviderSnapshot(snapshot(),full,now),/1000-row/);assert.equal(full.writes.length,0);
+});
+test('out-of-order captures cannot overwrite a newer retrieval or source observation',async()=>{
+ for(const prior of [
+  {id:product.id,retrieved_at:'2026-11-14T00:45:00Z',source_updated_at:product.updated_at},
+  {id:product.id,retrieved_at:'2026-11-14T00:15:00Z',source_updated_at:'2026-11-13T12:00:00Z'},
+ ]){
+  const db=database({existing:[prior]});const result=await publishProviderSnapshot(snapshot(),db,now);
+  assert.equal(db.writes.length,0);assert.equal(result.published,0);assert.equal(result.skipped_newer,1);
+  assert.deepEqual(db.calls,['count','lookup']);
+ }
+});
+test('mixed imports publish only eligible rows and report preserved newer snapshots',async()=>{
+ const db=database({existing:[{id:product.id,retrieved_at:'2026-11-14T00:45:00Z',source_updated_at:product.updated_at}]});
+ const input=snapshot({pages:[{data:[product,{...product,id:'priceline_new'}]}]});
+ const result=await publishProviderSnapshot(input,db,now);
+ assert.deepEqual(db.writes[0].map(r=>r.id),['priceline_new']);
+ assert.equal(result.published,1);assert.equal(result.skipped_newer,1);assert.equal(result.accepted,2);
+});
+test('missing prior timestamps fail closed before overwriting an existing row',async()=>{
+ const db=database({existing:[{id:product.id}]});
+ await assert.rejects(publishProviderSnapshot(snapshot(),db,now),/existing snapshot timestamps/);assert.equal(db.writes.length,0);
 });
 test('database failures stop subsequent calls and never report successful publication',async()=>{
  for(const config of [{count:null},{countError:{message:'private'}},{lookupError:{message:'private'}},{writeError:{message:'private'}}]){

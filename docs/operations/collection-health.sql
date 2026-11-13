@@ -8,7 +8,11 @@ with direct_fresh as (
  count(*) filter(where source_updated_at<=retrieved_at and retrieved_at<=now()
   and retrieved_at>now()-interval '72 hours'
   and source_updated_at>now()-interval '7 days') as fresh_records,
- max(retrieved_at) as last_import
+ max(retrieved_at) as last_import,
+ min(retrieved_at) filter(where source_updated_at<=retrieved_at and retrieved_at<=now()
+  and retrieved_at>now()-interval '72 hours' and source_updated_at>now()-interval '7 days') as oldest_fresh_retrieval,
+ min(source_updated_at) filter(where source_updated_at<=retrieved_at and retrieved_at<=now()
+  and retrieved_at>now()-interval '72 hours' and source_updated_at>now()-interval '7 days') as oldest_fresh_source_update
  from public.provider_products group by store
 ), direct_health as (
  select s.store,s.status as last_run_status,s.review_required,s.failure_kind,

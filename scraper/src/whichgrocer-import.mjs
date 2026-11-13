@@ -20,7 +20,7 @@ if(Array.isArray(input)&&!publish){
   if(!url||!key)throw Error('Server-only Supabase environment required');
   const {createClient}=await import('@supabase/supabase-js');
   const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:boundedProviderFetch()}});
-  await publishProviderSnapshot(input,db,now);
-  console.log('Imported provider snapshots with original retrieval time. Direct collector health was not changed.');
+  const result=await publishProviderSnapshot(input,db,now);
+  console.log(`${result.published} provider snapshots imported with original retrieval time; ${result.skipped_newer} newer stored snapshots preserved. Direct collector health was not changed.`);
  }
 }
