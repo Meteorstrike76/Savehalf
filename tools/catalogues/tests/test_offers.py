@@ -53,3 +53,9 @@ class WoolworthsTests(unittest.TestCase):
         for row in result['offers']:
             self.assertIn('/'+row['offer_id']+'/',row['image_url'])
             self.assertIn('?offer='+row['offer_id'],row['source_url'])
+
+class SourceProtocolTests(unittest.TestCase):
+    def test_http_source_cannot_become_https_provenance_by_normalisation(self):
+        html=(HERE/'fixtures/coles-offers.html').read_text().replace('href="/view/','href="http://www.catalogueoffers.com.au/view/')
+        result=offer_cards(html,'Coles','https://www.catalogueoffers.com.au/stores/coles/specials',safe_url)
+        self.assertFalse(result['offers'])

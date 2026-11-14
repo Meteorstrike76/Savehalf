@@ -225,3 +225,16 @@ settings, source permissions, adapters or database contents were changed.
 Data-only hosting in place of whole-site deployments, richer offer-condition
 extraction and shopper-region filtering remain subsequent upgrades; this batch does
 not claim they are implemented.
+
+## Final release hardening
+
+Offer IDs, store labels, source-link offer IDs and image-folder IDs must agree before
+an advertisement is displayed. HTTPS provenance is validated before URL normalisation.
+Source date strings must be present and ordered. The region selector excludes unknown
+and other-state editions when a state is selected; it never relabels an edition.
+
+This release does not configure a new storage service or invent purchase conditions.
+Data-only hosting and full condition extraction remain outside the deployed feature
+set. Automatic collection/publication flags stay disabled until their documented
+activation prerequisites are met. The public feed in source control remains empty;
+existing retailer and provider feeds continue operating separately.

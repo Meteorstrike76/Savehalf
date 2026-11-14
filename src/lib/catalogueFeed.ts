@@ -16,8 +16,11 @@ export function readCatalogueFeed(value:unknown,now=Date.now()):CatalogueAd[]{
   if(typeof p.id!=='string'||seen.has(p.id)||typeof p.name!=='string'||p.name.length<2||p.name.length>250||typeof p.store!=='string'||p.store.length>80||typeof p.notice!=='string')return false;
   if(typeof p.advertised_price!=='string'||!/^\d{1,5}\.\d{2}$/.test(p.advertised_price)||Number(p.advertised_price)<=0||p.price_text!=='$'+p.advertised_price)return false;
   if(!approvedSource(p.source_url)||!catalogueAdCurrent(p,now))return false;
+  const offerId=new URL(p.source_url).searchParams.get('offer');
+  if(!offerId||p.id!==p.store+':'+offerId)return false;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_from_date)||!/^\d{4}-\d{2}-\d{2}$/.test(p.valid_through_date)||p.valid_from_date>p.valid_through_date)return false;
   if(p.region!==null&&!['NSW','VIC','ACT','QLD','TAS','SA','NT','WA'].includes(p.region))return false;
-  if(p.image_url!==null){try{const u=new URL(p.image_url);if(u.protocol!=='https:'||u.hostname!=='img.offers-cdn.net'||u.username||u.password||u.port||u.search||u.hash||!/^\/assets\/uploads\/offers\/au\/\d+\//.test(u.pathname))return false;}catch{return false;}}
+  if(p.image_url!==null){try{const u=new URL(p.image_url);if(u.protocol!=='https:'||u.hostname!=='img.offers-cdn.net'||u.username||u.password||u.port||u.search||u.hash||!u.pathname.startsWith('/assets/uploads/offers/au/'+offerId+'/'))return false;}catch{return false;}}
   seen.add(p.id);return true;
  });
 }

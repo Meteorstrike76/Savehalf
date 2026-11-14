@@ -68,7 +68,7 @@ def offer_cards(text, store, listing_url, safe_url, maximum=25):
             seen.add(identity)
             source = urlsplit(urljoin(listing_url, card.attrs.get('href', '')))
             listing_slug = urlsplit(listing_url).path.split('/')[2]
-            if source.hostname != 'www.catalogueoffers.com.au' or not source.path.startswith('/view/offers/'+listing_slug+'-') or source.query != 'offer='+identity or not re.fullmatch(r'page=\d+', source.fragment):
+            if source.scheme!='https' or source.username or source.password or source.port not in (None,443) or source.hostname != 'www.catalogueoffers.com.au' or not source.path.startswith('/view/offers/'+listing_slug+'-') or source.query != 'offer='+identity or not re.fullmatch(r'page=\d+', source.fragment):
                 reason = 'offer_provenance_drift'
         if reason:
             rejected.append({'offer_id': identity, 'reason': reason})

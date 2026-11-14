@@ -16,6 +16,10 @@ test('actual catalogue component renders attributed source prices and hides expi
   const text=dom.window.document.body.textContent;
   assert.match(text,/Source product fixture/);assert.match(text,/\$15\.00/);assert.match(text,/Region unverified/);assert.match(text,/comparison basis has not been verified/);assert.match(text,/Confirm the price at checkout/);assert.doesNotMatch(text,/% OFF|Save \$/);
   const link=dom.window.document.querySelector('a');assert.equal(link.href,ad.source_url);assert.equal(link.style.minHeight,'48px');
+  const region=dom.window.document.querySelectorAll('select')[1];
+  await React.act(async()=>{region.value='NSW';region.dispatchEvent(new dom.window.Event('change',{bubbles:true}));});
+  assert.doesNotMatch(dom.window.document.body.textContent,/Source product fixture/);
+  await React.act(async()=>{region.value='All';region.dispatchEvent(new dom.window.Event('change',{bubbles:true}));});
   now=Date.parse(ad.expires_at);await React.act(async()=>{tick();});
   assert.equal(dom.window.document.querySelector('section'),null);
  }finally{await React.act(async()=>root.unmount());dom.window.close();Object.assign(global,saved);}
