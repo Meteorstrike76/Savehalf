@@ -1,90 +1,167 @@
-# Catalogue pipeline: staging implementation, not an activated data feed
+# Automated catalogue collection and attributed website advertisements
 
-Branch: `feat/catalogue-pipeline`, based on `main` a16bb1d. No changes to existing
-retailer adapters, review stops, Supabase schema, auth or production data.
+PR #37, `feat/catalogue-pipeline`, based on `main` a16bb1d. No changes to existing
+retailer adapters, their pauses, Supabase schema/RLS or authentication.
 
-## Implemented
+## Source findings and resolved blockers
 
-- Reads **all 28 actual retailer names** from `src/lib/stores.ts` and
-  `src/lib/moreRetailers.ts`. Directory entries are targets, not verified coverage.
-- Discovers real public listing URLs from `/stores` and the store sitemap linked
-  from the robots-advertised sitemap index. Does not synthesize retailer endpoints.
-- Extracts catalogue validity dates, cover URLs, viewer links and Product JSON-LD
-  where provided. Preserves source product fields as evidence.
-- Discovers explicitly rendered page-image URLs. Does not guess CDN paths or
-  execute source JavaScript. The observed Coles viewer URL ID 3900088 has page
-  assets in folder 3900091; these IDs must not be assumed interchangeable.
-- Local Tesseract OCR produces TSV words, confidence and layout coordinates.
-  OCR text is **not** a validated price/name/pack/condition association.
-- Writes a manifest, page-image evidence and OCR TSV into a GitHub Actions artifact.
-  Tokens, cookies and full source HTML are not saved. Retention: seven days.
-- Daily workflow, serial concurrency, 15-minute job deadline, 40 requests including
-  robots, 4 viewer pages and 5 images by default. Absolute CLI ceilings: 80 requests,
-  10 viewers, 25 images. 40 MB total and 4 MB per response, 20-second connection/read
-  timeout and 30-second checked body deadline. At least one second between requests;
-  robots crawl-delay respected. No automatic retries or redirect following.
-- Robots checked separately per origin. Non-success robots responses fail closed.
-  Only HTTPS catalogueoffers.com.au and img.offers-cdn.net, no query-bearing URLs.
-- Target order rotates daily to avoid permanently favouring the first retailer.
-- Missing listings, empty metadata, byte caps, request caps and source failures remain
-  explicit. `complete=false` and `publishable_offers=[]` are intentional: this is
-  an evidence collector, not a claim of complete retail coverage.
+The public Coles viewer URL ends in **3900088**, but its embedded page images live
+under **3900091**. Reconstructing URLs from the viewer ID is incorrect. Explicit
+HTML thumbnails are only 165 × 270; the first thumbnail yielded no usable OCR.
 
-## Run and inspect
+The source's referenced `booklet/folder-viewer.*.js` explicitly substitutes the
+literal `large` into its `flyerPages` templates. The collector now reads that static
+recipe and JSON literals without executing JavaScript. It verifies the viewer's
+`storeUrl`, CDN, template shape and source-referenced script. Changed or ambiguous
+recipes stop as drift. A real resolved Coles image was **1219 × 2000**, and local
+Tesseract extracted **91 non-empty words**, including names, pack sizes and the
+`FP-VIC-METRO` printer code. That is a **Victorian edition**, not Sydney pricing.
+
+Promotional prices with large digits/superscript cents are still unreliable OCR.
+The primary offer route therefore parses the source's already structured public
+**offer cards**: ID, product name, exact advertised price, reference-price text,
+matching offer image, catalogue URL and page number. Images must contain the same
+offer ID. No external image search, guessed matching, arithmetic discount or
+reference-price reinterpretation is used. OCR remains page evidence, not a price
+publisher.
+
+A bounded live two-store run returned **25 Coles + 25 Woolworths** offer cards,
+16 requests and 4,100,035 body bytes. Absolute catalogue dates were independently
+joined from viewer metadata or a listing cover with the exact catalogue ID.
+The resulting **50 attributed advertisements** passed feed export. This verifies
+that sample, not every retailer, every catalogue page, every variant or stock.
+
+Minimal sanitised fixtures include observed Coles cards, listing metadata, image
+URLs and the static viewer recipe. No full HTML, cookies, tracking/challenge tokens,
+headers or credentials are committed.
+
+## Automatic flow
+
+1. Read all **28 retailer names** from the website's actual primary and directory lists.
+2. Discover returned store links and the robots-advertised store sitemap. Verified
+   aliases cover Best & Less, Bunnings Warehouse and Domino’s Pizza without
+   guessing endpoints. Absent stores remain explicitly undiscovered.
+3. Follow an actually observed `/specials` link. Parse up to 25 source cards per store;
+   explicitly report extra cards, rejected rows and unprocessed pages as partial.
+4. Read dated catalogue metadata. Follow a bounded selection of referenced viewers
+   for full-page image evidence and local OCR.
+5. Join advertisements to absolute source dates. Missing/future/expired metadata is held.
+6. Export `website-feed.json`. Do **not** write these advertisements into verified
+   deals, provider products, price history, meal-planning prices or favourites.
+7. Build the existing website with that generated file as `public/catalogue-offers.json`.
+   The separate **From the catalogues** section displays source prices, source links,
+   detected edition or region-unverified labels, reference-price caveats and check times.
+8. Optionally stage a production build, compare its deployed feed with the generated
+   file and promote that exact build. This publisher is disabled unless opted in.
+
+No ChatGPT wake-up, vision API, new AI provider or recurring manual review is needed
+for source cards. Image-only or ambiguous offers are held; there is no claim that
+OCR extracts every product correctly.
+
+## Freshness, expiry and resuming
+
+- Every source card keeps its actual `source_checked_at`. Reading/re-exporting a file
+  never resets it. Captures more than 24 hours old or future-dated are rejected.
+- Known printer-code regions use that region's IANA timezone, including DST.
+- Unknown-region catalogue dates use the conservative intersection of civil timezone
+  windows: activate late, expire early. This sacrifices some availability rather than
+  silently assigning nationwide applicability. Original date strings remain visible.
+- The browser hides rows at expiry or after 24 hours without source verification,
+  independently of the scheduler; it checks every 30 seconds and on visibility return.
+  The feed revalidates at most every 15 minutes while visible.
+- The previous feed can retain still-current rows for unprocessed stores without
+  renewing their timestamps. Newly held versions suppress older versions of that ID.
+- Small image checkpoints contain only URL, content hash, original download time,
+  OCR outcome and detected region. Reuse does not claim a new image check. They expire
+  after seven days and are capped at 500 entries / 500 KB. Previously processed images
+  do not consume the next batch's download allowance, allowing progress through pages.
+- Prior state is recovered from a successful run on `main`. Missing/expired artifacts
+  safely restart discovery. No previous file paths or executable content are trusted.
+
+## Bounds and workflow behaviour
+
+CLI defaults: 40 total requests, 4 viewers, 5 new images, 8 specials listings.
+Absolute ceilings: 80 requests, 10 viewers, 25 images, 28 specials listings.
+
+The workflow uses **80 requests, 4 viewers, 5 new images and 14 specials listings**,
+twice daily at 08:15 and 20:15 UTC. Half-day rotation prioritises different halves of
+the 28-store target list. That is bounded polling, not an exhaustive instant mirror.
+Not every listed retailer necessarily has a catalogue on this source.
+
+Other bounds: 40 MB total, 4 MB per response, 20-second read/connection timeout,
+checked 30-second body deadline, one-second minimum spacing plus robots crawl-delay,
+serial workflow concurrency and 10-minute limits on each job. Redirects, arbitrary
+hosts, cookies, browser fallbacks, private APIs and unsupported query URLs are rejected.
+The job checks robots separately for the source and image CDN and fails closed.
+
+State artifacts are retained two days; page evidence one day. These consume included
+GitHub storage/minutes, so verify the available allocation before activation. No paid
+service or billing is activated. An enabled job is not a guarantee of complete coverage.
+
+## Local commands
 
 ```sh
 python3 -m unittest discover -s tools/catalogues/tests -v
-python3 tools/catalogues/pipeline.py --requests 40 --viewers 4 --images 5
+python3 tools/catalogues/pipeline.py --stores Coles,Woolworths \
+  --requests 20 --viewers 4 --images 2 --specials 2 \
+  --output catalogue-artifacts --website-feed public/catalogue-offers.json
+node --test tests/catalogue-feed.test.cjs tests/catalogue-render.test.cjs
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-Install the free local `tesseract-ocr` package for image extraction. No Python
-packages or API credentials are needed. Open `catalogue-artifacts/manifest.json`;
-inspect the per-store outcomes and each image's TSV.
+Install free local `tesseract-ocr`. No Python packages or model accounts are needed.
+The tracked public feed is **empty**; live captures are never committed as perpetual
+prices. A failed/missing feed does not change the working main catalogue.
 
-The scheduled job is disabled unless repository variable
-`SAVEHALF_CATALOGUE_STAGE_ENABLED=true`. Do not enable until source-use review and
-included GitHub Actions allowance are confirmed. No variable was changed by this PR.
-It is daily polling, **not** exact expiry-time refresh or durable ingestion.
-A cron in a PR branch does not activate until merged into the default branch.
+## One-time activation and deployment boundary
 
-## Verified source observations (14 November 2026)
+This PR does not merge, dispatch, deploy, change variables or obtain credentials.
+Both jobs require reviewed `main`; the source pipeline additionally requires
+`SAVEHALF_CATALOGUE_STAGE_ENABLED=true`. The production publisher independently
+requires `SAVEHALF_CATALOGUE_PUBLISH_ENABLED=true`.
 
-Public root, robots, Coles listing and one viewer were inspected with bounded
-requests. Coles listing JSON-LD contains dated cover metadata. The viewer embeds
-explicit page thumbnails and JavaScript page templates. Templates are not guessed
-or evaluated. The small committed fixtures contain only public catalogue metadata,
-links and image URLs, stripped of all surrounding tracking/challenge markup.
+Before enabling, resolve the source-use basis and confirm included Actions/Vercel
+quotas. CatalogueOffers' published Article 13 restricts content exploitation and
+addresses permission for intellectual-property use. This is distinct from ownership
+of the underlying retailer catalogues. Source:
+https://www.catalogueoffers.com.au/terms-and-conditions
 
-Sources:
-- https://www.catalogueoffers.com.au/robots.txt
-- https://www.catalogueoffers.com.au/stores/coles/catalogues-specials
-- https://www.catalogueoffers.com.au/view/offers/coles-catalogue-3900088
-- https://www.catalogueoffers.com.au/terms-and-conditions (Article 13)
+For automatic release, configure the existing SaveHalf Vercel project's IDs as
+`VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`, a reviewed exact `VERCEL_CLI_VERSION`, and
+`VERCEL_TOKEN` directly as a protected production secret. Never paste tokens into chat
+or commit them. Restrict the production environment to reviewed `main` and use the
+owner's release approval policy. No new account/project should be created.
 
-Public availability alone does not establish republication rights. Source terms
-restrict content exploitation and discuss intellectual-property permission. This
-is a source-use dependency, not a determination of ownership of retailer catalogues.
+The publish job skips unchanged advertisement data. It pulls that project's production configuration, checks its IDs, installs
+and tests the application, builds, deploys with `--prebuilt --prod --skip-domain`,
+fetches `/catalogue-offers.json` through `vercel curl`, compares it exactly, then
+promotes. A failure before promotion leaves the existing production deployment alone.
+Nothing secret-bearing from `.vercel` is uploaded as an artifact. Existing Git-based
+releases still deploy normally; a source-code release carries the deliberately empty
+feed until the next enabled catalogue job publishes a fresh capture.
 
-## Remaining work before website publication
+### Rollback
 
-1. Resolve a permitted source-use route (this source, retailer originals or a feed).
-2. Prove full-resolution asset discovery; observed explicit viewer images can be
-   thumbnails. Missing full-size links must be diagnosed, not constructed by guessing.
-3. Build and evaluate layout-aware offer extraction against labelled pages from
-   multiple stores: name, pack, exact price/currency, multibuys, membership, limits,
-   reference-price basis, validity and region. Low-confidence fields must remain absent.
-4. Add image association using exact product/variant evidence or catalogue crops
-   where reuse is established. Search-result images are not verified product matches.
-5. Add persistent catalogue hashes, checkpoints, expiry-aware scheduling and deduplication.
-   Current daily rotation/staging does not promise all-page coverage or avoid refetches.
-6. Integrate a separately tested catalogue publication path. Existing provider imports
-   are WhichGrocer-specific; do not impersonate provider records or reset old freshness.
-   Validate both valid-from and expiry at read time so a missed job cannot retain offers.
-7. Test rollback, partial imports, replacement arriving late, changed expiry, region
-   mismatch, extraction errors and writes against the actual website contract.
+Disable the catalogue stage/publish variables to stop future work; use the existing
+Vercel deployment rollback for an immediate release rollback. The UI independently
+expires stale advertisements. No database rows, schema changes or adapter unpauses
+need undoing.
 
-This PR deliberately has **no database credentials, publisher or automatic AI API**.
-ChatGPT does not automatically wake when GitHub uploads an artifact. Any future model
-worker must have an explicit trigger, verified free allowance and server-side quota
-limits; otherwise free local OCR remains the available unattended stage. No paid
-model, new account, browser workaround or access-review override is introduced.
+### Not verified
+
+- Production Vercel CLI credentials, exact CLI version, deployment protection and
+  promotion flow: integration code is present but has not been activated or exercised.
+- Source-use permission and remaining included Actions/Vercel quotas.
+- Catalogue/offer availability for all 28 targets; the live offer sample covers two.
+- Reliable price extraction for image-only offers or complete catalogue coverage.
+- Browser screenshots/axe: local Chromium exits because its singleton socket is denied.
+  The actual React component is covered by a jsdom render test, including expiry.
+
+## Validation for this update
+
+47 Python regressions (including a complete mocked run and checkpoint resume),
+197 application tests, 28 UI regression scripts, build, lint and typecheck passed.
+The actual React render test verifies visible caveats and open-page expiry. GitHub
+CI and the optional Vercel production handoff must be reported separately.

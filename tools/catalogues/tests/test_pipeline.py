@@ -1,11 +1,13 @@
 import importlib.util
 import json
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE))
 spec = importlib.util.spec_from_file_location('pipeline', HERE / 'pipeline.py')
 p = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(p)
@@ -32,6 +34,11 @@ class PipelineTests(unittest.TestCase):
     def test_discovery_does_not_guess_endpoints(self):
         page = p.Page('<a href="/stores/coles/catalogues-specials">x</a>')
         self.assertEqual(p.discover_store_links(page, ['Coles','Woolworths']), {'Coles':p.BASE+'/stores/coles/catalogues-specials'})
+    def test_observed_sitemap_aliases(self):
+        page=p.Page('<a href="/stores/best-less/catalogues-specials"></a><a href="/stores/bunnings-warehouse/catalogues-specials"></a><a href="/stores/domino-s-pizza/catalogues-specials"></a>')
+        result=p.discover_store_links(page,['Best & Less','Bunnings',"Domino's"])
+        self.assertEqual(set(result),{'Best & Less','Bunnings',"Domino's"})
+        self.assertEqual(p.discover_store_links(p.Page(''),['Bunnings']),{})
     def test_host_and_query_guards(self):
         for url in ['http://www.catalogueoffers.com.au/', 'https://evil.test/',
                     'https://www.catalogueoffers.com.au@evil.test/',

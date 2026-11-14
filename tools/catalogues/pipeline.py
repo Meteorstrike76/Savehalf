@@ -15,15 +15,24 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
+from viewer import viewer_assets, viewer_script_url
+from offers import offer_cards
+from feed import atomic_json, export_feed, region_evidence, merge_feed
+from checkpoints import load as load_checkpoints, bounded as bound_checkpoints
 
 BASE = 'https://www.catalogueoffers.com.au'
 HOSTS = {'www.catalogueoffers.com.au', 'img.offers-cdn.net'}
 UA = 'SaveHalfCatalogue/1.0'
+# Exact aliases verified in the public stores sitemap, not generated endpoints.
+STORE_SLUG_ALIASES = {'best-less':'Best & Less', 'bunnings-warehouse':'Bunnings', 'domino-s-pizza':"Domino's"}
 
 class Page(HTMLParser):
     def __init__(self, text):
         super().__init__(convert_charrefs=True)
         self.links, self.images, self.schemas = [], [], []
+        self.inline_scripts, self.script_urls = [], []
+        self.script_kind = None
+        self.meta = {}
         self.recording = False
         self.script = ''
         self.feed(text)
@@ -31,19 +40,27 @@ class Page(HTMLParser):
         a = dict(attrs)
         if tag == 'a' and a.get('href'):
             self.links.append((a['href'], a.get('title', '')))
+        if tag == 'meta':
+            self.meta[a.get('name') or a.get('property')] = a.get('content', '')
         if tag == 'img':
             self.images.append(a.get('src', ''))
-        if tag == 'script' and a.get('type') == 'application/ld+json':
+        if tag == 'script':
+            if a.get('src'):
+                self.script_urls.append(a['src'])
+            self.script_kind = a.get('type')
             self.recording, self.script = True, ''
     def handle_data(self, data):
         if self.recording:
             self.script += data
     def handle_endtag(self, tag):
         if tag == 'script' and self.recording:
-            try:
-                self.schemas.append(json.loads(self.script))
-            except ValueError:
-                pass
+            if self.script_kind == 'application/ld+json':
+                try:
+                    self.schemas.append(json.loads(self.script))
+                except ValueError:
+                    pass
+            elif self.script_kind in (None, 'text/javascript', 'module'):
+                self.inline_scripts.append(self.script)
             self.recording = False
 
 def objects(value):
@@ -128,7 +145,7 @@ def discover_store_links(page, names):
         if not match:
             continue
         for name in names:
-            if key(match[1]) == key(name) or (title and key(title) == key(name)):
+            if key(match[1]) == key(name) or STORE_SLUG_ALIASES.get(match[1]) == name or (title and key(title) == key(name)):
                 try:
                     result[name] = safe_url(href)
                 except ValueError:
@@ -169,7 +186,15 @@ def extract(page, source, store):
                 assets.append(safe_url(url))
             except ValueError:
                 pass
-    return {'catalogues': catalogues, 'products': products,
+    # Viewer metadata exposes absolute dates; never convert relative '3 days'
+    # badges into timestamps.
+    description = page.meta.get('description', '')
+    dates = re.search(r'valid from (\d{2}-\d{2}-\d{4}) until (\d{2}-\d{2}-\d{4})', description, re.I)
+    validity = None
+    if dates:
+        validity = {'valid_from_date': datetime.strptime(dates[1], '%d-%m-%Y').date().isoformat(),
+                    'valid_through_date': datetime.strptime(dates[2], '%d-%m-%Y').date().isoformat()}
+    return {'validity': validity, 'catalogues': catalogues, 'products': products,
             'viewer_links': list(dict.fromkeys(links)), 'page_images': list(dict.fromkeys(assets))}
 
 def ocr_file(path):
@@ -180,16 +205,29 @@ def ocr_file(path):
 
 def ocr_has_words(tsv):
     return any(row.get('level') == '5' and row.get('text', '').strip()
-               for row in csv.DictReader(io.StringIO(tsv), delimiter='\t'))
+               for row in csv.DictReader(io.StringIO(tsv), delimiter='\t', quoting=csv.QUOTE_NONE))
 
 
-def run(root, output, client, max_viewers=4, max_images=5):
+def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, stores=None):
     output.mkdir(parents=True, exist_ok=True)
+    previous_feed = {}
+    try:
+        feed_path = output / 'website-feed.json'
+        if feed_path.stat().st_size <= 2_000_000:
+            previous_feed = json.loads(feed_path.read_text())
+    except (OSError, ValueError):
+        pass
+    checkpoint_path = output / 'checkpoints.json'
+    checkpoints = load_checkpoints(checkpoint_path)
     names = targets(root)
+    if stores is not None:
+        if not stores or not set(stores).issubset(names):
+            raise ValueError('unknown_requested_store')
+        names = [n for n in names if n in stores]
     report = {'captured_at': datetime.now(timezone.utc).isoformat(),
               'complete': False, 'stores': [], 'publishable_offers': [],
               'limits': {'requests': client.limit, 'bytes': client.byte_limit,
-                         'viewers': max_viewers, 'images': max_images}}
+                         'viewers': max_viewers, 'images': max_images, 'specials': max_specials}}
     # Discovery is from links actually returned by the public store index.
     try:
         index = Page(client.get(BASE + '/stores').decode('utf-8'))
@@ -210,9 +248,11 @@ def run(root, output, client, max_viewers=4, max_images=5):
         report['discovery_failure'] = type(error).__name__
         found = locals().get('found', {})
     # Rotate priority each UTC day so bounded runs do not always favour Coles.
-    offset = datetime.now(timezone.utc).date().toordinal() % len(names)
+    offset = (int(datetime.now(timezone.utc).timestamp() // 43200) * max(1, max_specials)) % len(names)
     names = names[offset:] + names[:offset]
-    viewers_used, images_used = 0, 0
+    viewers_used, images_used, specials_used = 0, 0, 0
+    scripts = {}
+    per_store_viewer_limit = max(1, max_viewers // len(names))
     for store in names:
         row = {'store': store, 'status': 'not_discovered', 'catalogues': [], 'products': [], 'viewers': []}
         report['stores'].append(row)
@@ -220,22 +260,52 @@ def run(root, output, client, max_viewers=4, max_images=5):
             continue
         try:
             url = found[store]
-            data = extract(Page(client.get(url).decode('utf-8')), url, store)
+            listing_page = Page(client.get(url).decode('utf-8'))
+            data = extract(listing_page, url, store)
             row.update(data)
             row['status'] = 'metadata_only' if data['catalogues'] else 'parser_drift'
             # Only viewer links from this retailer's listing. No related-store crawl.
             slug = urllib.parse.urlsplit(url).path.split('/')[2]
-            for viewer in data['viewer_links']:
+            row['offer_cards'] = {'offers': [], 'rejected': [], 'observed_cards': 0}
+            if specials_used < max_specials:
+                for href, _ in listing_page.links:
+                    # Follow an observed, exact specials link, never guessed paths.
+                    if urllib.parse.urlsplit(href).path == '/stores/'+slug+'/specials' and not urllib.parse.urlsplit(href).query:
+                        specials_url = safe_url(href)
+                        specials_used += 1
+                        row['offer_cards'] = offer_cards(client.get(specials_url).decode('utf-8'), store, specials_url, safe_url)
+                        row['source_checked_at'] = datetime.now(timezone.utc).isoformat()
+                        break
+            # Prefer catalogues actually referenced by extracted offers.
+            offer_viewers = [o['catalogue_url'] for o in row['offer_cards']['offers']]
+            candidate_viewers = list(dict.fromkeys(offer_viewers + data['viewer_links']))
+            store_viewers_used = 0
+            for viewer in candidate_viewers:
                 if not urllib.parse.urlsplit(viewer).path.startswith('/view/offers/' + slug + '-'):
                     continue
-                if viewers_used >= max_viewers:
+                if viewers_used >= max_viewers or store_viewers_used >= per_store_viewer_limit:
                     row['status'] = 'partial_budget'
                     break
                 viewers_used += 1
-                parsed = extract(Page(client.get(viewer).decode('utf-8')), viewer, store)
-                item = {'source_url': viewer, 'products': parsed['products'], 'images': [], 'status': 'staged'}
+                store_viewers_used += 1
+                page = Page(client.get(viewer).decode('utf-8'))
+                parsed = extract(page, viewer, store)
+                item = {'source_url': viewer, 'products': parsed['products'], 'images': [], 'status': 'staged', 'validity': parsed['validity']}
                 row['viewers'].append(item)
-                for image in parsed['page_images']:
+                script_url = viewer_script_url(page, safe_url)
+                if script_url not in scripts:
+                    scripts[script_url] = client.get(script_url).decode('utf-8')
+                plan = viewer_assets(page, scripts[script_url], url, safe_url)
+                item.update({'total_pages': plan['total_pages'], 'recipe': plan['recipe'], 'script_url': script_url, 'validity': parsed['validity']})
+                for asset in plan['assets']:
+                    image = asset['url']
+                    previous = checkpoints.get(image)
+                    if previous:
+                        item['images'].append({'page_number':asset['page_number'], 'url':image,
+                                               **previous, 'cached':True, 'publishable':False})
+                        if asset['page_number']==1:
+                            item['region']=previous.get('region')
+                        continue
                     if images_used >= max_images:
                         item['status'] = 'partial_image_budget'
                         break
@@ -247,10 +317,18 @@ def run(root, output, client, max_viewers=4, max_images=5):
                         tsv = ocr_file(path)
                         (output / (identity + '.tsv')).write_text(tsv)
                         status = 'ocr_evidence_only' if ocr_has_words(tsv) else 'ocr_empty'
+                        if asset['page_number'] == 1:
+                            item['region'] = region_evidence(tsv)
                     except (OSError, subprocess.SubprocessError):
                         status = 'ocr_failed'
-                    item['images'].append({'url': image, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
-                                           'file': path.name, 'status': status, 'publishable': False})
+                    evidence = {'downloaded_at':datetime.now(timezone.utc).isoformat(),
+                                'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+                                'status':status, 'region':item.get('region') if asset['page_number']==1 else None}
+                    item['images'].append({'page_number':asset['page_number'], 'url':image, **evidence,
+                                           'file':path.name, 'cached':False, 'publishable':False})
+                    if status in ['ocr_empty','ocr_evidence_only']:
+                        checkpoints[image]=evidence
+                        atomic_json(checkpoint_path, bound_checkpoints(checkpoints))
         except (ValueError, OSError, TimeoutError) as error:
             # Never record response bodies, headers, cookies, signed URLs or exception text.
             row['status'] = 'failed'
@@ -259,6 +337,7 @@ def run(root, output, client, max_viewers=4, max_images=5):
         (output / 'manifest.json').write_text(json.dumps(report, indent=2))
     report['requests'], report['body_bytes'] = client.requests, client.bytes
     (output / 'manifest.json').write_text(json.dumps(report, indent=2))
+    atomic_json(output / 'website-feed.json', merge_feed(previous_feed, export_feed(report)))
     return report
 
 def main():
@@ -267,11 +346,16 @@ def main():
     parser.add_argument('--requests', type=int, default=40)
     parser.add_argument('--viewers', type=int, default=4)
     parser.add_argument('--images', type=int, default=5)
+    parser.add_argument('--specials', type=int, default=8)
+    parser.add_argument('--stores', help='Comma-separated exact website retailer names; default: all')
+    parser.add_argument('--website-feed', type=Path)
     args = parser.parse_args()
-    if not (1 <= args.requests <= 80 and 0 <= args.viewers <= 10 and 0 <= args.images <= 25):
+    if not (1 <= args.requests <= 80 and 0 <= args.viewers <= 10 and 0 <= args.images <= 25 and 0 <= args.specials <= 28):
         parser.error('limits exceed admitted maximum')
     root = Path(__file__).resolve().parents[2]
-    report = run(root, args.output, Client(args.requests), args.viewers, args.images)
+    report = run(root, args.output, Client(args.requests), args.viewers, args.images, args.specials, args.stores.split(',') if args.stores else None)
+    if args.website_feed:
+        atomic_json(args.website_feed, json.loads((args.output / 'website-feed.json').read_text()))
     print(json.dumps({'stores': len(report['stores']), 'requests': report['requests'],
                       'body_bytes': report['body_bytes'], 'published': 0}))
 

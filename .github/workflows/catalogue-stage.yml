@@ -2,33 +2,140 @@ name: Catalogue discovery and OCR staging
 on:
   workflow_dispatch:
   schedule:
-    - cron: '15 20 * * *'
+    - cron: '15 8,20 * * *'
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: catalogue-stage
   cancel-in-progress: false
 jobs:
   stage:
-    # Source-use review and included Actions allowance must be confirmed first.
-    if: vars.SAVEHALF_CATALOGUE_STAGE_ENABLED == 'true'
+    # Enable only on reviewed main after source use and included quotas are confirmed.
+    if: github.ref == 'refs/heads/main' && vars.SAVEHALF_CATALOGUE_STAGE_ENABLED == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    outputs:
+      changed: ${{ steps.feed.outputs.changed }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
       - name: Offline regression tests
         run: python3 -m unittest discover -s tools/catalogues/tests -v
+      - name: Restore small checkpoints from previous successful run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          mkdir -p catalogue-artifacts
+          run_id=$(gh run list --workflow catalogue-stage.yml --branch main --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [[ "$run_id" =~ ^[0-9]+$ ]]; then
+            gh run download "$run_id" --name catalogue-state --dir catalogue-artifacts || true
+          fi
       - name: Install local OCR
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tesseract-ocr
-      - name: Bounded staging (no credentials or database writes)
-        run: python3 tools/catalogues/pipeline.py --requests 40 --viewers 4 --images 5
-      - name: Retain evidence for seven days
+      - name: Bounded collection and website feed export
+        id: feed
+        run: |
+          cp catalogue-artifacts/website-feed.json /tmp/previous-catalogue-feed.json 2>/dev/null || printf '{"ads":[]}' > /tmp/previous-catalogue-feed.json
+          python3 tools/catalogues/pipeline.py --requests 80 --viewers 4 --images 5 --specials 14 --website-feed public/catalogue-offers.json
+          python3 - <<'PYTHON'
+          import json, os
+          previous=json.load(open('/tmp/previous-catalogue-feed.json'))
+          current=json.load(open('public/catalogue-offers.json'))
+          changed=previous.get('ads',[])!=current.get('ads',[])
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('changed='+str(changed).lower()+'\n')
+          PYTHON
+      - name: Retain small checkpoints
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: catalogue-state
+          path: |
+            catalogue-artifacts/checkpoints.json
+            catalogue-artifacts/website-feed.json
+          retention-days: 2
+          if-no-files-found: error
+      - name: Retain source evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: catalogue-staging-${{ github.run_id }}
           path: catalogue-artifacts/
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: warn
+  publish:
+    needs: stage
+    # Explicit opt-in; this PR never enables publishing or changes settings.
+    if: github.ref == 'refs/heads/main' && vars.SAVEHALF_CATALOGUE_PUBLISH_ENABLED == 'true' && needs.stage.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    env:
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+      - name: Download generated feed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh run download "$GITHUB_RUN_ID" --name catalogue-state --dir /tmp/catalogue-state
+          cp /tmp/catalogue-state/website-feed.json public/catalogue-offers.json
+      - name: Install reviewed CLI version
+        run: |
+          [[ "$VERCEL_CLI_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test -n "$VERCEL_ORG_ID"
+          test -n "$VERCEL_PROJECT_ID"
+          npm install -g "vercel@$VERCEL_CLI_VERSION"
+      - name: Pull existing production configuration
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production
+      - name: Verify configured project identity
+        run: |
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const p=JSON.parse(fs.readFileSync(".vercel/project.json","utf8"));
+            if(p.projectId!==process.env.VERCEL_PROJECT_ID||p.orgId!==process.env.VERCEL_ORG_ID)process.exit(1);
+          '
+      - name: Install and test application
+        run: |
+          npm ci
+          npm run typecheck
+          npm run lint
+          node --test tests/*.test.cjs
+      - name: Build production artifact
+        run: vercel build --prod
+      - name: Stage production deployment
+        id: deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          deployment_url=$(vercel deploy --prebuilt --prod --skip-domain)
+          DEPLOYMENT_URL="$deployment_url" node --input-type=module -e '
+            const value=process.env.DEPLOYMENT_URL,u=new URL(value);
+            if(u.protocol!=="https:"||u.origin!==value||!u.hostname.endsWith(".vercel.app"))process.exit(1);
+          '
+          printf 'url=%s\n' "$deployment_url" >> "$GITHUB_OUTPUT"
+      - name: Verify deployed feed and promote tested build
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.url }}
+        run: |
+          vercel curl /catalogue-offers.json --deployment "$DEPLOYMENT_URL" > /tmp/deployed-catalogue.json
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const expected=JSON.parse(fs.readFileSync("public/catalogue-offers.json","utf8"));
+            const actual=JSON.parse(fs.readFileSync("/tmp/deployed-catalogue.json","utf8"));
+            if(JSON.stringify(expected)!==JSON.stringify(actual))process.exit(1);
+          '
+          vercel promote "$DEPLOYMENT_URL"
