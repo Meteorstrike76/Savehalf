@@ -1,0 +1,34 @@
+name: Catalogue discovery and OCR staging
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 20 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: catalogue-stage
+  cancel-in-progress: false
+jobs:
+  stage:
+    # Source-use review and included Actions allowance must be confirmed first.
+    if: vars.SAVEHALF_CATALOGUE_STAGE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Offline regression tests
+        run: python3 -m unittest discover -s tools/catalogues/tests -v
+      - name: Install local OCR
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tesseract-ocr
+      - name: Bounded staging (no credentials or database writes)
+        run: python3 tools/catalogues/pipeline.py --requests 40 --viewers 4 --images 5
+      - name: Retain evidence for seven days
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: catalogue-staging-${{ github.run_id }}
+          path: catalogue-artifacts/
+          retention-days: 7
+          if-no-files-found: warn
