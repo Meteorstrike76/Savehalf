@@ -1,0 +1,29 @@
+name: Catalogue Vercel read-only target check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  target:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify token can read the existing project (no deploy)
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set +e
+          python3 tools/catalogues/verify_target.py > /tmp/catalogue-target-check.json
+          status=$?
+          cat /tmp/catalogue-target-check.json
+          printf '### Vercel target check (read only)\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/catalogue-target-check.json >> "$GITHUB_STEP_SUMMARY"
+          printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
