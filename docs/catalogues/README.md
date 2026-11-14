@@ -238,3 +238,12 @@ Data-only hosting and full condition extraction remain outside the deployed feat
 set. Automatic collection/publication flags stay disabled until their documented
 activation prerequisites are met. The public feed in source control remains empty;
 existing retailer and provider feeds continue operating separately.
+
+## Automatic collection activation preparation
+
+See [ACTIVATION.md](ACTIVATION.md) for the reviewed-main prerequisite, non-secret
+variable template, quota estimates, read-only readiness workflow, pilot limits and
+separate collection/publication switches. New preflight gates run before source
+requests and before credential-bearing deploy steps. Pilot is now the default;
+full rollout requires a separate review flag. These changes prepare activation;
+they do not merge the PR, install a schedule on main or enable either switch.

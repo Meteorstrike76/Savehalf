@@ -23,6 +23,13 @@ jobs:
           persist-credentials: false
       - name: Offline regression tests
         run: python3 -m unittest discover -s tools/catalogues/tests -v
+      - name: Activation preflight (before any upstream requests)
+        env:
+          SAVEHALF_CATALOGUE_SOURCE_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_SOURCE_REVIEWED }}
+          SAVEHALF_CATALOGUE_BUDGET_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_BUDGET_REVIEWED }}
+          SAVEHALF_CATALOGUE_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
+          SAVEHALF_CATALOGUE_FULL_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_FULL_REVIEWED }}
+        run: python3 tools/catalogues/preflight.py --require stage
       - name: Restore small checkpoints from previous completed run
         env:
           GH_TOKEN: ${{ github.token }}
@@ -37,9 +44,15 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tesseract-ocr
       - name: Bounded collection and website feed export
         id: feed
+        env:
+          COLLECTION_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
         run: |
           cp catalogue-artifacts/website-feed.json /tmp/previous-catalogue-feed.json 2>/dev/null || printf '{"ads":[]}' > /tmp/previous-catalogue-feed.json
-          python3 tools/catalogues/pipeline.py --requests 80 --viewers 4 --images 5 --specials 14 --website-feed public/catalogue-offers.json
+          if [[ "$COLLECTION_MODE" == 'full' ]]; then
+            python3 tools/catalogues/pipeline.py --requests 80 --viewers 4 --images 5 --specials 14 --website-feed public/catalogue-offers.json
+          else
+            python3 tools/catalogues/pipeline.py --stores Coles,Woolworths --requests 20 --viewers 2 --images 2 --specials 2 --website-feed public/catalogue-offers.json
+          fi
           python3 - <<'PYTHON'
           import json, os
           previous=json.load(open('/tmp/previous-catalogue-feed.json'))
@@ -86,6 +99,14 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22'
+      - name: Publication preflight (credential presence only)
+        env:
+          SAVEHALF_CATALOGUE_SOURCE_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_SOURCE_REVIEWED }}
+          SAVEHALF_CATALOGUE_BUDGET_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_BUDGET_REVIEWED }}
+          SAVEHALF_CATALOGUE_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
+          SAVEHALF_CATALOGUE_FULL_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_FULL_REVIEWED }}
+          VERCEL_TOKEN_PRESENT: ${{ secrets.VERCEL_TOKEN != '' }}
+        run: python3 tools/catalogues/preflight.py --require publish
       - name: Download generated feed
         env:
           GH_TOKEN: ${{ github.token }}
