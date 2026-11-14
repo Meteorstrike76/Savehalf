@@ -93,9 +93,11 @@ class Client:
         self.requests, self.bytes, self.last = 0, 0, 0
         self.robots = {}
         self.last_status, self.last_headers = None, {}
+        self.last_url = None
         self.opener = urllib.request.build_opener(NoRedirect)
     def raw(self, url, conditions=None):
         url = safe_url(url)
+        self.last_url, self.last_status = url, None
         if self.requests >= self.limit:
             raise ValueError('request_budget')
         time.sleep(max(0, self.delay - (time.monotonic() - self.last)))
@@ -114,6 +116,8 @@ class Client:
             return b''
         with response:
             self.last_status=getattr(response,'status',200)
+            if self.last_status != 200:
+                raise urllib.error.HTTPError(url,self.last_status,'unexpected_response_status',{},None)
             self.last_headers={k.lower():v for k,v in response.headers.items() if k.lower() in ['etag','last-modified'] and validator(v)}
             chunks, size = [], 0
             started = time.monotonic()
@@ -128,6 +132,8 @@ class Client:
                 if time.monotonic() - started > 30:
                     raise ValueError('body_timeout')
                 chunks.append(chunk)
+            if not size:
+                raise ValueError('empty_response')
             return b''.join(chunks)
     def get(self, url, conditions=None):
         url = safe_url(url)
@@ -265,6 +271,12 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
                 found.update(discover_store_links(proxy, names))
     except (ValueError, OSError, TimeoutError, ET.ParseError) as error:
         report['discovery_failure'] = type(error).__name__
+        diagnostic=failure_details(error,'discovery')
+        if diagnostic['http_status'] is None:
+            diagnostic['http_status']=getattr(client,'last_status',None)
+        parts=urllib.parse.urlsplit(getattr(client,'last_url',None) or BASE+'/stores')
+        diagnostic.update(host=parts.hostname,path=parts.path)
+        report['discovery_diagnostic']=diagnostic
         found = locals().get('found', {})
     # Rotate priority each UTC day so bounded runs do not always favour Coles.
     offset = (int(datetime.now(timezone.utc).timestamp() // 43200) * max(1, max_specials)) % len(names)
@@ -287,6 +299,9 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
         active_url=found.get(store,'')
         report['stores'].append(row)
         if store not in found:
+            if report.get('discovery_failure'):
+                row.update(status='failed',failure=report['discovery_failure'],
+                           diagnostic=report['discovery_diagnostic'])
             continue
         try:
             url = found[store]
