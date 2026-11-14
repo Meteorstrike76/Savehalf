@@ -36,3 +36,7 @@ supabase/.temp/
 tools/evals/.promptfoo/
 audit/
 .lighthouseci/
+
+# Local catalogue evidence and Python caches
+catalogue-artifacts/
+tools/catalogues/**/__pycache__/

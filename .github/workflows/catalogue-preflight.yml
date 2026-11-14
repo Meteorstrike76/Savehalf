@@ -1,0 +1,34 @@
+name: Catalogue activation readiness
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/catalogues/**'
+      - '.github/workflows/catalogue*.yml'
+permissions:
+  contents: read
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Report readiness without activating or reading credentials
+        env:
+          SAVEHALF_CATALOGUE_STAGE_ENABLED: ${{ vars.SAVEHALF_CATALOGUE_STAGE_ENABLED }}
+          SAVEHALF_CATALOGUE_PUBLISH_ENABLED: ${{ vars.SAVEHALF_CATALOGUE_PUBLISH_ENABLED }}
+          SAVEHALF_CATALOGUE_SOURCE_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_SOURCE_REVIEWED }}
+          SAVEHALF_CATALOGUE_BUDGET_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_BUDGET_REVIEWED }}
+          SAVEHALF_CATALOGUE_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
+          SAVEHALF_CATALOGUE_FULL_REVIEWED: ${{ vars.SAVEHALF_CATALOGUE_FULL_REVIEWED }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION }}
+          VERCEL_TOKEN_PRESENT: ${{ secrets.VERCEL_TOKEN != '' }}
+        run: |
+          python3 tools/catalogues/preflight.py --output /tmp/catalogue-readiness.json
+          printf '### Catalogue readiness (report only)\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/catalogue-readiness.json >> "$GITHUB_STEP_SUMMARY"
+          printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
