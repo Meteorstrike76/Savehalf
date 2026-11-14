@@ -42,7 +42,9 @@ def asset_recipe(script):
 
 
 def viewer_assets(page, script, listing_url, safe_url):
-    recipe = asset_recipe(script)
+    recipe = dict(script) if isinstance(script,dict) else asset_recipe(script)
+    if recipe.get('size') not in ['large','zoomLarge'] or not re.fullmatch('[a-f0-9]{64}',recipe.get('script_sha256','')):
+        raise ValueError('viewer_asset_recipe_drift')
     source_store = literal(page.inline_scripts, 'storeUrl')
     if safe_url(source_store) != safe_url(listing_url):
         raise ValueError('viewer_store_mismatch')

@@ -50,3 +50,36 @@ class IntegrationTests(unittest.TestCase):
             self.assertEqual(ocr.call_count,1)
             second_state=json.loads((Path(tmp)/'checkpoints.json').read_text())
             self.assertEqual(first_state[image]['downloaded_at'],second_state[image]['downloaded_at'])
+
+            # A later interrupted store cannot discard already completed work.
+            responses[base+'/stores']+='<a href="/stores/woolworths/catalogues-specials"></a>'
+            class Interrupted(Client):
+                def get(self,url):
+                    if '/stores/woolworths/' in url:raise KeyboardInterrupt()
+                    return super().get(url)
+            (Path(tmp)/'snapshots.json').unlink()
+            with patch.object(p,'targets',return_value=['Coles','Woolworths']),self.assertRaises(KeyboardInterrupt):
+                p.run(HERE.parents[1],Path(tmp),Interrupted(),1,0,2)
+            partial=json.loads((Path(tmp)/'manifest.json').read_text())
+            self.assertEqual(partial['stores'][0]['store'],'Coles')
+            partial_feed=json.loads((Path(tmp)/'website-feed.json').read_text())
+            self.assertEqual(len(partial_feed['ads']),1)
+
+    def test_repeated_batches_prioritise_the_unchecked_store_even_with_zero_cards(self):
+        base=p.BASE
+        class Fake:
+            limit=20;byte_limit=40000000
+            def __init__(self):self.requests=0;self.bytes=0
+            def get(self,url):
+                self.requests+=1
+                if url==base+'/stores':return b'<a href="/stores/coles/catalogues-specials"></a><a href="/stores/woolworths/catalogues-specials"></a>'
+                if url.endswith('/specials'):return b'<html>No cards</html>'
+                slug=url.split('/')[4]
+                return ('<a href="/stores/'+slug+'/specials"></a>').encode()
+        with tempfile.TemporaryDirectory() as tmp,patch.object(p,'targets',return_value=['Coles','Woolworths']):
+            first=p.run(HERE.parents[1],Path(tmp),Fake(),0,0,1)
+            second=p.run(HERE.parents[1],Path(tmp),Fake(),0,0,1)
+            checked1={r['store'] for r in first['stores'] if r.get('source_checked_at')}
+            checked2={r['store'] for r in second['stores'] if r.get('source_checked_at')}
+            self.assertEqual(len(checked1),1);self.assertEqual(len(checked2),1)
+            self.assertEqual(checked1|checked2,{'Coles','Woolworths'})

@@ -102,6 +102,7 @@ def merge_feed(previous, current, now=None):
             start,end,checked=[datetime.fromisoformat(ad[k]) for k in ['visible_from','expires_at','checked_at']]
             if all(t.tzinfo is not None for t in [start,end,checked]) and start<=now<end and checked<=now and now-checked<timedelta(hours=24):
                 kept.append(ad)
+                current_ids.add(ad['id'])
         except (KeyError,TypeError,ValueError):
             continue
     return {**current,'ads':(current['ads']+kept)[:700]}

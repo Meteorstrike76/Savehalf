@@ -165,3 +165,63 @@ need undoing.
 197 application tests, 28 UI regression scripts, build, lint and typecheck passed.
 The actual React render test verifies visible caveats and open-page expiry. GitHub
 CI and the optional Vercel production handoff must be reported separately.
+
+## Upgrade batch: measured coverage and collection efficiency
+
+The [28-store source audit](coverage-2026-11-14.md) and its
+[raw inventory](coverage-2026-11-14.json) record a metadata-only run on 14 November
+2026: **30 requests, 6,492,256 body bytes, 26 observed listings, 20 retailers with
+current dated catalogues, and 13 observed specials links**. McDonald's and UNIQLO
+were not discovered. These are source availability facts, not product coverage or
+claims that the missing retailers have no offers. No specials, viewer images or
+website imports were requested by that audit.
+
+New parsed HTTP snapshots store only bounded extraction results, the original
+observation time, latest actual source-check time and safe ETag/Last-Modified
+validators. They do not persist raw HTML, inline tracking scripts or authentication
+headers. Entries are versioned, integrity checked, capped at 80 / 2 MB and expire
+after seven days. A successful 304 can reverify the existing parsed snapshot;
+unsolicited 304s without a matching prior validator fail closed. Changed parser
+contracts must use a new snapshot kind/revision. Failed responses never replace the
+last valid cached snapshot.
+
+[Live CDN measurements](cdn-revalidation-2026-11-14.json) show **3 requests total**:
+robots + initial referenced viewer script + conditional revalidation. The initial
+body total was 555,147 bytes including robots; the second script response was
+**304, zero body bytes**. Only the parsed static image recipe is persisted. None of
+the 26 HTML listing responses supplied ETag/Last-Modified validators, so no HTML
+bandwidth saving is claimed. Unchanged parsed HTML still supports change reporting
+and scheduling priority.
+
+Retailer batches now prioritise never/oldest-checked sources using persisted source
+check times, including checked zero-card results. This avoids repeatedly allocating
+limited specials slots to the same stores. Original observation time is preserved
+when parsed data is unchanged; actual network reverification is recorded separately.
+
+Every completed store atomically checkpoints both the manifest and still-valid
+website feed. A later store exception cannot erase completed results. The workflow
+retains state with `if: always()` and restores the latest completed run, including
+failed runs, rather than ignoring interrupted progress. This is best-effort: abrupt
+runner loss or a failed artifact upload can still require a bounded restart. File
+replay never extends an offer's check time or expiry.
+
+Previous-feed duplicate IDs are suppressed. Diagnostics distinguish HTTP access
+errors, rate limits, DNS, TLS, timeout, refused connections, budgets and parser drift,
+with stage, public host/path and per-store request/byte counts. Exception messages,
+response bodies and credentials are excluded.
+
+Run the audit with:
+
+```sh
+python3 tools/catalogues/pipeline.py --audit-only --requests 40 --output catalogue-artifacts
+```
+
+Audit-only mode rejects `--website-feed` and makes no specials/image requests.
+The additional tests cover conditional revalidation, corrupted snapshots, interrupted
+runs, fair rotation, duplicate replay, expiry boundaries and edition preservation.
+The Python suite now has **61 passing tests**. No activation flags, production
+settings, source permissions, adapters or database contents were changed.
+
+Data-only hosting in place of whole-site deployments, richer offer-condition
+extraction and shopper-region filtering remain subsequent upgrades; this batch does
+not claim they are implemented.

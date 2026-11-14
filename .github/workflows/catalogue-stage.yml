@@ -23,13 +23,13 @@ jobs:
           persist-credentials: false
       - name: Offline regression tests
         run: python3 -m unittest discover -s tools/catalogues/tests -v
-      - name: Restore small checkpoints from previous successful run
+      - name: Restore small checkpoints from previous completed run
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
           mkdir -p catalogue-artifacts
-          run_id=$(gh run list --workflow catalogue-stage.yml --branch main --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          run_id=$(gh run list --workflow catalogue-stage.yml --branch main --status completed --limit 1 --json databaseId --jq '.[0].databaseId // empty')
           if [[ "$run_id" =~ ^[0-9]+$ ]]; then
             gh run download "$run_id" --name catalogue-state --dir catalogue-artifacts || true
           fi
@@ -49,12 +49,15 @@ jobs:
               out.write('changed='+str(changed).lower()+'\n')
           PYTHON
       - name: Retain small checkpoints
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: catalogue-state
           path: |
             catalogue-artifacts/checkpoints.json
             catalogue-artifacts/website-feed.json
+            catalogue-artifacts/snapshots.json
+            catalogue-artifacts/manifest.json
           retention-days: 2
           if-no-files-found: error
       - name: Retain source evidence

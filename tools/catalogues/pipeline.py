@@ -15,10 +15,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
-from viewer import viewer_assets, viewer_script_url
+from viewer import viewer_assets, viewer_script_url, asset_recipe
 from offers import offer_cards
 from feed import atomic_json, export_feed, region_evidence, merge_feed
 from checkpoints import load as load_checkpoints, bounded as bound_checkpoints
+from http_cache import SnapshotCache, validator
+from source_inventory import inventory, markdown as coverage_markdown
+from diagnostics import failure as failure_details
 
 BASE = 'https://www.catalogueoffers.com.au'
 HOSTS = {'www.catalogueoffers.com.au', 'img.offers-cdn.net'}
@@ -89,16 +92,29 @@ class Client:
         self.limit, self.byte_limit, self.delay = requests, body_bytes, delay
         self.requests, self.bytes, self.last = 0, 0, 0
         self.robots = {}
+        self.last_status, self.last_headers = None, {}
         self.opener = urllib.request.build_opener(NoRedirect)
-    def raw(self, url):
+    def raw(self, url, conditions=None):
         url = safe_url(url)
         if self.requests >= self.limit:
             raise ValueError('request_budget')
         time.sleep(max(0, self.delay - (time.monotonic() - self.last)))
         self.requests += 1
         self.last = time.monotonic()
-        request = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Encoding': 'identity'})
-        with self.opener.open(request, timeout=20) as response:
+        headers={'User-Agent':UA,'Accept-Encoding':'identity'}
+        headers.update({k:v for k,v in (conditions or {}).items() if k in ['If-None-Match','If-Modified-Since'] and validator(v)})
+        request = urllib.request.Request(url, headers=headers)
+        try:
+            response=self.opener.open(request, timeout=20)
+        except urllib.error.HTTPError as error:
+            if error.code!=304:raise
+            self.last_status=304
+            self.last_headers={k.lower():v for k,v in error.headers.items() if k.lower() in ['etag','last-modified'] and validator(v)}
+            error.close()
+            return b''
+        with response:
+            self.last_status=getattr(response,'status',200)
+            self.last_headers={k.lower():v for k,v in response.headers.items() if k.lower() in ['etag','last-modified'] and validator(v)}
             chunks, size = [], 0
             started = time.monotonic()
             while True:
@@ -113,7 +129,7 @@ class Client:
                     raise ValueError('body_timeout')
                 chunks.append(chunk)
             return b''.join(chunks)
-    def get(self, url):
+    def get(self, url, conditions=None):
         url = safe_url(url)
         origin = 'https://' + urllib.parse.urlsplit(url).netloc
         if origin not in self.robots:
@@ -124,7 +140,9 @@ class Client:
         if not robot.can_fetch(UA, url):
             raise ValueError('robots_denied')
         self.delay = max(self.delay, robot.crawl_delay(UA) or 0)
-        return self.raw(url)
+        return self.raw(url, conditions)
+    def get_conditional(self,url,conditions):
+        return self.get(url,conditions)
 
 def targets(root):
     """Read the website's actual lists, including directory-only retailers."""
@@ -217,6 +235,7 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
             previous_feed = json.loads(feed_path.read_text())
     except (OSError, ValueError):
         pass
+    snapshots = SnapshotCache(output / 'snapshots.json')
     checkpoint_path = output / 'checkpoints.json'
     checkpoints = load_checkpoints(checkpoint_path)
     names = targets(root)
@@ -250,32 +269,59 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
     # Rotate priority each UTC day so bounded runs do not always favour Coles.
     offset = (int(datetime.now(timezone.utc).timestamp() // 43200) * max(1, max_specials)) % len(names)
     names = names[offset:] + names[:offset]
+    # Persisted HTTP snapshots carry successful check times even for zero-card
+    # results. Oldest/never checked sources get the next bounded specials slots.
+    def priority(name):
+        listing=snapshots.rows.get('listing-v1:'+found.get(name,''),{}).get('payload',{})
+        links=listing.get('specials_links',[]) if isinstance(listing,dict) else []
+        checked=snapshots.rows.get('offers-v1:'+next(iter(links),''),{}).get('checked_at','')
+        return checked
+    names=sorted(names,key=priority)
     viewers_used, images_used, specials_used = 0, 0, 0
     scripts = {}
     per_store_viewer_limit = max(1, max_viewers // len(names))
     for store in names:
-        row = {'store': store, 'status': 'not_discovered', 'catalogues': [], 'products': [], 'viewers': []}
+        row = {'store': store, 'status': 'not_discovered', 'catalogues': [], 'products': [], 'viewers': [], 'requests':0, 'body_bytes':0}
+        request_start, byte_start = client.requests, client.bytes
+        stage='listing'
+        active_url=found.get(store,'')
         report['stores'].append(row)
         if store not in found:
             continue
         try:
             url = found[store]
-            listing_page = Page(client.get(url).decode('utf-8'))
-            data = extract(listing_page, url, store)
+            row['listing_url']=url
+            def parse_listing(text):
+                page=Page(text)
+                parsed=extract(page,url,store)
+                slug=urllib.parse.urlsplit(url).path.split('/')[2]
+                observed=[]
+                for href,_ in page.links:
+                    parts=urllib.parse.urlsplit(href)
+                    if parts.path=='/stores/'+slug+'/specials' and not parts.query:
+                        try:observed.append(safe_url(href))
+                        except ValueError:pass
+                return {'data':parsed,'specials_links':list(dict.fromkeys(observed))}
+            listing, listing_check = snapshots.fetch(client,url,'listing-v1',parse_listing)
+            data=listing['data']
+            row['listing_checked_at']=listing_check['checked_at']
+            row['specials_url']=next(iter(listing['specials_links']),None)
             row.update(data)
             row['status'] = 'metadata_only' if data['catalogues'] else 'parser_drift'
             # Only viewer links from this retailer's listing. No related-store crawl.
             slug = urllib.parse.urlsplit(url).path.split('/')[2]
             row['offer_cards'] = {'offers': [], 'rejected': [], 'observed_cards': 0}
             if specials_used < max_specials:
-                for href, _ in listing_page.links:
-                    # Follow an observed, exact specials link, never guessed paths.
-                    if urllib.parse.urlsplit(href).path == '/stores/'+slug+'/specials' and not urllib.parse.urlsplit(href).query:
-                        specials_url = safe_url(href)
-                        specials_used += 1
-                        row['offer_cards'] = offer_cards(client.get(specials_url).decode('utf-8'), store, specials_url, safe_url)
-                        row['source_checked_at'] = datetime.now(timezone.utc).isoformat()
-                        break
+                if row['specials_url']:
+                    specials_url=row['specials_url']
+                    specials_used+=1
+                    stage='specials'
+                    active_url=specials_url
+                    cards, check=snapshots.fetch(client,specials_url,'offers-v1',lambda text:offer_cards(text,store,specials_url,safe_url))
+                    row['offer_cards']=cards
+                    row['source_checked_at']=check['checked_at']
+                    row['source_first_observed_at']=check['first_observed_at']
+                    row['source_unchanged']=check['unchanged']
             # Prefer catalogues actually referenced by extracted offers.
             offer_viewers = [o['catalogue_url'] for o in row['offer_cards']['offers']]
             candidate_viewers = list(dict.fromkeys(offer_viewers + data['viewer_links']))
@@ -288,13 +334,17 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
                     break
                 viewers_used += 1
                 store_viewers_used += 1
+                stage='viewer'
+                active_url=viewer
                 page = Page(client.get(viewer).decode('utf-8'))
                 parsed = extract(page, viewer, store)
                 item = {'source_url': viewer, 'products': parsed['products'], 'images': [], 'status': 'staged', 'validity': parsed['validity']}
                 row['viewers'].append(item)
                 script_url = viewer_script_url(page, safe_url)
+                item['script_url']=script_url
+                active_url=script_url
                 if script_url not in scripts:
-                    scripts[script_url] = client.get(script_url).decode('utf-8')
+                    scripts[script_url],_=snapshots.fetch(client,script_url,'viewer-recipe-v1',asset_recipe)
                 plan = viewer_assets(page, scripts[script_url], url, safe_url)
                 item.update({'total_pages': plan['total_pages'], 'recipe': plan['recipe'], 'script_url': script_url, 'validity': parsed['validity']})
                 for asset in plan['assets']:
@@ -312,6 +362,8 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
                     images_used += 1
                     identity = hashlib.sha256(image.encode()).hexdigest()
                     path = output / (identity + '.img')
+                    stage='page_image'
+                    active_url=image
                     path.write_bytes(client.get(image))
                     try:
                         tsv = ocr_file(path)
@@ -332,12 +384,21 @@ def run(root, output, client, max_viewers=4, max_images=5, max_specials=8, store
         except (ValueError, OSError, TimeoutError) as error:
             # Never record response bodies, headers, cookies, signed URLs or exception text.
             row['status'] = 'failed'
-            row['failure'] = str(error) if type(error) is ValueError else type(error).__name__
+            row['failure'] = type(error).__name__
+            row['diagnostic'] = failure_details(error,stage)
+            parts=urllib.parse.urlsplit(active_url)
+            row['diagnostic'].update(host=parts.hostname,path=parts.path)
+        row['requests'],row['body_bytes']=client.requests-request_start,client.bytes-byte_start
         report['requests'], report['body_bytes'] = client.requests, client.bytes
-        (output / 'manifest.json').write_text(json.dumps(report, indent=2))
+        atomic_json(output / 'manifest.json', report)
+        atomic_json(output / 'website-feed.json',merge_feed(previous_feed,export_feed(report)))
     report['requests'], report['body_bytes'] = client.requests, client.bytes
-    (output / 'manifest.json').write_text(json.dumps(report, indent=2))
+    report['http_cache']=snapshots.metrics
+    atomic_json(output / 'manifest.json', report)
     atomic_json(output / 'website-feed.json', merge_feed(previous_feed, export_feed(report)))
+    coverage=inventory(report)
+    atomic_json(output / 'coverage.json',coverage)
+    (output / 'coverage.md').write_text(coverage_markdown(coverage))
     return report
 
 def main():
@@ -349,9 +410,13 @@ def main():
     parser.add_argument('--specials', type=int, default=8)
     parser.add_argument('--stores', help='Comma-separated exact website retailer names; default: all')
     parser.add_argument('--website-feed', type=Path)
+    parser.add_argument('--audit-only',action='store_true',help='Metadata inventory only; no specials, viewer or image downloads')
     args = parser.parse_args()
     if not (1 <= args.requests <= 80 and 0 <= args.viewers <= 10 and 0 <= args.images <= 25 and 0 <= args.specials <= 28):
         parser.error('limits exceed admitted maximum')
+    if args.audit_only:
+        args.viewers=args.images=args.specials=0
+        if args.website_feed:parser.error('Audit-only mode cannot write a website feed')
     root = Path(__file__).resolve().parents[2]
     report = run(root, args.output, Client(args.requests), args.viewers, args.images, args.specials, args.stores.split(',') if args.stores else None)
     if args.website_feed:

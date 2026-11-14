@@ -62,3 +62,23 @@ class MergeTests(unittest.TestCase):
         from feed import merge_feed
         old={'id':'Coles:1','visible_from':'2026-11-11T00:00:00+00:00','expires_at':'2026-11-17T00:00:00+00:00','checked_at':'2026-11-14T11:00:00+00:00'}
         self.assertEqual(merge_feed({'schema_version':1,'ads':[old]},{'ads':[],'held':[{'id':'Coles:1'}]},NOW)['ads'],[])
+
+class PreviousDuplicateTests(unittest.TestCase):
+    def test_previous_feed_duplicates_are_not_imported_twice(self):
+        from feed import merge_feed
+        row={'id':'Coles:1','visible_from':'2026-11-11T00:00:00+00:00','expires_at':'2026-11-17T00:00:00+00:00','checked_at':'2026-11-14T11:00:00+00:00'}
+        result=merge_feed({'schema_version':1,'ads':[row,row]},{'ads':[],'held':[]},NOW)
+        self.assertEqual(len(result['ads']),1)
+
+class RegionalBoundaryTests(unittest.TestCase):
+    def test_region_mismatch_is_not_relabelled_as_sydney(self):
+        # Regional evidence stays attached to its edition, rather than being
+        # replaced by a shopper location or a cached unknown-region row.
+        sample=FeedTests();sample.setUp()
+        result=export_feed(sample.report,NOW)
+        self.assertEqual(result['ads'][0]['region'],'VIC')
+        self.assertNotEqual(result['ads'][0]['region'],'NSW')
+    def test_state_timezone_boundaries_include_dst(self):
+        validity={'valid_from_date':'2026-11-11','valid_through_date':'2026-11-17'}
+        self.assertEqual(window(validity,'NSW')[1],'2026-11-17T13:00:00+00:00')
+        self.assertEqual(window(validity,'WA')[1],'2026-11-17T16:00:00+00:00')
