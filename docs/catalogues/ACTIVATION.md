@@ -85,3 +85,31 @@ The local readiness command reads only named configuration fields and prints onl
 It does not print credentials or arbitrary supplied values. It makes no network requests or mutations.
 `--require stage` and `--require publish` return exit code 2 when blocked. Do not
 pass real credentials to this script; it needs only `VERCEL_TOKEN_PRESENT`.
+
+## Automatic pilot acceptance and mode isolation
+
+The staging job now runs an offline pilot acceptance gate before it considers the
+exported feed publishable. The publication job runs the same check again after
+artifact download, before credential-bearing operations, so an expired pilot cannot
+be promoted merely because it passed earlier.
+
+Acceptance requires both Coles and Woolworths to have current source advertisements,
+no recorded store failure, a capture within one hour, checks during that capture,
+20-request / 40-MB bounds, 2-viewer / 2-new-image bounds and at most 50 rows. Exported
+rows must exactly match a fresh derivation from this run's manifest, including
+source check timestamps. It rejects prior-run feed carryovers, wrong-store rows,
+duplicates, changed prices, mismatched image IDs and missing display fields.
+
+A successful pilot still does not prove stock, local shelf prices, complete purchase
+conditions, permission or available account-wide quota. Unknown editions remain
+labelled; advertisements are not promoted to verified deals.
+
+Pilot and full state now use different artifact names (`catalogue-state-pilot` and
+`catalogue-state-full`). Publication uses the mode actually emitted by staging.
+Switching modes cannot silently restore or publish the other mode's state. Legacy
+unscoped state is intentionally not restored; the first scoped run starts within
+its normal request caps. An acceptance failure blocks publishing but retains the
+run's evidence for diagnosis where artifact upload succeeds.
+
+No live pilot was triggered by these changes. Main adoption and configuration
+checks remain prerequisites; no activation switches or production settings changed.

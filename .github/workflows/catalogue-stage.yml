@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       changed: ${{ steps.feed.outputs.changed }}
+      mode: ${{ steps.feed.outputs.mode }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
@@ -34,11 +35,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          COLLECTION_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
         run: |
           mkdir -p catalogue-artifacts
           run_id=$(gh run list --workflow catalogue-stage.yml --branch main --status completed --limit 1 --json databaseId --jq '.[0].databaseId // empty')
           if [[ "$run_id" =~ ^[0-9]+$ ]]; then
-            gh run download "$run_id" --name catalogue-state --dir catalogue-artifacts || true
+            gh run download "$run_id" --name "catalogue-state-$COLLECTION_MODE" --dir catalogue-artifacts || true
           fi
       - name: Install local OCR
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tesseract-ocr
@@ -47,11 +49,16 @@ jobs:
         env:
           COLLECTION_MODE: ${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
         run: |
+          [[ "$COLLECTION_MODE" == 'pilot' || "$COLLECTION_MODE" == 'full' ]]
+          printf 'mode=%s\n' "$COLLECTION_MODE" >> "$GITHUB_OUTPUT"
           cp catalogue-artifacts/website-feed.json /tmp/previous-catalogue-feed.json 2>/dev/null || printf '{"ads":[]}' > /tmp/previous-catalogue-feed.json
           if [[ "$COLLECTION_MODE" == 'full' ]]; then
             python3 tools/catalogues/pipeline.py --requests 80 --viewers 4 --images 5 --specials 14 --website-feed public/catalogue-offers.json
           else
             python3 tools/catalogues/pipeline.py --stores Coles,Woolworths --requests 20 --viewers 2 --images 2 --specials 2 --website-feed public/catalogue-offers.json
+          fi
+          if [[ "$COLLECTION_MODE" == 'pilot' ]]; then
+            python3 tools/catalogues/acceptance.py --directory catalogue-artifacts
           fi
           python3 - <<'PYTHON'
           import json, os
@@ -65,12 +72,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: catalogue-state
+          name: catalogue-state-${{ vars.SAVEHALF_CATALOGUE_MODE || 'pilot' }}
           path: |
             catalogue-artifacts/checkpoints.json
             catalogue-artifacts/website-feed.json
             catalogue-artifacts/snapshots.json
             catalogue-artifacts/manifest.json
+            catalogue-artifacts/pilot-acceptance.json
           retention-days: 2
           if-no-files-found: error
       - name: Retain source evidence
@@ -111,8 +119,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          COLLECTION_MODE: ${{ needs.stage.outputs.mode }}
         run: |
-          gh run download "$GITHUB_RUN_ID" --name catalogue-state --dir /tmp/catalogue-state
+          gh run download "$GITHUB_RUN_ID" --name "catalogue-state-$COLLECTION_MODE" --dir /tmp/catalogue-state
+          if [[ "$COLLECTION_MODE" == 'pilot' ]]; then
+            python3 tools/catalogues/acceptance.py --directory /tmp/catalogue-state
+          fi
           cp /tmp/catalogue-state/website-feed.json public/catalogue-offers.json
       - name: Install reviewed CLI version
         run: |
