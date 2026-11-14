@@ -18,8 +18,8 @@ def inventory(report):
                 else:current+=1
             except (KeyError,ValueError,TypeError):unknown+=1
         cards=row.get('offer_cards',{})
-        outcome=('not_discovered' if not row.get('listing_url') else
-                 'failed' if row.get('failure') else
+        outcome=('failed' if row.get('failure') else
+                 'not_discovered' if not row.get('listing_url') else
                  'offers_checked' if row.get('source_checked_at') else 'metadata_checked')
         rows.append({'store':row['store'],'listing_url':row.get('listing_url'),
                      'specials_url':row.get('specials_url'),'outcome':outcome,
