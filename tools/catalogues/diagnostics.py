@@ -15,7 +15,7 @@ def failure(error,stage):
     elif isinstance(error,ValueError):
         # Only internal fixed guard names affect classification. No message is emitted.
         code=str(error)
-        result['kind']=('budget' if code in ['request_budget','byte_budget'] else 'timeout' if code=='body_timeout' else
+        result['kind']=('empty_response' if code=='empty_response' else 'budget' if code in ['request_budget','byte_budget'] else 'timeout' if code=='body_timeout' else
                         'access' if code=='robots_denied' else 'parser_drift')
     elif isinstance(error,OSError):result['kind']='transport'
     return result
