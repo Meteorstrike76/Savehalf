@@ -53,8 +53,9 @@ def assess(report,feed,now=None):
                 image=urlsplit(ad['image_url'])
                 check(image.scheme=='https' and image.hostname=='img.offers-cdn.net' and not image.username and not image.password and image.port in [None,443] and not image.query and not image.fragment and image.path.startswith('/assets/uploads/offers/au/'+identity+'/'),'image_identity')
         return {'schema_version':1,'accepted':not errors,'checks_failed':sorted(set(errors)),
-                'stores_with_ads':sorted({p['store'] for p in ads}),'advertisements':len(ads),
-                'requests':report['requests'],'body_bytes':report['body_bytes'],
+                'stores_with_ads':sorted({p['store'] for p in ads if p['store'] in PILOT}),'advertisements':len(ads),
+                'requests':report['requests'] if type(report['requests']) is int else None,
+                'body_bytes':report['body_bytes'] if type(report['body_bytes']) is int else None,
                 'scope':'pilot source advertisements; not verified local prices, stock or complete coverage'}
     except (ValueError,KeyError,TypeError,AttributeError,OverflowError):
         # Never echo malformed fields or exception payloads into logs.

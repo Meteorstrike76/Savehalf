@@ -50,3 +50,8 @@ class AcceptanceTests(unittest.TestCase):
     def test_missing_display_field_does_not_pass_a_blank_browser_feed(self):
         r=copy.deepcopy(self.report);del r['stores'][0]['offer_cards']['offers'][0]['price_text']
         self.assertFalse(assess(r,export_feed(r,NOW),NOW)['accepted'])
+
+    def test_invalid_fields_are_not_echoed_in_acceptance_logs(self):
+        r=copy.deepcopy(self.report);r['requests']='must-not-leak'
+        result=assess(r,self.feed,NOW)
+        self.assertFalse(result['accepted']);self.assertNotIn('must-not-leak',str(result))
