@@ -1,0 +1,23 @@
+{
+  "captured_at": "2026-11-16T06:46:08.285009+00:00",
+  "scope": "One-time local collection, partial source advertisements, not verified local shelf prices or stock",
+  "stores": {
+    "Coles": 25,
+    "Woolworths": 25
+  },
+  "requests": 14,
+  "body_bytes": 3611453,
+  "accepted": true,
+  "checks_failed": [],
+  "feed_sha256": "9db8f0232dc20068f84576e8f86837fb50796c1ea9bc19b0ddb552ebf09cafa4",
+  "github_collection_run": 43820128425,
+  "github_collection_outcome": "verification_required: HTTP 202 x-amzn-waf-action challenge at /robots.txt; no retry",
+  "automatic_collection_enabled": false,
+  "automatic_publication_enabled": false,
+  "limitations": [
+    "Pack sizes and purchase conditions have not been independently extracted.",
+    "TAS-detected and unknown-region editions are labelled separately; do not imply NSW applicability.",
+    "Displayed expiry and freshness filters remain active.",
+    "This snapshot does not prove unattended GitHub collection works."
+  ]
+}
