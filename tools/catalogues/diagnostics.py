@@ -1,12 +1,16 @@
 """Sanitised failure metadata; never log exception messages or response bodies."""
 import socket,ssl
 from urllib.error import HTTPError,URLError
+from recovery import challenge_headers
 
 
 def failure(error,stage):
     result={'stage':stage,'http_status':None,'kind':'unexpected'}
     if isinstance(error,HTTPError):
         result.update(http_status=error.code,kind='access' if error.code in [401,403] else 'rate_limit' if error.code==429 else 'upstream')
+        markers=challenge_headers(error.headers)
+        if markers:
+            result.update(kind='verification_required',verification_markers=markers)
     elif isinstance(error,URLError):
         reason=error.reason
         result['kind']=('dns' if isinstance(reason,socket.gaierror) else 'tls' if isinstance(reason,ssl.SSLError) else
