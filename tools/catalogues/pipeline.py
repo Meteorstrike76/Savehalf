@@ -22,6 +22,7 @@ from checkpoints import load as load_checkpoints, bounded as bound_checkpoints
 from http_cache import SnapshotCache, validator
 from source_inventory import inventory, markdown as coverage_markdown
 from diagnostics import failure as failure_details
+from recovery import challenge_headers
 
 BASE = 'https://www.catalogueoffers.com.au'
 HOSTS = {'www.catalogueoffers.com.au', 'img.offers-cdn.net'}
@@ -116,8 +117,8 @@ class Client:
             return b''
         with response:
             self.last_status=getattr(response,'status',200)
-            if self.last_status != 200:
-                raise urllib.error.HTTPError(url,self.last_status,'unexpected_response_status',{},None)
+            if self.last_status != 200 or challenge_headers(response.headers):
+                raise urllib.error.HTTPError(url,self.last_status,'unexpected_response_status',challenge_headers(response.headers),None)
             self.last_headers={k.lower():v for k,v in response.headers.items() if k.lower() in ['etag','last-modified'] and validator(v)}
             chunks, size = [], 0
             started = time.monotonic()
