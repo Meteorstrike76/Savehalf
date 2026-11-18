@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const m={exports:{}};vm.runInNewContext(require('esbuild').transformSync(fs.readFileSync('src/lib/reviewedImports.ts','utf8'),{loader:'ts',format:'cjs'}).code,{module:m,exports:m.exports,Date,Number});
+const {reviewedImports,importCurrent}=m.exports;
+test('reviewed imports hide on freshness boundary, future check or catalogue expiry',()=>{const row=reviewedImports[0],now=Date.parse(row.checkedAt);assert(importCurrent(row,now));assert(!importCurrent(row,now-1));assert(!importCurrent(row,now+24*3600000));assert(!importCurrent({...row,validTo:'2026-11-17'},now));assert(!importCurrent({...row,validFrom:'2026-11-20'},now));assert(!importCurrent({...row,checkedAt:'bad'},now));});
+test('unknown dates are not invented and source records retain product identity',()=>{assert.equal(reviewedImports.length,2);assert.equal(reviewedImports[1].validTo,null);assert.equal(reviewedImports[1].reference,null);assert.match(reviewedImports[0].detail,/83F500N2AU/);assert.match(reviewedImports[0].reference,/may previously have sold below/);});
