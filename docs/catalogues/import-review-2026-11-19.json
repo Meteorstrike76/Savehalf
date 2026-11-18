@@ -1,0 +1,496 @@
+{
+  "source_upload": "Pasted text.txt",
+  "reviewed_at": "2026-11-18T22:04:00Z",
+  "published": [
+    "JB Hi-Fi 899167 / 83F500N2AU",
+    "Target 73104933; official full product title used"
+  ],
+  "held": [
+    {
+      "retailer": "ALDI",
+      "name": "Beach Cabana",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    },
+    {
+      "retailer": "ALDI",
+      "name": "Adventuridge 8 Litre Outdoor Shower",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    },
+    {
+      "retailer": "ALDI",
+      "name": "Carrera Go!!! Mario Kart Slot Car Set",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    },
+    {
+      "retailer": "ALDI",
+      "name": "Coffee Capsule Machine",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    },
+    {
+      "retailer": "BIG W",
+      "name": "Nintendo Switch Games",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    },
+    {
+      "retailer": "Kmart",
+      "name": "Hello Kitty and Friends Stationery Set",
+      "reason": "Missing exact primary-source identity and/or current dates; no promotion inferred from relative countdown."
+    }
+  ],
+  "notes": [
+    "Eight supplied offers; two independently sourced product observations published, six held.",
+    "Catalogue-only entries are not product offers.",
+    "No extracted images supplied; no guessed or generated product imagery.",
+    "Source reference values are not verified previous selling prices.",
+    "Existing collection and publishing automation flags untouched."
+  ],
+  "original_submission": {
+    "source": {
+      "url": "https://www.catalogueoffers.com.au/",
+      "retrieved_date": "2026-11-19",
+      "location_context": null
+    },
+    "categories": [
+      {
+        "category": "Main store filters (7)",
+        "retailers": [
+          {
+            "retailer": "Coles",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "Coles (valid until 24-11)",
+                "valid_from": null,
+                "valid_until": "2026-11-24",
+                "validity_status": "Still valid for 6 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "New Coles (valid until 24-11) Coles Still valid for 6 days"
+                }
+              }
+            ],
+            "offers": []
+          },
+          {
+            "retailer": "Woolworths",
+            "listed_on_site": true,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "ALDI",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "ALDI | Black wednesday (valid until 1-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-01",
+                "validity_status": "Valid in 1 week",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "New ALDI | Black wednesday (valid until 1-12) ALDI | Black wednesday Valid in 1 week"
+                }
+              }
+            ],
+            "offers": [
+              {
+                "product_name": "Beach Cabana",
+                "offer_price": "$39.99",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "6 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "ALDI Beach Cabana offer Beach Cabana 6 days $39.99"
+                }
+              },
+              {
+                "product_name": "Adventuridge 8 Litre Outdoor Shower",
+                "offer_price": "$29.99",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "6 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "ALDI Adventuridge 8 Litre Outdoor Shower offer Adventuridge 8 Litre Outdoor Shower 6 days $29.99"
+                }
+              },
+              {
+                "product_name": "Carrera Go!!! Mario Kart Slot Car Set",
+                "offer_price": "$99.99",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "6 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "ALDI Carrera Go!!! Mario Kart Slot Car Set offer Carrera Go!!! Mario Kart Slot Car Set 6 days $99.99"
+                }
+              },
+              {
+                "product_name": "Coffee Capsule Machine",
+                "offer_price": "$49.99",
+                "was_price": "$78.99",
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "6 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "ALDI Coffee Capsule Machine offer Coffee Capsule Machine 6 days $78.99 $49.99"
+                }
+              }
+            ]
+          },
+          {
+            "retailer": "BIG W",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "BIG W | Black Friday (valid until 25-11)",
+                "valid_from": null,
+                "valid_until": "2026-11-25",
+                "validity_status": "Valid from tomorrow",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "New BIG W | Black Friday (valid until 25-11) BIG W | Black Friday Valid from tomorrow"
+                }
+              }
+            ],
+            "offers": [
+              {
+                "product_name": "Nintendo Switch Games",
+                "offer_price": "$39.00",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "Soon valid / Valid from tomorrow",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "BIG W Nintendo Switch Games offer Nintendo Switch Games Soon valid Valid from tomorrow $39.00"
+                }
+              }
+            ]
+          },
+          {
+            "retailer": "Kmart",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "Kmart (valid until 16-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-16",
+                "validity_status": "Valid for 4 more weeks",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "Tip Kmart (valid until 16-12) Kmart Valid for 4 more weeks"
+                }
+              },
+              {
+                "catalogue_title": "Kmart (valid until 24-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-24",
+                "validity_status": "Still valid for 1 month",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "Tip Kmart (valid until 24-12) Kmart Still valid for 1 month"
+                }
+              }
+            ],
+            "offers": [
+              {
+                "product_name": "Hello Kitty and Friends Stationery Set",
+                "offer_price": "$25.00",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "1 week",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "Kmart Hello Kitty and Friends Stationery Set offer Hello Kitty and Friends Stationery Set 1 week $25.00"
+                }
+              }
+            ]
+          },
+          {
+            "retailer": "Target",
+            "listed_on_site": true,
+            "catalogues": [],
+            "offers": [
+              {
+                "product_name": "Preview maxi shirt dress",
+                "offer_price": "$75.00",
+                "was_price": null,
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "3 weeks",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "Target Preview maxi shirt dress offer Preview maxi shirt dress 3 weeks $75.00"
+                }
+              }
+            ]
+          },
+          {
+            "retailer": "Best & Less",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Additional groceries (1)",
+        "retailers": [
+          {
+            "retailer": "IGA",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "IGA Liquor (valid until 1-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-01",
+                "validity_status": "Still valid for 13 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "New IGA Liquor (valid until 1-12) IGA Liquor Still valid for 13 days"
+                }
+              }
+            ],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Beauty & care (4)",
+        "retailers": [
+          {
+            "retailer": "Adore Beauty",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Sephora",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Chemist Warehouse",
+            "listed_on_site": true,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Priceline",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "Priceline (valid until 23-11)",
+                "valid_from": null,
+                "valid_until": "2026-11-23",
+                "validity_status": "Still valid for 5 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "Tip Priceline (valid until 23-11) Priceline Still valid for 5 days"
+                }
+              }
+            ],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Food & drink (5)",
+        "retailers": [
+          {
+            "retailer": "McDonald\u2019s",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "KFC",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Hungry Jack\u2019s",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Domino\u2019s",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Subway",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Tech & office (4)",
+        "retailers": [
+          {
+            "retailer": "JB Hi-Fi",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "JB Hi-Fi | Black Friday (valid until 2-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-02",
+                "validity_status": "Valid for 2 more weeks",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "JB Hi-Fi | Black Friday (valid until 2-12) JB Hi-Fi | Black Friday Valid for 2 more weeks"
+                }
+              }
+            ],
+            "offers": [
+              {
+                "product_name": "16\" Legion 7 Gaming Notebook",
+                "offer_price": "$3,989.00",
+                "was_price": "$5,499.00",
+                "discount_label": null,
+                "valid_from": null,
+                "valid_until": null,
+                "validity_status": "2 weeks",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "catalogue_title": null,
+                  "raw_snippet": "JB Hi-Fi 16\" Legion 7 Gaming Notebook offer 16\" Legion 7 Gaming Notebook 2 weeks $5,499.00 $3,989.00"
+                }
+              }
+            ]
+          },
+          {
+            "retailer": "Officeworks",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "Officeworks | Black Friday (valid until 30-11)",
+                "valid_from": null,
+                "valid_until": "2026-11-30",
+                "validity_status": "Still valid for 12 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "Officeworks | Black Friday (valid until 30-11) Officeworks | Black Friday Still valid for 12 days"
+                }
+              }
+            ],
+            "offers": []
+          },
+          {
+            "retailer": "The Good Guys",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "The Good Guys | Black Friday (valid until 2-12)",
+                "valid_from": null,
+                "valid_until": "2026-12-02",
+                "validity_status": "Valid from tomorrow",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "New The Good Guys | Black Friday (valid until 2-12) The Good Guys | Black Friday Valid from tomorrow"
+                }
+              }
+            ],
+            "offers": []
+          },
+          {
+            "retailer": "Bing Lee",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Fashion & sport (4)",
+        "retailers": [
+          {
+            "retailer": "Cotton On",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "UNIQLO",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "rebel",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Kathmandu",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          }
+        ]
+      },
+      {
+        "category": "Home & auto (3)",
+        "retailers": [
+          {
+            "retailer": "IKEA",
+            "listed_on_site": null,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Supercheap Auto",
+            "listed_on_site": true,
+            "catalogues": [],
+            "offers": []
+          },
+          {
+            "retailer": "Bunnings",
+            "listed_on_site": true,
+            "catalogues": [
+              {
+                "catalogue_title": "Bunnings (valid until 29-11)",
+                "valid_from": null,
+                "valid_until": "2026-11-29",
+                "validity_status": "Still valid for 11 days",
+                "source_evidence": {
+                  "source_url": "https://www.catalogueoffers.com.au/",
+                  "raw_snippet": "Bunnings (valid until 29-11) Bunnings Still valid for 11 days"
+                }
+              }
+            ],
+            "offers": []
+          }
+        ]
+      }
+    ]
+  }
+}
