@@ -1,0 +1,9 @@
+import {useEffect,useState} from 'react';
+import {reviewedImports,importCurrent} from '@/lib/reviewedImports';
+export default function ReviewedImports({search}:{search:string}){
+ const [now,setNow]=useState(Date.now);
+ useEffect(()=>{const refresh=()=>setNow(Date.now());const timer=setInterval(refresh,30000);document.addEventListener('visibilitychange',refresh);return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',refresh);};},[]);
+ const rows=reviewedImports.filter(p=>importCurrent(p,now)&&p.name.toLowerCase().includes(search.trim().toLowerCase()));
+ if(!rows.length)return null;
+ return <section className="retailer-offers" aria-label="Reviewed catalogue imports"><div className="section-head"><div><div className="eyebrow">SOURCE-CHECKED LISTINGS</div><h2>Recently checked finds.</h2></div><span className="data-pill">One-time import</span></div><p>Selected items checked against official retailer pages. These have separate search results and are not included in verified reductions, price filters or basket comparisons. Images are unavailable. Listings hide 24 hours after checking, or earlier when the catalogue ends.</p><div className="radar-grid">{rows.map(p=><article className="radar-card" key={p.id}><span>{p.store} · {p.validTo?'Catalogue advertisement':'Listed product price'}</span><h3>{p.name}</h3><strong>{new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD'}).format(p.price)}</strong><p>{p.detail}</p>{p.reference&&<p>{p.reference}</p>}<p>{p.conditions}</p>{p.validFrom&&<p>Catalogue dates: {p.validFrom} to {p.validTo}</p>}<p>Region and local stock unverified.</p><small>Checked {new Date(p.checkedAt).toLocaleString('en-AU',{timeZone:'Australia/Sydney'})} Sydney.</small><p><a href={p.source} target="_blank" rel="noopener noreferrer">{p.sourceLabel}</a></p></article>)}</div></section>;
+}
