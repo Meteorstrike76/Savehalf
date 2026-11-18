@@ -18,6 +18,7 @@ export const supabase = createClient(url || 'http://localhost:54321', key || 'mi
 });
 
 export interface Deal {
+  offerConditions?: string;
   unitBasis?: '100g'|'100ml'|'each';
   unitPrice?: number;
   id: string;
@@ -49,11 +50,12 @@ export interface SavedDeal {
 
 /** Columns the UI needs. Never `select('*')`: it keeps egress small on the free tier. */
 export const DEAL_COLUMNS =
-  'id,external_id,title,original_price,discount_price,discount_pct,store_category,category,image_url,deal_url,published_at,coupon_code,is_active,last_seen_at,source_feed,observed_region,promotion_ends_at,source_url,unit_basis,unit_price';
+  'id,external_id,title,original_price,discount_price,discount_pct,store_category,category,image_url,deal_url,published_at,coupon_code,is_active,last_seen_at,source_feed,observed_region,promotion_ends_at,source_url,unit_basis,unit_price,offer_conditions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toDeal(r: any): Deal {
   return {
+    offerConditions: r.offer_conditions || undefined,
     unitBasis: ['100g','100ml','each'].includes(r.unit_basis)?r.unit_basis:undefined,
     unitPrice: r.unit_price!=null&&Number.isFinite(Number(r.unit_price))&&Number(r.unit_price)>0?Number(r.unit_price):undefined,
     id: r.id,

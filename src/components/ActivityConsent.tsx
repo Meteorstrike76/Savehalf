@@ -1,0 +1,3 @@
+import {useState} from 'react';
+import {activityConsent,setActivityConsent} from '@/lib/siteEvents';
+export default function ActivityConsent(){const [enabled,setEnabled]=useState(activityConsent);return <label style={{display:'block',paddingBlock:12}}><input type="checkbox" checked={enabled} onChange={e=>{setEnabled(e.target.checked);setActivityConsent(e.target.checked);}}/> Share anonymous product and section interaction counts to improve SaveHalf. No account IDs, search text or browsing histories are recorded. Optional; off by default. Do Not Track and Global Privacy Control are respected.</label>;}
