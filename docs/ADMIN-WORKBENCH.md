@@ -52,3 +52,13 @@ Public wrappers use SECURITY INVOKER. Privileged implementations live in non-exp
 ## Verification
 
 Run npm test --prefix tools/admin for PostgreSQL/PGlite role, mutation, freshness, permission, ingestion and storage checks. Run npm run typecheck, npm run lint, npm run build, node --test tests/*.test.cjs and npm run test:ui using CI public fixture environment. UI integration exercises actual bundled components with mock auth/API responses. Hosted validation uses rollback-only transactions and leaves no test products, roles or events. Native browser review must preserve MFA; no admin access bypass.
+
+## Activation status
+
+Implementation is in PR #43. Automatic approval review rejected applying the production migration because it introduces privileged functions, triggers, storage policies/grants and a retention schedule; it requires explicit production database approval. A subsequent read-only hosted inspection confirmed admin_private, offer_conditions, admin-evidence and savehalf-admin-retention were all absent. No production schema changes occurred. Do not deploy the frontend first: its product query includes offer_conditions and requires the additive column.
+
+After explicit approval: apply the reviewed migration once, then verify grants/RLS, RPC allow/deny and storage behaviour in a rollback-only transaction using fixtures; run advisors and compare with the recorded existing warnings. Merge/release only the tested PR SHA after those pass. Native admin UI review requires the owner's ordinary MFA session. The existing owner must not be changed or impersonated in a browser.
+
+## Recovery
+
+If activation fails transactionally, stop and inspect; do not repeat an uncertain mutation. If the schema applied but UI release fails, retain the additive schema and keep the previous production app. If a release must roll back, use Vercel's previous production commit (3e8df613e5ed838483a8d94d5f84638a18e73066) and inspect auto-assignment afterwards. Do not drop admin tables or private evidence: preserve product revisions and permission records. An operator can revoke EXECUTE on the two new public RPC wrappers to stop new workbench writes/telemetry while retaining existing administration. Collector gate triggers and retention job must be reviewed explicitly; don't disable unrelated jobs or the existing MFA/RLS policies. Manual product publication is a separate audited action; rolling back code does not undo published product changes.
