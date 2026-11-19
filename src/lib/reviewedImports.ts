@@ -17,3 +17,14 @@ export function importCurrent(row:{checkedAt:string;validFrom:string|null;validT
  if(row.validTo&&now>=Date.parse(row.validTo+'T23:59:59+11:00'))return false;
  return true;
 }
+
+// Exact product-page image matches; image collection does not refresh price observations.
+export const reviewedProductImages: Record<string,string> = {
+  "kmart-110016082": "https://assets.kmart.com.au/transform/7dab20a4-6a35-45cb-8ebe-fc9d9e2999f7/110016082-1?io=transform%3Afit%2Cwidth%3A640%2Cheight%3A800&quality=80",
+  "kmart-110003758": "https://assets.kmart.com.au/transform/717feeb1-1f2a-4d55-99e1-ce84293e5e0c/110003758-1?io=transform%3Afit%2Cwidth%3A640%2Cheight%3A800&quality=80",
+  "kmart-110002268": "https://assets.kmart.com.au/transform/c2706dbb-c84e-448c-85f5-91a628c515f9/110002268-1?io=transform%3Afit%2Cwidth%3A640%2Cheight%3A800&quality=80",
+  "kmart-110121335": "https://assets.kmart.com.au/transform/64e922c9-10d0-48c8-bb48-bd1f35e5f489/110121335-1?io=transform%3Afit%2Cwidth%3A640%2Cheight%3A800&quality=80",
+  "target-73104933": "https://assets.target.com.au/asset/63e2ad47-45ca-4457-81ae-06a5c52dea64/thumbnail/webimage-265_73104933_1-265T7310.png",
+  "ikea-20623045": "https://www.ikea.com/au/en/images/products/enhet-mirror-cabinet-with-doors-white__1485605_pe1002057_s5.jpg?f=m",
+  "ikea-10616880": "https://www.ikea.com/au/en/images/products/fjaellbo-shelving-unit-black__0473389_pe614540_s5.jpg?f=m"
+};
