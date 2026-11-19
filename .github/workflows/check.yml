@@ -17,6 +17,8 @@ jobs:
           cache: npm
       - name: Catalogue pipeline regression tests
         run: python3 -m unittest discover -s tools/catalogues/tests -v
+      - run: npm ci --prefix tools/admin --ignore-scripts
+      - run: npm test --prefix tools/admin
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
