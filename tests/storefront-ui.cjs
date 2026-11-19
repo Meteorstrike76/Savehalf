@@ -1,4 +1,5 @@
 // Run with SAVEHALF_JSDOM_PATH pointing to an installed jsdom package.
+const waitFor=require('./wait-for.cjs');
 const {JSDOM,VirtualConsole}=require(process.env.SAVEHALF_JSDOM_PATH||'jsdom');
 const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
 const html=fs.readFileSync(path.join(__dirname,'../standalone-preview.html'),'utf8');
@@ -10,7 +11,7 @@ const pause=()=>new Promise(r=>setTimeout(r,40));const doc=dom.window.document;
 const button=t=>[...doc.querySelectorAll('button')].find(x=>x.textContent.trim()===t);
 const setValue=(input,value)=>{Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype,'value').set.call(input,value);input.dispatchEvent(new dom.window.Event('input',{bubbles:true}));};
 (async()=>{
- await new Promise(r=>setTimeout(r,200));assert.equal(doc.querySelectorAll('.community-links a').length,7);
+ await waitFor(()=>doc.querySelectorAll('.community-links a').length===7&&[...doc.querySelectorAll('.unit-price')].some(x=>x.textContent.includes('/ L')),'offline catalogue and unit prices');assert.equal(doc.querySelectorAll('.community-links a').length,7);
  assert([...doc.querySelectorAll('.unit-price')].some(x=>x.textContent.includes('/ L')));
  button('Sign in').click();await pause();const email=doc.getElementById('email');
  for(const value of ['g','gaurab','gaurab@example.com']){setValue(email,value);await pause();assert.equal(doc.activeElement,email);assert.equal(email.value,value);}
