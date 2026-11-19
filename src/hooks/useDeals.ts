@@ -24,6 +24,7 @@ export function useDeals(filters: DealFilters, enabled=true) {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount,setRetryCount]=useState(0);
   const reqId = useRef(0);
   const abortRef=useRef<AbortController|null>(null);
   const moreLock=useRef(false);
@@ -96,7 +97,7 @@ export function useDeals(filters: DealFilters, enabled=true) {
     }, filters.search ? 250 : 0); // debounce typing only
     const invalidate = () => { ++reqId.current; };
     return () => { active=false;clearTimeout(t); abortRef.current?.abort(); invalidate(); };
-  }, [fetchPage, filters.stores.length, filters.search, enabled]);
+  }, [fetchPage, filters.stores.length, filters.search, enabled,retryCount]);
 
   const loadMore = useCallback(async () => {
     if(moreLock.current)return;moreLock.current=true;setLoadingMore(true);
@@ -111,5 +112,5 @@ export function useDeals(filters: DealFilters, enabled=true) {
     }
   }, [fetchPage, deals.length]);
 
-  return { deals, total, loading, loadingMore, error, hasMore: deals.length < total, loadMore };
+  return { deals, total, loading, loadingMore, error, hasMore: deals.length < total, loadMore, retry:()=>setRetryCount(n=>n+1) };
 }

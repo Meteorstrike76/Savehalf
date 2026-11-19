@@ -1,14 +1,21 @@
 import {CATEGORIES,STORE_IDS,isStoreId,type StoreId,type DealCategory} from './stores';
 import type {Deal} from './supabase';
+import {PRODUCT_TYPES,type ProductType} from './productTypes';
 import {unitPrice} from './shopping';
-export type BrowseState={tab:'deals'|'catalogue';search:string;stores:StoreId[];category:DealCategory|'All';sort:'discount'|'price'|'newest'|'unit';half:boolean;budget:string;minimum?:string};
+export type BrowseState={tab:'deals'|'catalogue';search:string;stores:StoreId[];category:DealCategory|'All';sort:'discount'|'price'|'newest'|'unit';half:boolean;budget:string;minimum?:string;productType?:ProductType;region?:string;retailer?:string;source?:'all'|'collected'|'catalogues';mix?:boolean};
 export type SavedSearch={name:string;filters:BrowseState};
 export const SEARCHES_KEY='savehalf-searches-v1',HIDDEN_KEY='savehalf-hidden-v1',VISIT_KEY='savehalf-last-visit-v1';
 export function validateBrowse(value:unknown):BrowseState|null{
  if(!value||typeof value!=='object')return null;const d=value as BrowseState;
  if(!['deals','catalogue'].includes(d.tab)||typeof d.search!=='string'||d.search.length>60||!Array.isArray(d.stores)||d.stores.length>STORE_IDS.length||!d.stores.every(isStoreId)||!(d.category==='All'||CATEGORIES.includes(d.category))||!['discount','price','newest','unit'].includes(d.sort)||typeof d.half!=='boolean'||typeof d.budget!=='string'||d.budget.length>12||(d.budget!==''&&(!Number.isFinite(Number(d.budget))||Number(d.budget)<0||Number(d.budget)>5000)))return null;
  if(d.minimum!==undefined&&(typeof d.minimum!=='string'||d.minimum.length>12||d.minimum!==''&&(!Number.isFinite(Number(d.minimum))||Number(d.minimum)<0||Number(d.minimum)>5000)))return null;
- return {tab:d.tab,search:d.search,stores:[...new Set(d.stores)],category:d.category,sort:d.sort,half:d.half,budget:d.budget,...(d.minimum!==undefined?{minimum:d.minimum}:{})};
+ if(d.minimum&&d.budget&&Number(d.minimum)>Number(d.budget))return null;
+ if(d.productType!==undefined&&!PRODUCT_TYPES.includes(d.productType))return null;
+ if(d.region!==undefined&&!['All','NSW','VIC','NT','Unverified'].includes(d.region))return null;
+ if(d.retailer!==undefined&&!['All',...STORE_IDS,'IGA','IKEA','Officeworks'].includes(d.retailer))return null;
+ if(d.source!==undefined&&!['all','collected','catalogues'].includes(d.source))return null;
+ if(d.mix!==undefined&&typeof d.mix!=='boolean')return null;
+ return {tab:d.tab,search:d.search,stores:[...new Set(d.stores)],category:d.category,sort:d.sort,half:d.half,budget:d.budget,...(d.minimum!==undefined?{minimum:d.minimum}:{}),...(d.productType!==undefined?{productType:d.productType}:{}),...(d.region!==undefined?{region:d.region}:{}),...(d.retailer!==undefined?{retailer:d.retailer}:{}),...(d.source!==undefined?{source:d.source}:{}),...(d.mix!==undefined?{mix:d.mix}:{})};
 }
 export function readSharedBrowse():BrowseState|null{try{const q=new URLSearchParams(location.search),raw=q.get('browse');return raw&&raw.length<=2000?validateBrowse(JSON.parse(raw)):null;}catch{return null;}}
 export function browseLink(origin:string,pathname:string,filters:BrowseState){const url=new URL(pathname,origin);url.searchParams.set('browse',JSON.stringify(filters));return url.toString();}
