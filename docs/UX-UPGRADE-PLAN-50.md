@@ -21,7 +21,7 @@ This is a phased plan, not a claim that 50 changes are live. Items 1–20 belong
 | 11 | Explain excluded catalogue ads | Verification/freshness/photo/unit-price constraints explain why ads are omitted. Advertisements never become verified reductions. |
 | 12 | Put primary results first | Provider snapshots move below the shared grid and its pagination, while retaining their separate labels/counts. |
 | 13 | Direct product-grid shortcut | A keyboard-accessible link skips filter controls and targets the result summary. |
-| 14 | Announce result changes | The result summary has a polite, atomic live status without moving keyboard focus. |
+| 14 | Announce result changes | The result summary has a polite, atomic live status without moving keyboard focus and labels collected totals as before local filters. |
 | 15 | Recover from an empty selection | Empty states offer a direct clear-and-browse-products action; missing loaded matches do not imply complete retailer coverage. |
 | 16 | Retry failed collection reads | A retry action reissues the existing bounded read without reloading the page or discarding filters. |
 | 17 | Readable catalogue dates and links | End dates use Australian month names; catalogue links announce new tabs and their specific product. Unknown dates remain unknown. |
