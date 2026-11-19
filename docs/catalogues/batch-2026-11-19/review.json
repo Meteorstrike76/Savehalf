@@ -1,0 +1,1717 @@
+{
+  "source_file": "ALL_CATALOGUES_COMBINED.md",
+  "sha256": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+  "lines": 2344,
+  "bytes": 150065,
+  "reviewed_at": "2026-11-19T00:36:25.537406+00:00",
+  "currency_blocks": 206,
+  "officially_checked_listings": [
+    {
+      "id": "kmart-110016082",
+      "store": "Kmart",
+      "name": "Artiss TV Unit Entertainment Unit Storage Cabinet 180cm - Black",
+      "price": 151.85,
+      "detail": "180cm wide · Black · Marketplace seller Aisle Six.",
+      "reference": null,
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page.",
+      "source": "https://www.kmart.com.au/product/artiss-tv-unit-entertainment-unit-storage-cabinet-180cm-black-110016082/",
+      "sourceLabel": "Official Kmart marketplace product page",
+      "validFrom": null,
+      "validTo": null,
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 613
+    },
+    {
+      "id": "kmart-110003758",
+      "store": "Kmart",
+      "name": "Artiss Convertible Folding Sofa Bed - Green",
+      "price": 339.85,
+      "detail": "Green · Marketplace seller Aisle Six.",
+      "reference": null,
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page.",
+      "source": "https://www.kmart.com.au/product/artiss-convertible-folding-sofa-bed-green-green-110003758/",
+      "sourceLabel": "Official Kmart marketplace product page",
+      "validFrom": null,
+      "validTo": null,
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 624
+    },
+    {
+      "id": "kmart-110002268",
+      "store": "Kmart",
+      "name": "Gardeon 3-piece Outdoor Bistro Set - Black",
+      "price": 80.85,
+      "detail": "Table and two chairs · Black · Marketplace seller Aisle Six.",
+      "reference": null,
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page.",
+      "source": "https://www.kmart.com.au/product/gardeon-3-piece-outdoor-bistro-set-table-and-chairs-stackable-patio-furniture-weather-resistant-easy-assembly-black-110002268/",
+      "sourceLabel": "Official Kmart marketplace product page",
+      "validFrom": null,
+      "validTo": null,
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 630
+    },
+    {
+      "id": "kmart-110121335",
+      "store": "Kmart",
+      "name": "Artiss 7 Chest of Drawers Dresser Table - White",
+      "price": 163.85,
+      "detail": "White · 110 × 39 × 72cm · Marketplace seller Aisle Six. Uploaded catalogue price $166.85; official page currently $163.85.",
+      "reference": null,
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page.",
+      "source": "https://www.kmart.com.au/product/artiss-7-chest-of-drawers-dresser-table-white-110121335/",
+      "sourceLabel": "Official Kmart marketplace product page",
+      "validFrom": null,
+      "validTo": null,
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 641
+    },
+    {
+      "id": "ikea-20623045",
+      "store": "IKEA",
+      "name": "ENHET Mirror cabinet with doors, white, 60×17×75cm",
+      "price": 143.1,
+      "detail": "Article 206.230.45 · Wall anchoring required; see retailer installation instructions.",
+      "reference": "Retailer labels $159 as previous price. Its historical selling basis has not been independently verified.",
+      "conditions": "Retailer displays 10% off. Valid until 30 November 2026 or while stock lasts. Confirm store availability, delivery and final price.",
+      "source": "https://www.ikea.com/au/en/p/enhet-mirror-cabinet-with-doors-white-20623045/",
+      "sourceLabel": "Official IKEA product page",
+      "validFrom": null,
+      "validTo": "2026-11-30",
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 2194
+    },
+    {
+      "id": "ikea-10616880",
+      "store": "IKEA",
+      "name": "FJÄLLBO Shelving unit, black, 51×136cm",
+      "price": 99.99,
+      "detail": "Article 106.168.80 · Black · 51×136cm.",
+      "reference": "Retailer labels $119 as previous price. Its historical selling basis has not been independently verified.",
+      "conditions": "Displayed item price $99.99. Retailer also advertises 10% Black Friday discount applied at checkout until 30 November 2026; eligibility and final checkout price are not assumed. Confirm availability and delivery.",
+      "source": "https://www.ikea.com/au/en/p/fjaellbo-shelving-unit-black-10616880/",
+      "sourceLabel": "Official IKEA product page",
+      "validFrom": null,
+      "validTo": "2026-11-30",
+      "checkedAt": "2026-11-19T00:36:25.537406+00:00",
+      "upload_line": 2186
+    }
+  ],
+  "draft_count": 38,
+  "draft_candidates": [
+    {
+      "title": "SAVE%6.96 oe enteze i SAVES4.40 WASS12.96 = 3 : WAS$8.40 Streets Magnum Sticks Zooper Dooper Water Ice Water Ice Ice 24 Pack 4 Pack-6 Pack-6 Pack 360mL-400mL 360mL-400mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 3. $0.17 per each each 15%OFF Selected TCN Gifti Cards D | “ice See page 10 for details ACTIVE SHOP. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 3
+    },
+    {
+      "title": "Schick Silk 4 Days Purple Razor Kit with 1 Refill Blade 1 Each",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 5.88,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 39. $5.88 per each On sale for 2 weeks. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 39
+    },
+    {
+      "title": "Gillette Venus White Tea Comfortglide Razor with 2 Refill Blades 1 Each",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 8.4,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 46. $8.40 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 46
+    },
+    {
+      "title": "Garnier Micellar Cleansing Water 400mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 48. $2.00 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 48
+    },
+    {
+      "title": "QV Gentle Wash 1kg",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 60. $1.44 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 60
+    },
+    {
+      "title": "Voltaren Pain Relief Gel 12 Hourly 100g*",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 15.0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 67. $15.00 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 67
+    },
+    {
+      "title": "Metamucil 72 Dose Fibre Supplement 425g*",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 74. $3.93 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 74
+    },
+    {
+      "title": "Morning Fresh Dishwashing Liquid 900mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 86. $0.53 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 86
+    },
+    {
+      "title": "Fairy Platinum Lemon Dishwashing Tablets 52 Pack",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 88. $0.40 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 88
+    },
+    {
+      "title": "Coca-Cola, Fanta or Sprite Soft Drink 1.25 Litre",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 115. $1.80 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 115
+    },
+    {
+      "title": "Philadelphia Cream Cheese Block 250g",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 117. $11.40 per kg. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 117
+    },
+    {
+      "title": "ee.<br>” (fey 2<br>ee ESOS ey<br>No<br>ea<br>$17<br>SAVE517.50wisest<br>Ferrero Rocher Gift Box<br>30 Pack 375g",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 122. $4.67 per 100g.<br><!-- End of picture text -->. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 122
+    },
+    {
+      "title": "Skin Control Pimple Patch Party Pack 36 Pack",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 143. $0.13 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 143
+    },
+    {
+      "title": "Palmer's Tahitian Vanilla Body Lotion 400mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 150. $1.71 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 150
+    },
+    {
+      "title": "COSRX Low pH Good Morning Gel Cleanser 150mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 157. $8.75 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 157
+    },
+    {
+      "title": "Bic Soleil Sensitive Advance Razor 2 Pack",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 164. $2.89 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 164
+    },
+    {
+      "title": "Veet Sensitive Skin Facial Hair Removal Wax Strips 20 Pack",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 166. $0.34 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 166
+    },
+    {
+      "title": "Mixa Urea Cica Repair+ Body Milk 400mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 173. $1.97 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 173
+    },
+    {
+      "title": "Garnier Vitamin C Hydrating Sorbet Cream 85mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 175. $9.88 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 175
+    },
+    {
+      "title": "Hey Bud Daily Gel Cleanser 150mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 187. $10.50 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 187
+    },
+    {
+      "title": "L'Oréal Revitalift Filler Glass Skin Liquid Cream 50mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 189. $63.00 per 100mL. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 189
+    },
+    {
+      "title": "Cuddly Concentrate Fabric Conditioner 850mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 204. $6.48 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 204
+    },
+    {
+      "title": "Pine O Cleen Disinfectant Wipes 100 Pack",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 206. $0.06 per each. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 206
+    },
+    {
+      "title": "Pine O Cleen Antibacterial Platinum Laundry Sanitiser 2 Litre",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 215. $7.35 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 215
+    },
+    {
+      "title": "Dynamo Professional Laundry Liquid 2 Litre",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 217. $7.61 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 217
+    },
+    {
+      "title": "Cadbury Giant Freddo or Caramello Koala 35g",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 230. $2.86 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 230
+    },
+    {
+      "title": "Popcorners 130g",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 248. $1.94 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 248
+    },
+    {
+      "title": "CC's Corn Chips 175g",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 294. $1.50 per 100g. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 294
+    },
+    {
+      "title": "Raw C Pure Natural Coconut<br>Water 1 Litre",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 309. $2.75 per litre<br><!-- End of picture text -->. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 309
+    },
+    {
+      "title": "Powerade Sports Drink 1 Litre",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 321. $2.95 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 321
+    },
+    {
+      "title": "Coca-Cola, Fanta or Sprite Soft Drink 10x375mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 323. $3.07 per litre. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 323
+    },
+    {
+      "title": "S) ey<br>> Ee =<br>—_—, &.<br>0 SD Prevorh<br>a a Po<br>B ‘i FQ ARREIN manga<br>$4450Tt<br>SAVES<br>Mt Franklin Sparkling Water<br>10x375mL",
+      "store": "Coles",
+      "category": "Groceries",
+      "price": 0,
+      "source_url": "",
+      "image_url": "",
+      "region": "NT",
+      "checked_at": "",
+      "expires_at": "2026-11-24T23:59:59+09:30",
+      "conditions": "HELD: uploaded OCR line 328. $3.07 per litre<br><!-- End of picture text -->. Coles NT edition 18–24 Nov 2026. Selling price requires exact page verification; unit rates are not multiplied. Not independently checked.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 328
+    },
+    {
+      "title": "Artiss TV Unit Entertainment Unit Storage Cabinet 180cm - Black",
+      "store": "Kmart",
+      "category": "Home & Living",
+      "price": 151.85,
+      "source_url": "https://www.kmart.com.au/product/artiss-tv-unit-entertainment-unit-storage-cabinet-180cm-black-110016082/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "",
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page. 180cm wide · Black · Marketplace seller Aisle Six.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 613
+    },
+    {
+      "title": "Artiss Convertible Folding Sofa Bed - Green",
+      "store": "Kmart",
+      "category": "Home & Living",
+      "price": 339.85,
+      "source_url": "https://www.kmart.com.au/product/artiss-convertible-folding-sofa-bed-green-green-110003758/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "",
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page. Green · Marketplace seller Aisle Six.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 624
+    },
+    {
+      "title": "Gardeon 3-piece Outdoor Bistro Set - Black",
+      "store": "Kmart",
+      "category": "Home & Living",
+      "price": 80.85,
+      "source_url": "https://www.kmart.com.au/product/gardeon-3-piece-outdoor-bistro-set-table-and-chairs-stackable-patio-furniture-weather-resistant-easy-assembly-black-110002268/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "",
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page. Table and two chairs · Black · Marketplace seller Aisle Six.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 630
+    },
+    {
+      "title": "Artiss 7 Chest of Drawers Dresser Table - White",
+      "store": "Kmart",
+      "category": "Home & Living",
+      "price": 163.85,
+      "source_url": "https://www.kmart.com.au/product/artiss-7-chest-of-drawers-dresser-table-white-110121335/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "",
+      "conditions": "Online-only marketplace listing. Delivery charges and postcode eligibility vary. Listed price, not a verified reduction. Promotion dates were not stated on the product page. White · 110 × 39 × 72cm · Marketplace seller Aisle Six. Uploaded catalogue price $166.85; official page currently $163.85.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 641
+    },
+    {
+      "title": "ENHET Mirror cabinet with doors, white, 60×17×75cm",
+      "store": "IKEA",
+      "category": "Home & Living",
+      "price": 143.1,
+      "source_url": "https://www.ikea.com/au/en/p/enhet-mirror-cabinet-with-doors-white-20623045/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "2026-11-30T23:59:59+11:00",
+      "conditions": "Retailer displays 10% off. Valid until 30 November 2026 or while stock lasts. Confirm store availability, delivery and final price. Article 206.230.45 · Wall anchoring required; see retailer installation instructions.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 2194
+    },
+    {
+      "title": "FJÄLLBO Shelving unit, black, 51×136cm",
+      "store": "IKEA",
+      "category": "Home & Living",
+      "price": 99.99,
+      "source_url": "https://www.ikea.com/au/en/p/fjaellbo-shelving-unit-black-10616880/",
+      "image_url": "",
+      "region": "",
+      "checked_at": "2026-11-19T00:36:25.537406+00:00",
+      "expires_at": "2026-11-30T23:59:59+11:00",
+      "conditions": "Displayed item price $99.99. Retailer also advertises 10% Black Friday discount applied at checkout until 30 November 2026; eligibility and final checkout price are not assumed. Confirm availability and delivery. Article 106.168.80 · Black · 51×136cm.",
+      "evidence_path": "",
+      "import_batch": "9f8c83074b47366f2607003a7b170a125b9ff792e115a80fe1aee048b5235e06",
+      "upload_line": 2186
+    }
+  ],
+  "important_findings": [
+    "Coles cover is NT, not NSW; valid 18–24 November 2026.",
+    "ALDI pages explicitly announce Wednesday 25 November: upcoming, not current.",
+    "IGA contains QLD/VIC/NSW editions and a WA footnote; prices must not be merged nationally.",
+    "House of Wellness and JB Hi-Fi magazine content include editorial text and competitions, not only offers.",
+    "Repeated IKEA blocks were deduplicated.",
+    "Ambiguous currency tokens, missing decimal points, rounded unit prices and relative dates were not converted into selling prices.",
+    "Kmart dresser was corrected from uploaded $166.85 to official $163.85.",
+    "No images were supplied or granted reuse rights; none invented."
+  ],
+  "held_currency_blocks": [
+    {
+      "line": 1,
+      "excerpt": "Wed 18 Nov to Tue 24 Nov 2026 NT For Jarms, conditions and . exgikisions, see page 36. I +> _ ae iP aL NI A | } S »- aw sr » N |iSBlack | aa a(@) @ ey (| Blackc",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 3,
+      "excerpt": "SAVE%6.96 oe enteze i SAVES4.40 WASS12.96 = 3 : WAS$8.40 Streets Magnum Sticks Zooper Dooper Water Ice Water Ice Ice 24 Pack 4 Pack-6 Pack-6 Pack 360mL-400mL 36",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 7,
+      "excerpt": "  ‘23 Ss ao ID SAME Gia vonmonng sR Owe ColesRump AustralianSteak $23.00 No Addedper kg  Hormones Beef  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 39,
+      "excerpt": "Schick Silk 4 Days Purple Razor Kit with 1 Refill Blade 1 Each $5.88 per each On sale for 2 weeks",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 46,
+      "excerpt": "Gillette Venus White Tea Comfortglide Razor with 2 Refill Blades 1 Each $8.40 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 48,
+      "excerpt": "Garnier Micellar Cleansing Water 400mL $2.00 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 57,
+      "excerpt": "  ‘ QV en‘ne a 4 f ea SAVES17.63 WAS$32.03  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 60,
+      "excerpt": "QV Gentle Wash 1kg $1.44 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 64,
+      "excerpt": "  foltaren we oe aceal — “15 ea SAVES18.60WAS$33.60  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 67,
+      "excerpt": "Voltaren Pain Relief Gel 12 Hourly 100g* $15.00 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 71,
+      "excerpt": "  ei Ter { ‘aye swoon Meta | —_MUCIL, a | 6” 7 a fea eee LovoUnd 00TH SAVE‘20.58WAS$37.28 sa  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 74,
+      "excerpt": "Metamucil 72 Dose Fibre Supplement 425g* $3.93 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 83,
+      "excerpt": "  ,,x eyIMORNING! &= —  UFaRy. FRESH a z = peor eS e FormanFRESH ; ) $4,75\" M1:  ) sess §= 4 SAVES5.75 od SAVE ‘27.30 WASS10.50 WAS $48.30  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 86,
+      "excerpt": "Morning Fresh Dishwashing Liquid 900mL $0.53 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 88,
+      "excerpt": "Fairy Platinum Lemon Dishwashing Tablets 52 Pack $0.40 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 105,
+      "excerpt": "  ven ery it\\ ATL 8 \\ Vo qt | a ro... ranADes Vu & | oa Risin 32 ea Ci “aan Arnott's Shapes Crackers 160g-190g ullai— = ' $@50 a SAVEZASWASS13.65 Red Bull Energ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 112,
+      "excerpt": "  Z \\ 4 a sre 4° Cooma | PHILADELPHIA 7 j ie| —_— o \\ PHILADELPHIA LAEI / q | i =a $925ea 7) $985ea : ee IASS6.16  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 115,
+      "excerpt": "Coca-Cola, Fanta or Sprite Soft Drink 1.25 Litre $1.80 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 117,
+      "excerpt": "Philadelphia Cream Cheese Block 250g $11.40 per kg",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 121,
+      "excerpt": "  ee. ” (fey 2 ee ESOS ey No ea $17 SAVE517.50wisest Ferrero Rocher Gift Box 30 Pack 375g $4.67 per 100g.  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 126,
+      "excerpt": "  OLAY = en 25x = eee *36° a MUSA. CollagenOlay RegeneristPeptides Super Moisturiser 45g $81.67 per 100g  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 131,
+      "excerpt": "  3 . ~ en - *» 7, S1 = > * > de) my_= } Z } GLSSSHOUSE | a ee SD Coles ~ Sr =” ‘ey Australian Glasshouse Grape Tomatoes a\\Srowy 200g Pack $15.00= | per kg2 ~  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 143,
+      "excerpt": "Skin Control Pimple Patch Party Pack 36 Pack $0.13 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 147,
+      "excerpt": "  & TAHITIAN $6”oo =aVANILLA3 SAVE‘G6.83thteves  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 150,
+      "excerpt": "Palmer's Tahitian Vanilla Body Lotion 400mL $1.71 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 154,
+      "excerpt": "  $421213° “— SAVE513.13WAS$26.25  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 157,
+      "excerpt": "COSRX Low pH Good Morning Gel Cleanser 150mL $8.75 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 161,
+      "excerpt": "  “ 9 Cioleil _ womens RsSHOE4 REMOVAL poo Si (=) Ecbsions . $577ea 2 ints- qOY +6”ea WAS:sans : SAVES6.83  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 164,
+      "excerpt": "Bic Soleil Sensitive Advance Razor 2 Pack $2.89 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 166,
+      "excerpt": "Veet Sensitive Skin Facial Hair Removal Wax Strips 20 Pack $0.34 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 170,
+      "excerpt": "  one YAMING [Mixa GARNICR $7737 [5%= | $30 be — es SAVE‘7,88ee al SAVE‘8.40WASS16.80  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 173,
+      "excerpt": "Mixa Urea Cica Repair+ Body Milk 400mL $1.97 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 175,
+      "excerpt": "Garnier Vitamin C Hydrating Sorbet Cream 85mL $9.88 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 179,
+      "excerpt": "  LOREAL, $45031°= ection cola SAVEWASS63,ESO  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 184,
+      "excerpt": "  = $4675152. SAVES15.75WASS31.50 _»  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 187,
+      "excerpt": "Hey Bud Daily Gel Cleanser 150mL $10.50 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 189,
+      "excerpt": "L'Oréal Revitalift Filler Glass Skin Liquid Cream 50mL $63.00 per 100mL",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 199,
+      "excerpt": "  Net — Ml iy = = 3 i ¥ , Fe Bh) NS 5 P54) e y2 & en  bat Rt Bref. (a J 3\")ea _&Bea PaceyPy _laat19\" WASS$735 $39.90, Bref In The Bowl 42g-50g or Liquid Toilet ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 202,
+      "excerpt": "Vanish NapiSan Gold Pro Turbo Turbo Stain Remover Powder 2kg $9.98GeperGeperper kg.*See pagesisi 29 for T&Cs",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 204,
+      "excerpt": "Cuddly Concentrate Fabric Conditioner 850mL $6.48 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 206,
+      "excerpt": "Pine O Cleen Disinfectant Wipes 100 Pack $0.06 per each",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 212,
+      "excerpt": "  - Ya 28 ae \\ ; ¥ “24 %®. | oe : ~ nynainy, La 22) ariel 1, al Ga 944° ‘scm=>J é $152 \\cTIONDie $152 OMO SIMESEO” - SIMS SIME  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 215,
+      "excerpt": "Pine O Cleen Antibacterial Platinum Laundry Sanitiser 2 Litre $7.35 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 217,
+      "excerpt": "Dynamo Professional Laundry Liquid 2 Litre $7.61 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 230,
+      "excerpt": "Cadbury Giant Freddo or Caramello Koala 35g $2.86 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 234,
+      "excerpt": "  a BO U Tey (peels j EW SWIGKERS, thetiedoch raE MGIESVY caTAR amareft a : Secyl $457ea $429ea a : WES S8 wes  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 243,
+      "excerpt": "  Fit cri porcine See SK ott 2... = SMS, az ~ |porcORE=\" =a Light {Crispy} iim a ce 32 ” ad $92bea®o # | shyMerene : ME sb  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 248,
+      "excerpt": "Popcorners 130g $1.94 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 284,
+      "excerpt": "  4ACES) : . cos. OKa] O oa S $962) ‘xii SAVE'2,ee The Natural Chip Co. Potato Chips 175g $1.50 per 100g  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 289,
+      "excerpt": "  ? PATCHSOURE]ines = > on aa rae Chees ; ig Ty ry prigina q a $962) =  Natural Confectionery Confectionery SAVE‘2.63WASS5.25  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 294,
+      "excerpt": "CC's Corn Chips 175g $1.50 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 298,
+      "excerpt": "  4 & \\ (Ss = we PURE PURE sf NATURAL NATURAL c rOCONT COCONUT i sR WATER $Ji0ea $975 . ea wectea Nez  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 303,
+      "excerpt": "  Gatorade Sports Drink or G Active Water 600mL $3.50 per litre  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 308,
+      "excerpt": "  Raw C Pure Natural Coconut Water 1 Litre $2.75 per litre  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 313,
+      "excerpt": "  = NEW J = pan Pes) i | PES. be) | $985 heey@ J sid pee | WAS$5.70 Golden Circle Zero Sugar Cordial 2 Litre $1.43 per litre  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 318,
+      "excerpt": "  POWERWPOWER yp) “ vane Abe A \\ q _ \\ ‘ SHO Pat | @ea | 2 | __ Be $995 ( Pia ; $4450TI SAMeseae° SESS?  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 321,
+      "excerpt": "Powerade Sports Drink 1 Litre $2.95 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 323,
+      "excerpt": "Coca-Cola, Fanta or Sprite Soft Drink 10x375mL $3.07 per litre",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 327,
+      "excerpt": "  S) ey > Ee = —_—, &. 0 SD Prevorh a a Po B ‘i FQ ARREIN manga $4450Tt SAVES Mt Franklin Sparkling Water 10x375mL $3.07 per litre  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 344,
+      "excerpt": "ia > = Season Special Enjoy su ay : Australian Ganipee: Ma a\\$Q90 Pp Ss",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 346,
+      "excerpt": "<B “@ RS BRS eo Pas | y = “4 onus| ; $440 $975 sh $g75 SAVES1.40 SAVES2.75 SAVES$2.50 SAVES$2.75 Chicken Sandwich Schnitzels ~ Proms the Det Coosball Coconut Wa",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 352,
+      "excerpt": "  . Contents | eve: ~ ~ we : Sa  P rei.” re me Click to browse a a’, tf 4 r - e 5 viel m e ‘ sf Serving Bg 1/2 Price ) $26 | ANY 2 = ° Seasonal FOR arresue } & ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 375,
+      "excerpt": "your first online ~ shop when you s ¥ — =~ spend$i40 ~ ~~: avs",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 389,
+      "excerpt": "when you spend $300 Save on Cleaning, ° at Everyday Market. Toiletries, Confectionery * & more ot « ecostore SS Code: Be{sx{e) . ; ne os ; es\"\" ee do Gh \"7",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 399,
+      "excerpt": "#Ends 23:59 (AEDT) 1/12/2026. Spend $300+ on Everyday Market, get",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 413,
+      "excerpt": "* e -~ @ Collect ic a, 15% 5G SIM 5x )Os 4 off’ Only plans. plans. points & Plus, double data for (} onselected eGift Cards when the first 6 months:' you spend ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 429,
+      "excerpt": "  \\ 74 ms 2 r Gi ® Ae f bldit 1 & ait ye ‘ fy f Si * + aught Tor ayP LLj yi j X~ en e y awe Yi pS —__, oN 4, a @ Christmas oex aa. it ~~ A i \\ | e ~ i \\ me 6 N ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 445,
+      "excerpt": "|et¥ a4 oNAGENeeeEELoS.ok at«ae heANYPO ty WoolworthsHoney & MustardOrange,or * Tat osetypats pe é Cy Fig, Honey my & Thyme WB BY cxnsrens ee F wig tie Glaze 15",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 458,
+      "excerpt": "Cx 3 ge Se $10>° eee We a Si ‘ ‘i Ingham's Frozen Turkey Weegee Se K 4 Easy Carve Buffe” . I eo, v - From From the Freezer Di ee va | ( Ne » RETR. x \\\\S FRR ar ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 518,
+      "excerpt": "  —- — G LAF : _ —— 3 Pri gir Xk \"tives 5 re Ny Pe man Seidel SE sa UP i’ a ee: | ae @ a d ee i = 7. — oe mat a o aeMe. MaBi! 7 Ww ap A te , teeee patet= Zeon)e",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 523,
+      "excerpt": "  y 3M) Sweet iz and merry fee4 , ) +7” p= a S A t 4 «ie \\ ee 2 ‘ m4 o Ne  § 0% Rnd - rie 5 6G. ey, ope . SS =e ‘ : ra oe ah 7 Brandy . (>!oy wa =. 4>  &%| lemo",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 541,
+      "excerpt": "  ‘ = Serving suggestion. nutella Le: R aiscomFRUIT a at $11°° $599 aS $299 F Belgian Butters Finest Waffle Crisps | _H Daelmans Stroopwafels Caramel J 180g $4.",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 546,
+      "excerpt": "Rs sag | ae > d a $| Praa ‘ Marini GY | | al ae walill EP ir 2VOiard| wens — = > eur Vi | eee 5 : i : @ r : z ao Nad nyi NETWrSEan aea __ —oo Vis ROO B {2 € } 4",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 550,
+      "excerpt": "  D —=% = rs ———_at POPCORN5 POPCORN 99» a —— E . a 2678 \\\\ Il wl ~& * ae \\~- eo $6ea ght©, ie A Marini400g $4.49Savoiardi$1.12Ladyper100gFingers742557Biscuits ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 553,
+      "excerpt": "E PopcornHugo'sHugo's White200g Chocolate$6.99200g Chocolate$6.99 Chocolate$6.99$6.99 Coated:: * CaramelisedBiscuitBiscuit or Cookies & Cookies & & Cream $3.50p",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 557,
+      "excerpt": "oe   a Onsale ‘   ¥ 4 Cs Gre tootiinN ea. Ges _ ye i 2 an 4 - @ ‘ Free Range ' PSs NaeLF leeS SSS —s f cy \\ 4 a Soneless Ham Vi = Re} ee = iz Jj ie setae = A B ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 559,
+      "excerpt": "A Festive Selection Australian Half Leg Ham Bone In per kg $7.99 $7.99 perkg 403824 B Curated Collection Triple Smoked Half Leg Ham Bone In per kg $13.99 $13.99",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 563,
+      "excerpt": "  C Curated Collection Free Range Lightly Smoked Ham Portion per kg $21.99 $21.99 perkg 597261 D Berg Deli Truffle Salami 100g $4.99 $49.90 perkg 501529 E Berg ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 568,
+      "excerpt": "> *% ‘&53 \\ 2[-) w* - 4 -_ $4149 : 4 te per kg te “ Pr». * Pe| f= . , 7 ‘a : eS a 3 Lan ‘¢ \" wer , e 3 ; ) ik : h¢ xs Uh: 1¢ “at = , poe $e eS **.** SE a . ae) ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 574,
+      "excerpt": "  =KO a “_ =KO | vf cea BIG DEAL 12s EKO Mini Ice : Cream Maker 2 i | =, -Dark Grey Es , 7 tr A 2 i . ree ths —  § EKO a 909 Single  BIG DEAL SlushieiiteseadttM",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 577,
+      "excerpt": "5 Free Metro Delivery on orders over $59",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 588,
+      "excerpt": "  Bes p a Me (SEB, \\ Bees ¥ e 2= i) pss $ \\» m™ Resort | DualSense ae — Nintendo Controller - —_— Switch 2 Console + 6000303 6094296 AB, PlaystationyR2 fa) XBOX",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 613,
+      "excerpt": "###### $151.85",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 624,
+      "excerpt": "###### $339.85",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 630,
+      "excerpt": "###### $80.85",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 641,
+      "excerpt": "###### $166.85",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 672,
+      "excerpt": "$176 @ Online only",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 676,
+      "excerpt": "  $184  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 688,
+      "excerpt": "$222 |",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 690,
+      "excerpt": "$108 @ Online only",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 713,
+      "excerpt": "$4398",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 724,
+      "excerpt": "$1019",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 740,
+      "excerpt": "Oikiture Buffet Sideboard Storage Cabinet Cupboard - | White $14850 )",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 751,
+      "excerpt": "###### $203*",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 801,
+      "excerpt": "  */ v 1/2 PRICE ye Wa é ah be . Doritos Corn ® Ne.~ Doritosr ChipsRots170: Doritss Ve Sractenh veiteieeChips 1 oo ¥sU CAN'T “ed $950 ‘aw BEAT LOCAL wa : THIS C",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 816,
+      "excerpt": "  Py h Sch Mixers, peo ' eo Mineral Water 1.1 Litre ory \\ era Selected Varieties i, ela Stet) = $1.50 per Litre $7565 ea 2 te Pare a N a5 y Nescare| NEescar : C",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 834,
+      "excerpt": "  FEES. The Natural —\" :‘ B te , Confectionery Co. _ F Peters 2 THENATURALsaber 330-2309, SourPatch Kids Bag Pelesoa Drumsai tick 4Peters Pack D o r umstick . S",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 845,
+      "excerpt": "‘ L - = 3 { } $20: —— 3 PACK — Bo Toomeyoe _— -_ | pO LB SS = ’ i i : ly (ey r @ 8 WFFALO™ ° Tra! f [i Wu~~ Wige Wee x| =| _ HAMPEey BUFFALO.“bee TRACE Zs 3 PAC",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 855,
+      "excerpt": "  F = — j i $25-) (57>) (862: G50) (652-) 670° 6 PACK 24 PACK ji 24 PACK i 10 PACK 10 PACK 700mL  tg GUINNESS J RS BRey' ie ‘Wem fi 260 (SB Am BR Ve DRAUGHT yo ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 883,
+      "excerpt": "PEOPLE C0 ‘MINS: we . ~ —— $ = a P *~ y ib 4 ‘\\ 4 _ __— Px te oie ste LY “A . a. > ¢ * rr = rt A = yA FF, et _* . ’ leie ~ i am ® ea . a : The Country Chef ‘ f=",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 899,
+      "excerpt": "TOMATOES ~ . — $499 We — kg — yp tae NS = \\ iia ae Srewn in f - ¢J a Srewnn $ _ NN « SZ Australian Large 4 aes. Rockmelon ' BN > x <pt Sy itt Ae 2 Ma =Fut y osa",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 908,
+      "excerpt": "  =) e cate ao mm) (gp99) sem (goa9 $G99) repo Australian ea Cucumbers ea Mixed Salted ea Baby Beetroot  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 918,
+      "excerpt": "  -  PROUDLYGIVES | \" | en BACK TO LOCAL omy } ering Re > + COMMUNITIES a ee is\" THROUGH al Aer ET TS, | : ene 4 S secomansery cee, srov>$25Spinachper kg 100g (",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 937,
+      "excerpt": "  AUSTRALIAN BEEF ve — ROS es SCOTCH FILLET STEAK S := Ae SeOF 2 So 2) Ny et LIF A Le o 4 . Australia max Se, ett eS rig GABAPk a OY . eePa a en ‘ irevea)Growni",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 949,
+      "excerpt": "  $1399kg GoAustraliaray > $2599kg Australian Beef Oyster Blade Steak  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 954,
+      "excerpt": "  - we —_ ‘o ry  4 Stes Leg a _- ” 1 yN : Aastraliaeed STB) serarsestcossCooked & Peeled SQ $750ea AustralianChicken ThighFreshFillets ReadyBeef90€ perLasagne 1",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 963,
+      "excerpt": "  ON SALE WED 18 NOV TO TUE 24 NOV 2026 =! v1/2 PRICE \\+ ‘ - ye * ® \\ \\ APES7 orDoritos Smith's¥ 150-170:Double \\ 1 PQHE F, Crunch Chips 150g } ‘of Selected Var",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 968,
+      "excerpt": "  Cobram Estate Extra Estate Extra Extra $1250gaga Virgin Olive Olive Oil 750mL 750mL Selected Varieties SAVE $12.50 $12.50 $1.67 per 100mL  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1014,
+      "excerpt": "  5 PAVLOVA. f= 20 VIEW RECIPE pen tae lee / Taney ‘MINS FTO) , La -_ aOR - ' ys . .* ‘ -_ . Ns  .> ee Wy r » » * as = a ye Qe $8. 3 7s. 2 . (Caan The Country C",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1027,
+      "excerpt": "Community Co Iced Fruit Cake 500g $2 per 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1041,
+      "excerpt": "$19 per kg",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1045,
+      "excerpt": "  pashli , — Ss ay en SE, yy ax gae ght on: aie Y pa : x Ea) AMELIA PARK MINT $26. CHOCANZAC CHIP BISCUITS COOKIES OR S3 0850 BUTTERFLIED LAMB LEG Tapa  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1057,
+      "excerpt": "  * $ ks Y¥suU CAN'T -  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1062,
+      "excerpt": "  . x * Vv ¥ tor * * “1/2 PRICE ),*- WP Coenen1/2 PRICE THAN) \\. “2 «  } 1/2 PRICE Ao)= = ~ Doritash —- a weppes Aa (s950) | $765 Doritos Corn Chips 170% Select",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1092,
+      "excerpt": "  $20: S PACK =i os © ys - $18 ea P| 3 PACK  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1118,
+      "excerpt": "  = = ESPOLON FARKLING MARCART: Tee | ex $ £2 ee= e || y om (Ey 330mL capoténpoldn TequilaTequi *Limit 1 per transaction. 4.5%Cans Premix 330mL Range  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1158,
+      "excerpt": "  gh $ é kg | Grown in Australia a Pa y y / | de 44 P SS J=— : —— - ra —— 4 a wi . A i) Ar $350 hectrata Australian Cos TWIN PACK Australian Continental Cucumbe",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1180,
+      "excerpt": "  —oe Smooth Feta af i] ji community SD 7 + BABY ¢ SPINACH p ” Washed & ready to eat =  Baby Spinach 100g Spinach 100g 100g 3) $28.50Lemnosper Smoothkg  Fetta 2",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1183,
+      "excerpt": "Community$24 per kg Co Baby Spinach 100g Spinach 100g 100g",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1185,
+      "excerpt": "5 ea aE$2",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1210,
+      "excerpt": "  wo @ ie ee TOP UP THE SNACKS IGA * af YOR * * \"1/2 PRICE )*- Le Mi Chupa “7 ibe } St 2 Cadbury e- a - } cs ¥ A Selected Varieties B ) PICNIC? s im . Cadbury F",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1215,
+      "excerpt": "  id 2 Pgs DAIRY“ aw Nf) 4 j r 2s ae MILK : “ (CC, ; Pe a. = ; Pea oa: EASEoe eecen ae * Beeges sao eae acy ED . ~| in 4 2 a faa ~ we i = = (ek)KE: = al~   ™ 12",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1231,
+      "excerpt": "  1 GS  Wy. \\: : ) oF U , : 3 oe ‘ NAL . By Xe: onic 0b7, x a oe nat strawberry in SQ65 “_=($eme0 ea va= oe ea Peters Maxibon 4 Pack Selected Varieties Ea Se Bu",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1236,
+      "excerpt": "  t NNOISSEU 7 ONNOISSE: : i Wanwithtnas a.Pe)cos RenalaMcCain.Lamb FaySm Aon ANGLE eb omel 2 ’ oan oS $@65 les 9 een! Connoisseur ea Nanna’s Fruit Pie $550ea M",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1241,
+      "excerpt": "  iji abgineean LapSIE ne « ra, ? Sie eset: Rae! Ss PeeLaGeoeecay oeapeae ee Ceoieee S 2 etchant(sgso a5 3 Tateainp25 =Aa os Lean Cuisine 6 ea McCain Frozen $ 4",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1259,
+      "excerpt": "  os — ONCE >. LOOK, SAME ICONIC TASTE aca ct a RS y ii : irowanenas oh Bre au a SOY, HONEY Seay . ANTIOXIDANTS yf ARC fy eps) |, UnclePlus Cereal Tobys 05 85 .",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1264,
+      "excerpt": "  im = t | (iz WARBECUE) — | TOMATO. q [mee | meiacm| r zg 0 ee ee MasterFoodsSqueezy SauceSqueezy Sauce Sauce $9752 ea2 ea ea KanTong Cooking Cooking $2503 ea3",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1276,
+      "excerpt": ". \\ =. y \\. x gi ~ Kat, a f © ” ’ pivehe| ea i “ ea $5.32AustralianperboBi 750g2 Pack 7506 PACK West AustralianIceberg= Lettuce",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1280,
+      "excerpt": "  on - I, E =) \" as ate ‘ CHICKEN & Ss A aon ASSION & — mission pies Xe \\ \\ BEEF PIE -J eumR x * Giz:Mes) =6% ees Fr 2 alY Se hw oY $1.80 Mission PER 1006 Commu",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1283,
+      "excerpt": "=; nts)6: © TIMO — : n ini i SHORT CUT © AS Rs ce Pepsi, Soto, iz z ~ Will « SunkistSchweppes or Mini : @he $ 40 Cans 6x250mL Primo Rindless Short bea Selected ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1287,
+      "excerpt": "  4 : , 7.6f6ff PANTS a fNGNG 1E ras,\" ‘8, fz  A 2FOR Nea @iio Red Bull Energy me5 PantsBabyBooSize Nappy5 = a gay Drink 473mL py ae 7 23 Pack or Size 6 Selecte",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1311,
+      "excerpt": "Lifespan Kids Scout 2-in-1 Scout 2-in-1 2-in-1 Balance Bike & Trike One Size Bike & Trike One Size & Trike One Size Trike One Size One Size Size $161.47 ——— $37",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1315,
+      "excerpt": "  Kids Scout 2-in-1 Scout 2-in-1 2-in-1 \" : Balance Bike & Trike One Size Bike & Trike One Size & Trike One Size Trike One Size One Size Size _ 6 . $161.47 anf ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1322,
+      "excerpt": "  Bedside Sleeper 1Unit a ) $135.00 ly —|4 $64.69 Off RRP a Se _—T ia t—7 , iI | [a | ps2): L\\A Lifespan Kids Courtyard 2-in-1 p. Monkey Bars & Swing Set One Si",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1327,
+      "excerpt": "  AROVEC Air Purifier @= *”” ee HI3 True HEPA Air Filter = ~S   for Home, Bedroom S wot | tune White \\ we S149 99 me ee” “a St ; N a $39.900fFRRP Ss. = ve vA “ ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1337,
+      "excerpt": "e $60.00 Off RRP",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1344,
+      "excerpt": "an Rose-Hip Vital J Equine 3.0k quine 9g $119.96 Off RRP eu eee baat Pete letwe EVERYDAYSHAMPOO CONDITIONERa NK AY ina ae! RI 1. ae »",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1355,
+      "excerpt": "Petway Everyday J Care Dog Grooming Pack Bundle $69.99 $0.48 Off RRP",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1357,
+      "excerpt": "$59.95 $52.04 Off RRP wt —_—— aaa",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1442,
+      "excerpt": "  | —\\. Cancer —\" 1 . OFF RRP | Pacts “8 AS3 canceR‘ANGE!COUN A q TA RANEa 4 a ee 91399 4 | I or . emer 4) ]  @ ¥ - MOISTURISERFACE——& BODY 4s—|MOISTURISERmoe P",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1447,
+      "excerpt": "cleansingensures gentlefor youri Sa+iwien | $499 face, eyes, and lips’",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1455,
+      "excerpt": "  wellness _ | NOVEMBER \\ \\\\ “al —— atts — \\ \\ | EE 4 \\ \\ /j™ \\ Mes\\aeS : te b a m=! AlexYou had Carey an interesting = ; Ca ieod cricket, swapping to Aussie Ru",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1464,
+      "excerpt": "P 1 — — Ea REGENERIST $29.99 $12.50ea |=ee = Papiile Peptic = 2 OLAY — = OGX Selected Haircare products 4 yd rangeY | Now I | | $7.99ea PRICE 4 HYALURON |] = FR",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1474,
+      "excerpt": "  = pulserewards | ry / c “er . wl = 7 Uplift 4 S/R t, | yOUurrouune ~ Get a FREE Skincare Bag when you spend $89 on participating brands* Valued at Member excl",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1477,
+      "excerpt": "*Spend $89 or more on participating brands in one transaction in-store or online and receive a FREE Skincare Bag. Limit one Skincare Bag per customer per transa",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1481,
+      "excerpt": "  ae $44.99 $59.39 eee Pure Retinol a 0.3% RETINOL ae entré ¢ Deal] Si Supports skio’s ‘Signs of skie Résuttats spectact \" nightlyLargetingcaps repair hee visib",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1486,
+      "excerpt": "  FREE Skincare Bag* Al dl 1. eAe , 5eF | OLAY | $34.99 Gonro) GARNIER (— \\ OLAY: ] ame Water  meee ze aero GARNIER 4 = OLAY Selected products = >] Selected pro",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1495,
+      "excerpt": "  —E |; $32.99 . | ' = » |a $8.99ea . a A | —er’ \\ —_— baie s | ~ $35.99ea | exratiaron | ee SelectedLIOREAL PARIS RK j iei $10.79Ne 720 ) c= s= products Skinca",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1504,
+      "excerpt": "  LA ROCHE-POSAY s ———., CERAVE Selected products g » Selected products -30% Hr ‘= DARK SPOT q 20 Zo | J a VISIBILTYA ‘a,f/ 4 Ad =~ DING TIME : ; ! IMEPING — HY",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1546,
+      "excerpt": "  | : | $11.96ea i SAVE : || SAVE$2.99 i ; SAVE : 7 te} 20” | 2 Ry 20% Member Q) exclusive : NY LANOLIPS Member price ; Entire range* $23%ea i: Non-member ‘ ; $",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1562,
+      "excerpt": "  oo tt —”————.C OD te VERSACE \\ ( BILLIE EILISH 2 Purchase any Eilish 100mL - $185 | Memberpoints*X 40mL. WhileandEilish receive Your Turn a stocks FREE Roller",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1588,
+      "excerpt": "$@p.50 COFFEE D sanse",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1698,
+      "excerpt": "ee PRIZE INCLUDES: 1X DREAME AQUA20 ULTRA ROLLER RT|an z= \\ Oe 5 aa Vp 7, ne TV pV, en OVpp En ei Ly pa ‘es 3 jet He my [PNOT/A) *, ‘. * 7 PERKS [MEMBERZ, ea ee",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1726,
+      "excerpt": "CONTENTS | 6 TakeMOVIES 5/Cinema & TV highlights/Charts/ \\di ThisS77V 7 \\\\v/’ ||Y Bsa4 NovIhe65 7 AnneBob u'sepic Film adventure: Buff BafflersThe Odyssey X=» T",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1769,
+      "excerpt": "aaa —_ ct ttt “ — MEeettecaeeeenngeeanee \" a S eH Prony ¥ - : mere 5 i fey a Christmas ae a= a Pc i ea ye 2 Garden sanctuary ge = Pages 2-4 Sem ti Pages 8-11 pe",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1773,
+      "excerpt": "  Scere = Flaelela 30) = ‘Escape’ Cavers = = A sf 120kgToesWith weightCooler capacity.Camp$ Chair2998 1520084ALMerbau.Decking‘Aquadeck’ Water Oil based. $10890 ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1815,
+      "excerpt": "  NEW | a a — Seeees 1.8m mapa ‘Whistler’ ~— 1.2m Pink Pubeiaes, ‘Noble’ MEER Pre-Lit PY x a eT: ac re uF poetien = . ‘. TreeChristmas ee o #5. TreeChristmas “e",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1820,
+      "excerpt": "  lao) “Ke 3-2 & oy rs 4 yi e) at © 7 Ll dhl gm 1050390StringLED Stitch Lights.  10re) red1056348‘perilcbie100& pink Pce varieties.in  Baublecact & vd  Pack$39 ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1850,
+      "excerpt": "  h J r $35... 4 : Jt . *° 3 * . F 8 A ¥ , ee | af -~ a: yi oa eee ae oe 2 s Py an ae sqq Natty\" sp5q Biss” spgg  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1877,
+      "excerpt": "Reindeer & Slaigh $59",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1879,
+      "excerpt": "Slaigh $59 Coal war ite aan $99 #BunningsFindsor in-store moments. [Al",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1891,
+      "excerpt": "(= -., = ary! aueneee =: id Ww 300g TropicalJ 250gPyrethrum Natural Mosquito ‘*GECKO Momuee‘Easy Up’ Antiseptic Bite $ 45 Candle With Lid $ 53 13W Weatherproof ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1893,
+      "excerpt": "FF | SE NEW — 1 NEW SET oy cmret aM com wy | 443mm7305200SingleCamping FlockedmetasMattress Airbed$750 Sleeping80x1182892aonpa orcBa:3 $4499 1120312orgGravityes",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1897,
+      "excerpt": "  NEW _ ir ¢ a ad ) ; . \\ —— Sy esta! Ry urcroe Esky Esky Cc Ceivail bk Aft itt. aah = sill 30- Backpack 0920796200.1300Te«400m $2299 Trestle31922106i0x 740 «12",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1902,
+      "excerpt": "  Sasa a SB NEW A i nl - i Gasmate 220g But a yy 3.5L Cast | rae 0037745Gen Cartickges‘ane  $599 jo30412auaosButane hingSt  $288 0443615Dutche  Ovenast Iron$5.2",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1918,
+      "excerpt": "ee ——= Be. 1 ee, ee) Sa nf? eee ysne tes J i fiers me aL : GUTTERHOOKS ¢ MeslF TUS200 altoes He” OR| LIGHT! geeeee) es _7 a TY ~~ hh = PART i [—— Y iGHTS : lytw",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1930,
+      "excerpt": "we... . a a Sa xed ah ;Sa ; . ; SS ; “== % ri. cy We can arrange UY aes re me assembly o'F pase: ed aWy Uaof ul a, BRB. reseanbat’ xs == our new play “gE ® il ’",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1937,
+      "excerpt": "ey Leste —e —Kids Garden Gloves ‘AvedlableKids Gumbootsin sizes 1-2, ri3 Pee Kids 0293973/5 $38 pail0954/9 els bo ee 18Pith 0491608Garden Tool Set $998",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1939,
+      "excerpt": "= Kids Super Rake onus *~ $(498",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1946,
+      "excerpt": "af SHERLOCK Cone Kids Chair 20L Poly Tray Kids Outdoor See-Saw 0477030rridstee teas 10 0839306Wheelbarrow $4,2 eee0856073 $4850",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1952,
+      "excerpt": "  Po =o —— : ft cf a ee Ray j Furgicle co Sseo Marquee J Shark Jaws Kids ~~ Outdoor Garden ae 1078471780Playcenterx 1190 x1570mm. Inflatable $75 ms682770Potting",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1972,
+      "excerpt": "  i NEW NEW 3] Packof24 BI == Packof 60 I l ae Pediors —e—) bs es Ar ™ | “ 4E {aK} {y*Hya=| eee Adult20kg  DogDry ; sian\" Lar Dog et 0572399 pia Cat ee Cat sos ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1983,
+      "excerpt": "  T Wireless Apple CarPlay a ci al w A Auto Smart Monitor are yc a pd with Dual Cameras Dual Cameras Cameras ‘ ios | | 4 oN oe g oreerer t = $ 99 Sony 6.95\" App",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1986,
+      "excerpt": "> NULON ALR,= = NULON = om APEX+ e oa be “> Anti-Freeze/ Full Synthetic - Anti-Boil = 5W-3010W-40 OR PRON W NULON CONCENTRATE [ELCT gga Engine 6L a APaXt 6L Coo",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 1999,
+      "excerpt": "SAVE $449.99",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2030,
+      "excerpt": "  $ tat  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2085,
+      "excerpt": "Col GET $5 FOREVERY PESACREDIT “spenn | S Ea Gs crackhoe Sonn 00 aeaml en a oma par eRbee era e Colter ree: Grae any aS doe Terms & Conditions apply. See our we",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2105,
+      "excerpt": "SONY gue ‘SELECTEDco STORES 10.7 Floating 5 Mh VCO Wireless Apple . ite A CarPlay & Android™ ode Auto Head Unit r 5 EI $999 oOooed: % - 40:",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2133,
+      "excerpt": "  | $e ) —) —— a |$499910SAVES | K4oieANER wo2  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2145,
+      "excerpt": "  $343  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2172,
+      "excerpt": "% off, save $12.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2174,
+      "excerpt": "SENSUELL fe Frying pan, stainless steel/grey, 28 cm a ' $79.99 oe 7",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2180,
+      "excerpt": "q i x, BILLY/OXBERG ? aE— 40!’2\" oakBookcaseeffect, with glass doors, hh 868s $329 : 10% off, save $32.90 off, save $32.90 save $32.90 $32.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2182,
+      "excerpt": "10% off, save $32.90 off, save $32.90 save $32.90 $32.90 Me lM | 5” ie R",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2186,
+      "excerpt": "ee gs E FJALLBO rie Shelving unit, black, WayeYx. 51x136 cm * ae | $119 - ean $99.99/, (= 5",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2192,
+      "excerpt": "10% off, save $3.60",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2194,
+      "excerpt": "ENHET Mirror cabinet with doors, white, 60x17x75 cm $143.10 10% off, save $15.90 | ! —_ .. A. - 1% =|",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2198,
+      "excerpt": "} -HEMNES | | | Glass-door cabinet with | 3 drawers, white stain/light brown, a ) — 90x198 cm $699 wy | ge wT 10% off, save $69.90 \\i ——— i",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2200,
+      "excerpt": "BARSLOV . 3-seat sofa-bed with a chaise longue, ‘ - | Tibbleby beige/grey <— ot $999 , ene i rte fete 899° me",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2202,
+      "excerpt": "% off, save $99.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2210,
+      "excerpt": "q i x, BILLY/OXBERG ? aE— 40!’2\" oakBookcaseeffect, with glass doors, hh 868s $329 : 10% off, save $32.90 off, save $32.90 save $32.90 $32.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2212,
+      "excerpt": "10% off, save $32.90 off, save $32.90 save $32.90 $32.90 Me lM | 5” ie R",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2216,
+      "excerpt": "ee gs E FJALLBO rie Shelving unit, black, WayeYx. 51x136 cm * ae | $119 - ean $99.99/, (= 5",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2226,
+      "excerpt": "% off, save $12.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2228,
+      "excerpt": "SENSUELL fe Frying pan, stainless steel/grey, 28 cm a ' $79.99 oe 7",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2234,
+      "excerpt": "q i x, BILLY/OXBERG ? aE— 40!’2\" oakBookcaseeffect, with glass doors, hh 868s $329 : 10% off, save $32.90 off, save $32.90 save $32.90 $32.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2236,
+      "excerpt": "10% off, save $32.90 off, save $32.90 save $32.90 $32.90 Me lM | 5” ie R",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2240,
+      "excerpt": "ee gs E FJALLBO rie Shelving unit, black, WayeYx. 51x136 cm * ae | $119 - ean $99.99/, (= 5",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2250,
+      "excerpt": "% off, save $12.90",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2252,
+      "excerpt": "SENSUELL fe Frying pan, stainless steel/grey, 28 cm a ' $79.99 oe 7",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2256,
+      "excerpt": "  onmN i oe ie = i _ ‘ | $99 | .. \\eaatrad DEAL PRICE ey DEAL PRICE , F wassor iw = 24° FHD165HZ = —_ $225| wass279 || : Leros“a 14’3Ultra IdeaPad5 16/5126BSlim",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2263,
+      "excerpt": "  sre ein pea (By a a — (ai 3. ie a— | ri DEAL PRICE péaiprice——— 4 | == | 120ce Gy | raeEreeSync | Ee] DEALPRICE: ed TOSHIBAWAS $189 | _wass4ee | 5 278 Canvio ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2275,
+      "excerpt": "  7A as=. —_ SAVE ° a . vans i= - $100; ie 7, f AOC «Fico = ™ ~~ Dy \\ va, Sy Zo a | GAMING 4 _—— Ca =i Rg vik 3x. wii = oe = Dbaq DEAL PRICE DEAL PRICE = DEAL P",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2284,
+      "excerpt": "  gi i,sive / . SAVES /FaeSAVE, a 540 / \\820 , \\999 ; — —= ie at ae suo a ee | a~ ee DEAL PRICE = DEAL PRICE DEAL PRICE ern | *99 | $177 $350 was $329} Canon D-",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2294,
+      "excerpt": "  Le { my | (i) j iiy C y i hil DEAL PRICE PRICE : $13.47. Google ‘ Pixel 11 Pro 256GB Unlocked Smartphone Offer ends 01/12/26  ",
+      "status": "held_ocr_review"
+    },
+    {
+      "line": 2328,
+      "excerpt": "  DEAL PRICE $699)SAMSUNG 50° 4K Crystal UHD SmartOffer ends TV30/11/26 U8000H  ",
+      "status": "held_ocr_review"
+    }
+  ],
+  "admin_drafts_created": 38,
+  "original_file_library_id": "libfile_5db21d30767481918d7973fca5269395"
+}
