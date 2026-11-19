@@ -31,7 +31,7 @@ jobs:
           test "$(stat -c%s savehalf.dump.enc)" -lt 40000000
           openssl dgst -sha256 -hmac "$BACKUP_ENCRYPTION_KEY" savehalf.dump.enc | awk '{print $NF}' > savehalf.dump.enc.hmac
           sha256sum savehalf.dump.enc > savehalf.dump.enc.sha256
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: savehalf-encrypted-${{ github.run_id }}
           path: |
