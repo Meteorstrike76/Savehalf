@@ -8,3 +8,11 @@ export function uploadedCatalogueCurrent(row:UploadedCatalogueItem,now=Date.now(
  if(now<Date.parse(row.validFrom+'T00:00:00+08:00'))return false;
  return !row.validTo||now<Date.parse(row.validTo+'T23:59:59+11:00');
 }
+
+// A price-sorted single source should not hide the other catalogue retailers.
+export function diverseCatalogueRows(rows:UploadedCatalogueItem[]) {
+ const groups=Array.from(new Set(rows.map(p=>p.store))).sort((a,b)=>a==='IGA'?-1:b==='IGA'?1:a.localeCompare(b)).map(s=>rows.filter(p=>p.store===s));
+ const result:UploadedCatalogueItem[]=[];
+ for(let i=0;i<Math.max(0,...groups.map(g=>g.length));i++)for(const group of groups)if(group[i])result.push(group[i]);
+ return result;
+}
