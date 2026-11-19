@@ -32,6 +32,7 @@ import RetailerDirectory from '@/components/RetailerDirectory';
 const RetailerOffers=lazy(()=>import('@/components/RetailerOffers'));
 const ProviderProducts=lazy(()=>import('@/components/ProviderProducts'));
 const ReviewedImports=lazy(()=>import('@/components/ReviewedImports'));
+const UploadedCatalogues=lazy(()=>import('@/components/UploadedCatalogues'));
 const CatalogueAdvertisements=lazy(()=>import('@/components/CatalogueAdvertisements'));
 const RetailerExpansion=lazy(()=>import('@/components/RetailerExpansion'));
 import {MORE_RETAILERS} from '@/lib/moreRetailers';
@@ -129,6 +130,7 @@ function Feed() {
  {tab!=='saved'&&feed.hasMore&&<button className="load-more" disabled={feed.loadingMore} onClick={()=>void feed.loadMore()}>{feed.loadingMore?'Loading…':'Discover more finds'} <ArrowRight size={17}/></button>}
  {tab!=='saved'&&<DeferredSection label="pharmacy catalogue products"><RetailerExpansion search={search} stores={stores} category={category} min={minimum} max={budget} half={half}/></DeferredSection>}
  {tab!=='saved'&&<DeferredSection label="reviewed catalogue imports"><ReviewedImports search={search}/></DeferredSection>}
+ {tab!=='saved'&&<DeferredSection label="uploaded catalogue products"><UploadedCatalogues search={search}/></DeferredSection>}
  {tab!=='saved'&&<DeferredSection label="catalogue advertisements"><CatalogueAdvertisements/></DeferredSection>}
  {tab!=='saved'&&<DeferredSection label="retailer community offers"><RetailerOffers search={search}/></DeferredSection>}
  </section><section className="bottom-banner"><div><Bookmark size={24}/><h3>Seen something good? Keep it.</h3><p>Your own shortlist. Ready when you are.</p></div><button className="login" onClick={()=>setTab('saved')}>Your saved finds <ArrowRight size={16}/></button></section>
