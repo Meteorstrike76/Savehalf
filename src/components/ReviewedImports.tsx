@@ -11,5 +11,5 @@ export default function ReviewedImports({search}:{search:string}){
 function ReviewedProductImage({id,name}:{id:string;name:string}) {
  const [failed,setFailed]=useState(false);
  const src=reviewedProductImages[id];
- return <div style={{height:220,background:'#fff',borderRadius:12,marginBottom:16,display:'grid',placeItems:'center'}}>{src&&!failed ? <img src={src} alt={name} width={320} height={220} loading="lazy" decoding="async" referrerPolicy="no-referrer" style={{width:'100%',height:'100%',objectFit:'contain'}} onError={()=>setFailed(true)}/> : <span>Product image unavailable</span>}</div>;
+ return <div style={{height:220,overflow:'hidden',background:'#fff',borderRadius:12,marginBottom:16,display:'grid',placeItems:'center'}}>{src&&!failed ? <img src={src} alt={name} width={320} height={220} loading="lazy" decoding="async" referrerPolicy="no-referrer" style={{width:'100%',height:220,maxHeight:220,minHeight:0,objectFit:'contain'}} onError={()=>setFailed(true)}/> : <span>Product image unavailable</span>}</div>;
 }
