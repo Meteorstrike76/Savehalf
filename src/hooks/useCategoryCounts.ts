@@ -19,7 +19,7 @@ export function useCategoryCounts(filters:DealFilters,enabled:boolean){
   const refresh=()=>{
    if(document.visibilityState==='hidden')return;
    const id=++request;
-   cachedRead('catalogue-facets:'+key,async()=>{
+   cachedRead('catalogue-facets:'+key+':'+Math.floor(Date.now()/MAX_AGE),async()=>{
     const expiresAt=Date.now()+MAX_AGE;
     const {data,error}=await supabase.rpc('catalogue_facets',params).abortSignal(AbortSignal.timeout(12000));
     if(error)throw error;
@@ -30,9 +30,8 @@ export function useCategoryCounts(filters:DealFilters,enabled:boolean){
     clearTimeout(expiry);
     if(next.expiresAt<=Date.now()){setSnapshot(null);return;}
     setSnapshot(next);
-    // Expire visibly without background polling. The next browse/focus event
-    // refreshes the shared aggregate, including after a suspended tab resumes.
-    expiry=setTimeout(()=>setSnapshot(null),next.expiresAt-Date.now());
+    // Refresh expired totals while visible; focus/visibility refreshes suspended tabs.
+    expiry=setTimeout(()=>{setSnapshot(null);refresh();},next.expiresAt-Date.now());
    }).catch(()=>{if(active&&id===request)setSnapshot(null);});
   };
   const debounce=setTimeout(refresh,params.p_query?250:0);window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',refresh);

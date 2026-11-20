@@ -19,3 +19,7 @@ Source: ALL_CATALOGUES_COMBINED.pdf, SHA-256 e13007dbfb045a8bac82fc6a0c804892572
 Officeworks page 128 overrides: Lenovo 24-inch monitor, Lenovo IdeaPad Slim 3 and Samsung Galaxy A17 end 2 Dec 2026; PAG Ash chair ends 4 Dec 2026. Canon printer, Lenovo tablet and Samsung TV end 30 Nov 2026. These printed per-product dates take precedence over the general catalogue footer.
 
 On 21 Nov 2026, 125 dated records are eligible under the new rule, and the 22 unknown-end Woolworths records remain outside the 24-hour window. No unknown end date has been invented. Partial coverage and store-specific availability still apply.
+
+## Woolworths weekly-cycle correction
+
+The owner confirmed the shared Wednesday–Tuesday refresh cycle. Woolworths' official specials terms also state weekly specials end at midnight AEDT each Tuesday: https://www.woolworths.com.au/shop/browse/specials . For the supplied Victorian pages starting Wednesday 18 Nov 2026, the 22 records now use Tuesday 24 Nov 2026 as a weekly-cycle inferred end. Cards say “Expected until” and retain a basis note; this date is not presented as printed on those PDF pages. No review timestamps were renewed. The current uploaded batch therefore has 147 eligible dated/cycle-dated offers on 21 Nov.

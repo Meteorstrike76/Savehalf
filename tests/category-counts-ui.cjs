@@ -1,6 +1,6 @@
 const {JSDOM,VirtualConsole}=require('jsdom'),fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),waitFor=require('./wait-for.cjs');
-const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'dist/index.html'),'utf8'),script=html.match(/src="\/([^" ]+\.js)"/)[1],calls=[];let offset=0;const realNow=Date.now;Date.now=()=>realNow()+offset;let failCounts=false,releaseLag;const facetCalls=[];
-const dom=new JSDOM(html,{url:'https://savehalf.vercel.app',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:new VirtualConsole(),beforeParse(w){Object.assign(w,{Headers,Request,Response,AbortSignal,TextDecoder});w.Date.now=()=>Date.now();w.fetch=async (input,init)=>{calls.push(new URL(String(input)));if(String(input).includes('/rpc/catalogue_facets')){
+const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'dist/index.html'),'utf8'),script=html.match(/src="\/([^" ]+\.js)"/)[1],calls=[];let offset=0;const realNow=Date.now;Date.now=()=>realNow()+offset;let failCounts=false,releaseLag;const facetCalls=[],expiryTimers=[];
+const dom=new JSDOM(html,{url:'https://savehalf.vercel.app',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:new VirtualConsole(),beforeParse(w){const timeout=w.setTimeout.bind(w);w.setTimeout=(fn,ms,...args)=>{if(ms>=119000&&ms<=120000)expiryTimers.push(fn);return timeout(fn,ms,...args);};Object.assign(w,{Headers,Request,Response,AbortSignal,TextDecoder});w.Date.now=()=>Date.now();w.fetch=async (input,init)=>{calls.push(new URL(String(input)));if(String(input).includes('/rpc/catalogue_facets')){
  const params=JSON.parse(init.body);facetCalls.push(params);
  if(params.p_query==='lag')await new Promise(resolve=>{releaseLag=resolve;});
  if(failCounts)return new Response('{}',{status:503});
@@ -12,9 +12,10 @@ dom.window.eval(require('./production-bundle.cjs')(root,script));const doc=dom.w
 const button=t=>[...doc.querySelectorAll('button')].find(b=>b.textContent===t);
 const input=(label,value)=>{const el=doc.querySelector(`[aria-label="${label}"]`);Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype,'value').set.call(el,value);el.dispatchEvent(new dom.window.Event('input',{bubbles:true}));};
 (async()=>{
+ await waitFor(()=>doc.querySelector('select[aria-label="Listing source"]'),'source control');const source=doc.querySelector('select[aria-label="Listing source"]');source.value='collected';source.dispatchEvent(new dom.window.Event('change',{bubbles:true}));
  await waitFor(()=>doc.querySelector('.category-count')?.textContent==='140','full catalogue total');
  assert([...doc.querySelectorAll('.category-count')].some(e=>e.textContent==='120'));
- offset=120001;dom.window.dispatchEvent(new dom.window.Event('focus'));
+ offset=120001;assert(expiryTimers.length,'automatic aggregate refresh timer registered');expiryTimers.at(-1)();
  await waitFor(()=>doc.querySelector('.category-count')?.textContent==='110','expired aggregate refresh');
  offset=240002;failCounts=true;dom.window.dispatchEvent(new dom.window.Event('focus'));
  await waitFor(()=>[...doc.querySelectorAll('.category-count')].every(e=>e.textContent==='—'),'refresh failure unknown');

@@ -1,5 +1,5 @@
 import batch from '@/data/uploadedCatalogueItems.json';
-export type UploadedCatalogueItem = (typeof batch.rows)[number];
+export type UploadedCatalogueItem = (typeof batch.rows)[number] & {endDateBasis?:string};
 export const uploadedCatalogueItems = batch.rows;
 function validDay(value:unknown):value is string {
  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
