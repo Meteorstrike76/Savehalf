@@ -1108,10 +1108,11 @@
         0.485
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-1",
@@ -1128,10 +1129,11 @@
         0.485
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-2",
@@ -1148,10 +1150,11 @@
         0.485
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-3",
@@ -1168,10 +1171,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-4",
@@ -1188,10 +1192,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-5",
@@ -1208,10 +1213,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-6",
@@ -1228,10 +1234,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-7",
@@ -1248,10 +1255,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-12-8",
@@ -1268,10 +1276,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition, catalogue commencing 18 November 2026. End date not visible in the upload. Thawed seafood and local stock conditions apply. Listed/advertised prices include everyday low-price items; no reduction assumed. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-12.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-0",
@@ -1288,10 +1297,11 @@
         0.27
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-1",
@@ -1308,10 +1318,11 @@
         0.48
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-2",
@@ -1328,10 +1339,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-3",
@@ -1348,10 +1360,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-4",
@@ -1368,10 +1381,11 @@
         0.7
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-5",
@@ -1388,10 +1402,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-6",
@@ -1408,10 +1423,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-13-7",
@@ -1428,10 +1444,11 @@
         0.925
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction.",
+      "validTo": "2026-11-24",
+      "notice": "Selected varieties. Stock and local participation vary. Advertised price, not an independently verified reduction. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-13.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-14-0",
@@ -1448,10 +1465,11 @@
         0.23
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-14-1",
@@ -1468,10 +1486,11 @@
         0.425
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-14-2",
@@ -1488,10 +1507,11 @@
         0.62
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-14-3",
@@ -1508,10 +1528,11 @@
         0.82
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-14-4",
@@ -1528,10 +1549,11 @@
         0.84
       ],
       "validFrom": "2026-11-18",
-      "validTo": null,
-      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible.",
+      "validTo": "2026-11-24",
+      "notice": "VIC edition. From the freezer; products may not be in all stores, while stocks last. Turkey must be thawed in the refrigerator; see source handling instructions. End date not visible. End date inferred from the Wednesday–Tuesday weekly catalogue cycle starting 18 November; the supplied page does not print an end date. Confirm at Woolworths.",
       "checkedAt": "2026-11-19T02:42:09.268769+00:00",
-      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg"
+      "evidence": "/catalogue-evidence/2026-11-19/page-14.jpg",
+      "endDateBasis": "weekly-cycle"
     },
     {
       "id": "pdf-20261119-34-0",

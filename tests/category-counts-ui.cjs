@@ -12,6 +12,7 @@ dom.window.eval(require('./production-bundle.cjs')(root,script));const doc=dom.w
 const button=t=>[...doc.querySelectorAll('button')].find(b=>b.textContent===t);
 const input=(label,value)=>{const el=doc.querySelector(`[aria-label="${label}"]`);Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype,'value').set.call(el,value);el.dispatchEvent(new dom.window.Event('input',{bubbles:true}));};
 (async()=>{
+ await waitFor(()=>doc.querySelector('select[aria-label="Listing source"]'),'source control');const source=doc.querySelector('select[aria-label="Listing source"]');source.value='collected';source.dispatchEvent(new dom.window.Event('change',{bubbles:true}));
  await waitFor(()=>doc.querySelector('.category-count')?.textContent==='140','full catalogue total');
  assert([...doc.querySelectorAll('.category-count')].some(e=>e.textContent==='120'));
  offset=120001;dom.window.dispatchEvent(new dom.window.Event('focus'));
