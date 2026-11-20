@@ -96,7 +96,7 @@ function Feed() {
  useEffect(()=>{if(isAuthReturn&&user&&!recovery)setToast('You’re signed in. Welcome to SaveHalf.');},[user,recovery]);
  const rangeError=priceRangeError(minimum,budget);
  const filters=useMemo(()=>({stores:retailerScope!=='All'&&!STORE_IDS.includes(retailerScope as StoreId)?[]:stores,category,search,sort,saleOnly:tab!=='catalogue',minDiscount:half?50:0,minPrice:minimum&&!rangeError?Number(minimum):undefined,maxPrice:budget&&!rangeError?Number(budget):undefined}),[stores,category,search,sort,tab,half,budget,minimum,retailerScope,rangeError]);
- const needsLocalCounts=photos||fresh||!!exclude.trim()||matchedCatalogue||hidden.length>0||productType!=='All types';
+ const needsLocalCounts=!isConfigured||photos||fresh||!!exclude.trim()||matchedCatalogue||hidden.length>0||productType!=='All types';
  const facetRows=useCategoryMatches(filters,tab!=='saved'&&listingSource!=='catalogues'&&needsLocalCounts&&!rangeError);
  const collectedCounts=useCategoryCounts(filters,tab!=='saved'&&listingSource!=='catalogues'&&!needsLocalCounts&&!rangeError);
  const [localLimit,setLocalLimit]=useState(24);

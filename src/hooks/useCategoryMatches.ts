@@ -16,7 +16,7 @@ export function useCategoryMatches(filters:DealFilters,enabled:boolean){
    cachedRead('category-matches:'+key+':'+Math.floor(Date.now()/AGE),async()=>{
     const params=JSON.parse(key),expiresAt=Date.now()+AGE;
     if(!params.p_stores.length)return {key,rows:[],expiresAt};
-    if(!isConfigured)return {key,expiresAt,rows:demoDeals.filter(d=>params.p_stores.includes(d.store)&&d.title.toLowerCase().includes(params.p_query.toLowerCase())&&(!params.p_sale||d.discountPct>0)&&d.discountPct>=params.p_discount&&d.discountPrice>=params.p_min&&d.discountPrice<=params.p_max)};
+    if(!isConfigured)return {key,expiresAt,rows:demoDeals.filter(d=>params.p_stores.includes(d.store)&&d.title.toLowerCase().includes(params.p_query.toLowerCase())&&(!params.p_sale||d.discountPct>0)&&d.discountPct>=params.p_discount&&d.discountPrice>=params.p_min&&(params.p_max===null||d.discountPrice<=params.p_max))};
     const rows:Deal[]=[],controller=new AbortController(),deadline=setTimeout(()=>controller.abort(),12000);
     try{for(let offset=0;offset<MAX_ROWS;offset+=48){
      let data:Array<{item:Record<string,unknown>;total_count:number}>|null=null;
