@@ -19,7 +19,7 @@ export function useCategoryCounts(filters:DealFilters,enabled:boolean){
   const refresh=()=>{
    if(document.visibilityState==='hidden')return;
    const id=++request;
-   cachedRead('catalogue-facets:'+key,async()=>{
+   cachedRead('catalogue-facets:'+key+':'+Math.floor(Date.now()/MAX_AGE),async()=>{
     const expiresAt=Date.now()+MAX_AGE;
     const {data,error}=await supabase.rpc('catalogue_facets',params).abortSignal(AbortSignal.timeout(12000));
     if(error)throw error;

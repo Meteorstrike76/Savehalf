@@ -13,7 +13,7 @@ export function useCategoryMatches(filters:DealFilters,enabled:boolean){
   setSnapshot(null);if(!enabled)return;
   let active=true,generation=0;let timer:ReturnType<typeof setTimeout>|undefined;
   const refresh=()=>{if(document.hidden)return;const request=++generation;setSnapshot(null);
-   cachedRead('category-matches:'+key,async()=>{
+   cachedRead('category-matches:'+key+':'+Math.floor(Date.now()/AGE),async()=>{
     const params=JSON.parse(key),expiresAt=Date.now()+AGE;
     if(!params.p_stores.length)return {key,rows:[],expiresAt};
     if(!isConfigured)return {key,expiresAt,rows:demoDeals.filter(d=>params.p_stores.includes(d.store)&&d.title.toLowerCase().includes(params.p_query.toLowerCase())&&(!params.p_sale||d.discountPct>0)&&d.discountPct>=params.p_discount&&d.discountPrice>=params.p_min&&d.discountPrice<=params.p_max)};
