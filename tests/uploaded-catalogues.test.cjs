@@ -1,5 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const batch=JSON.parse(fs.readFileSync('src/data/uploadedCatalogueItems.json','utf8'));
+const allBatches=JSON.parse(fs.readFileSync('src/data/uploadedCatalogueItems.json','utf8'));
+// Retain the original import regression fixture; the latest batch has separate checks.
+const batch={...allBatches,rows:allBatches.rows.filter(r=>r.id.startsWith('pdf-20261119-'))};
 const m={exports:{}};vm.runInNewContext(require('esbuild').transformSync(fs.readFileSync('src/lib/uploadedCatalogues.ts','utf8'),{loader:'ts',format:'cjs'}).code,{module:m,exports:m.exports,require:()=>batch,Date,Number});
 const {uploadedCatalogueCurrent}=m.exports;
 test('PDF import excludes ALDI and duplicate product/edition offers',()=>{assert.equal(batch.rows.length,147);assert.equal(new Set(batch.rows.map(r=>r.id)).size,batch.rows.length);assert(!batch.rows.some(r=>/aldi/i.test(r.store)||(r.page>=15&&r.page<=21)));assert.equal(new Set(batch.rows.map(r=>`${r.store}:${r.region}:${r.name}`)).size,batch.rows.length);for(const r of batch.rows){assert(r.price>0);assert(fs.existsSync('public'+r.evidence));}});

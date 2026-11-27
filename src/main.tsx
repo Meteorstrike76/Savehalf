@@ -10,3 +10,6 @@ createRoot(document.getElementById('root')!).render(
     <CloudflareAnalytics /><SiteActivity/>
   </StrictMode>
 );
+
+// Lazy and disabled until student entitlement is verified; never blocks rendering.
+void import('./lib/startStudentMonitoring').then(m=>m.startStudentMonitoring()).catch(()=>{});

@@ -18,4 +18,4 @@ export function productTypes(title:string):ProductType[]{
  if(/rice\b|pasta\b|noodles|tinned|beans?|cereal|rolled oats|cooking sauce|sauce|sugar\b|baking mix|olive oil|sunflower oil|spaghetti|pesto|flour|glaze/.test(t)&&!tags.includes('Sweets')&&!tags.includes('Household'))tags.push('Pantry');
  return tags;
 }
-export function catalogueDepartment(title:string,store:string){const tags=productTypes(title);return tags.includes('Tech')?'Electronics':tags.includes('Home')||tags.includes('Household')||tags.includes('Health & beauty')||store==='IKEA'?'Home & Living':'Groceries';}
+export function catalogueDepartment(title:string,store:string){const tags=productTypes(title);if(['Chemist Warehouse','Priceline','Supercheap Auto'].includes(store))return 'Home & Living';if(store==='JB Hi-Fi')return 'Electronics';return tags.includes('Tech')?'Electronics':tags.includes('Home')||tags.includes('Household')||tags.includes('Health & beauty')||store==='IKEA'?'Home & Living':'Groceries';}
