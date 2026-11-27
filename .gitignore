@@ -40,3 +40,6 @@ audit/
 # Local catalogue evidence and Python caches
 catalogue-artifacts/
 tools/catalogues/**/__pycache__/
+
+# Student crawler local caches
+tools/student-pack/**/__pycache__/

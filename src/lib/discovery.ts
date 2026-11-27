@@ -11,8 +11,8 @@ export function validateBrowse(value:unknown):BrowseState|null{
  if(d.minimum!==undefined&&(typeof d.minimum!=='string'||d.minimum.length>12||d.minimum!==''&&(!Number.isFinite(Number(d.minimum))||Number(d.minimum)<0||Number(d.minimum)>5000)))return null;
  if(d.minimum&&d.budget&&Number(d.minimum)>Number(d.budget))return null;
  if(d.productType!==undefined&&!PRODUCT_TYPES.includes(d.productType))return null;
- if(d.region!==undefined&&!['All','NSW','VIC','NT','Unverified'].includes(d.region))return null;
- if(d.retailer!==undefined&&!['All',...STORE_IDS,'IGA','IKEA','Officeworks'].includes(d.retailer))return null;
+ if(d.region!==undefined&&!['All','NSW','VIC','NT','TAS','Unverified'].includes(d.region))return null;
+ if(d.retailer!==undefined&&!['All',...STORE_IDS,'IGA','IKEA','Officeworks','Chemist Warehouse','Priceline','JB Hi-Fi','Supercheap Auto'].includes(d.retailer))return null;
  if(d.source!==undefined&&!['all','collected','catalogues'].includes(d.source))return null;
  if(d.mix!==undefined&&typeof d.mix!=='boolean')return null;
  return {tab:d.tab,search:d.search,stores:[...new Set(d.stores)],category:d.category,sort:d.sort,half:d.half,budget:d.budget,...(d.minimum!==undefined?{minimum:d.minimum}:{}),...(d.productType!==undefined?{productType:d.productType}:{}),...(d.region!==undefined?{region:d.region}:{}),...(d.retailer!==undefined?{retailer:d.retailer}:{}),...(d.source!==undefined?{source:d.source}:{}),...(d.mix!==undefined?{mix:d.mix}:{})};
