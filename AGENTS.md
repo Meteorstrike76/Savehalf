@@ -9,3 +9,5 @@
 - Never commit secrets or put service-role credentials in frontend code.
 
 - Owner approved N1–N10 integration batch on 22 October 2026: bounded Supabase flags/reports, GitHub quality/evals/Lighthouse/axe/Playwright/Dependabot, Turnstile, Better Stack Uptime, existing provider router upgrades, TanStack Query, Zod, Open Food Facts, native/ZXing barcode input, Cloudflare Web Analytics replacement, native UI/SVG/build-time share assets. Keep deferred maps, OCR, voice, push, other providers and extra UI frameworks out. New service accounts with card requirements must not be activated. See docs/SERVICES-REGISTRY.md for pending activation gates.
+
+- ALDI publication rule: show only items with an evidenced original price strictly above the current price, including a one-cent reduction. Regular prices, missing comparison prices and percentage-only claims are ineligible. Do not invent previous prices. Retain excluded records privately for audit; public counts, search and planners must use current_deals.
