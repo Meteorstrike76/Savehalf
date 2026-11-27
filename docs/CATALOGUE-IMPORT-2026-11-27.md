@@ -21,3 +21,5 @@ This is a selected, visually checked import, not complete extraction. Local Tess
 The new import reuses page numbers from the old PDF. Exclusion of old pages 15–21 is scoped to the old evidence path, and image dimensions are keyed by full evidence path so new crops cannot pick up old page dimensions. Retailer filter options derive from all imported retailer names; shared filters support the added names and TAS.
 
 Ancillary cover/conditions pages 52,127,133 are included as evidence links. Products with unclear model/price, expired offers, editorial pages, unpriced products and unreviewed rows are not published. Extraction is not automatically trusted or declared complete.
+
+Preview verification found that SVG letterboxing could expose adjacent products. Every crop now has an explicit clipping rectangle matching its viewBox, with a rendered-component regression check.
